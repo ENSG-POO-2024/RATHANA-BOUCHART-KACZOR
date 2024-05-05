@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 # On recupere les données dont j'ai besoin qu'on met dans un dataframe
 pokemon_stat_df = pd.read_csv("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\data\pokemon_first_gen.csv", skiprows=1)
 pokemon_position_df=pd.read_csv("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\data\pokemon_coordinates.csv",skiprows=1)
-table_des_types_df=pd.read_csv("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\data\table_des_types.csv",skiprows=1)
+table_des_types_df=pd.read_csv("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\data\Table_des_types.csv",skiprows=1)
 
 # Je les convertis en matrices pour mieux les manipuler
 pokemon_stat=pokemon_stat_df.values
@@ -23,9 +23,9 @@ pokemon_pos_arrondies= np.round(coord * 10, decimals=0).astype(int)
 dico_pokemon={row[1]:row[0] for row in pokemon_stat}
 
 #Création d'un dictionnaire avec comme clés les types auxquels on associe leur place dans le tableau des types 
-dico_types={table_types[0][i+1]: i for i in range(len(table_types)-1)}
+dico_types={table_types[i][0]: i for i in range(len(table_types))}
 
-class Pokemon:
+class Pokemon(ABC):
     #Initialisation des pokemons
     def __init__(self,nom):
         nb_pkm=dico_pokemon[nom]
