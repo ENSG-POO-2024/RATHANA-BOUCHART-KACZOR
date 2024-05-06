@@ -40,7 +40,7 @@ class Window(QMainWindow):
         painter.end()
 
         self.dresseur.setPixmap(pixmap)        
-        
+    """    
     def dist(self, indice_pokemon):
         x_baryc_dresseur = self.dresseur.x() + self.diametre_dresseur/2
         y_baryc_dresseur = self.dresseur.y() + self.diametre_dresseur/2
@@ -49,7 +49,7 @@ class Window(QMainWindow):
         dist_euclid = ((x_baryc_pokemon-x_baryc_dresseur)**2 +
                        (y_baryc_pokemon-y_baryc_dresseur)**2)**0.5
         return dist_euclid
-    
+    """
         
     def UiComponents(self):
         self.dresseur = QLabel(self)
@@ -58,25 +58,13 @@ class Window(QMainWindow):
                                   (self.l_window-self.diametre_dresseur)/2, 
                                   self.diametre_dresseur, self.diametre_dresseur)
         self.draw_disk()
-        
+        """
         self.nb_pokemons = 30
         self.diametre_pokemon = 20
         for i in range(self.nb_pokemons):
             exec(f"self.p{i} = QLabel(self)")
             exec(f"self.p{i}.setGeometry(rd.randrange(500), rd.randrange(500), self.diametre_pokemon, self.diametre_pokemon)")
-            
-        #    if dist(self, i) <= self.diametre_dresseur/2 :
-        #        draw_cross(self, i)
-        
-        #self.p1 = QLabel(self)
-        #Window.Pokemon(self.p1)
-        #self.p2 = QLabel(self)
-        #Window.Pokemon(self.p2)
-        #self.p3 = QLabel(self)
-        #Window.Pokemon(self.p3)
-        #self.p4 = QLabel(self)
-        #Window.Pokemon(self.p4)
-        
+        """
     def keyPressEvent(self, event):
         x = self.dresseur.x()
         y = self.dresseur.y()
@@ -96,7 +84,7 @@ class Window(QMainWindow):
         if event.key() == Qt.Key_Right :
             if x <= self.l_window - self.diametre_dresseur - self.speed :
                 self.dresseur.move(x + self.speed, y)
-        
+        """
         for i in range(self.nb_pokemons):
                 if Window.dist(self, i) <= (self.diametre_dresseur + self.diametre_pokemon)/2 :
                     pixmap = QPixmap(self.diametre_pokemon, self.diametre_pokemon)
@@ -112,7 +100,7 @@ class Window(QMainWindow):
                     painter.end()
             
                     exec(f"self.p{i}.setPixmap(pixmap)")
-                                
+        """                                
         
                     
 
@@ -121,3 +109,4 @@ if __name__ == "__main__":
     window = Window()
     window.show()
     sys.exit(app.exec_())
+            
