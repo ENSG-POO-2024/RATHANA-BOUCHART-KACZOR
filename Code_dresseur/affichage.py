@@ -1,60 +1,50 @@
-"""from PIL import Image
-from matplotlib import pyplot as plt
-
-# Charger les images
-fond = Image.open("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/fond_pokemon.jpg")
-planche = Image.open("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
-
-# Découper le Sprite Sheet
-liste_personnages = [(1,0,31,36)]
-
-for personnage in liste_personnages:
-    perso_sprite = planche.crop(personnage).convert("RGBA")
-    perso_redimension = perso_sprite.resize((300, 360))
-    # Superposer le sprite sur le fond
-    fond.paste(perso_redimension, (15, 20))  # Remplacez x_position et y_position par les coordonnées de position sur votre fond
-
-# Afficher l'image
-plt.clf()
-plt.imshow(fond, interpolation="none")
-plt.axis('off')  # Masquer les axes
-plt.show()
-
-"""
-
 import sys
 from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow
-from PyQt5.QtGui import QPixmap, QPainter
+from PyQt5.QtGui import QPixmap
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        # Charger les images
-        self.fond = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/fond_pokemon.jpg")
-        self.planche = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
+        # Charger l'image depuis un fichier
+        pixmap = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/chemin.png")
+        sprite_sheet = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
+        
+        # Dimensions 
+        hauteur_sprite_sheet = 144
+        largeur_sprite_sheet = 124
+        hauteur_sprite = 36
+        largeur_sprite = 31
 
-        # Créer un label pour afficher l'image de fond
-        self.fond_label = QLabel(self)
-        self.fond_label.setPixmap(self.fond)
 
-        # Découper le Sprite Sheet
-        self.liste_personnages = [(1, 0, 31, 36)]
+        # Découper le sprite sheet
+        coordonnees_sprites = [(x, y, largeur_sprite, hauteur_sprite) for x in range(0, largeur_sprite_sheet, largeur_sprite) for y in range(0, hauteur_sprite_sheet, hauteur_sprite)]
+        sprites_individuels = []
+        for coordonnees_sprite in coordonnees_sprites:
+            sprite_individuel = sprite_sheet.copy(*coordonnees_sprite)
+            sprites_individuels.append(sprite_individuel)
 
-        # Superposer le personnage sur l'image de fond
-        for personnage in self.liste_personnages:
-            perso_sprite = self.planche.copy(*personnage)
-            perso_redimension = perso_sprite.scaled(30, 36)
+        # Créer un label pour afficher l'image
+        fond = QLabel(self)
+        fond.setPixmap(pixmap)
+        fond.setGeometry(50, 50, pixmap.width(), pixmap.height())  # Définir la position et la taille du label
+        fond.setScaledContents(True)  # Redimensionner automatiquement l'image pour s'adapter au label
 
-            # Créer un label pour afficher le personnage
-            perso_label = QLabel(self)
-            perso_label.setPixmap(perso_redimension)
-            perso_label.move(15, 20)  # Position du personnage sur l'image de fond
-            perso_label.show()
+        # Créer un label et afficher le perso
 
-        # Redimensionner la fenêtre à la taille de l'image de fond
-        self.resize(self.fond.width(), self.fond.height())
+        # Réduire la taille de chaque sprite de moitié
+        for i in range(len(sprites_individuels)):
+            sprite_reduit = sprites_individuels[i].scaled(sprites_individuels[i].width() // 2, sprites_individuels[i].height() // 2)
+            sprites_individuels[i] = sprite_reduit
 
+        joueur = QLabel(self)
+        joueur.setPixmap(sprites_individuels[0])  # Afficher le sprite individuel au choix
+        joueur.setGeometry(50 , 50 , largeur_sprite, hauteur_sprite)  # Définir la position et la taille du joueur
+        joueur.show()
+
+        # Redimensionner la fenêtre à la taille de l'image
+        self.resize(pixmap.width() + 100, pixmap.height() + 100)
+        
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
