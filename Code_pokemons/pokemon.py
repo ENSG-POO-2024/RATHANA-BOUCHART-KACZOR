@@ -5,9 +5,9 @@ from abc import ABC, abstractmethod
 import os 
 
 # On recupere les données dont j'ai besoin qu'on met dans un dataframe
-pokemon_stat_df = pd.read_csv("../data/pokemon_first_gen.csv", skiprows=1)
-pokemon_position_df=pd.read_csv("../data/pokemon_coordinates.csv",skiprows=1)
-table_des_types_df=pd.read_csv("../data/Table_des_types.csv")
+pokemon_stat_df = pd.read_csv("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\data\pokemon_first_gen.csv", skiprows=1)
+pokemon_position_df=pd.read_csv("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\data\pokemon_coordinates.csv",skiprows=1)
+table_des_types_df=pd.read_csv("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\data\Table_des_types.csv")
 
 # Je les convertis en matrices pour mieux les manipuler
 pokemon_stat=pokemon_stat_df.values
@@ -54,9 +54,12 @@ class Pokemon:
         else:
             type_attaque=dico_types[self.type1]
         type_defense1=dico_types[pokemon_adverse.type1]  #On recupere le type de defense
-        #type_defense2=dico_types[pokemon_adverse.type2]
+        type_defense2=dico_types[pokemon_adverse.type2]
         #On applique la formule officielle des degats des attaques, mais sans prendre en compte les niveaux
-        degats= np.trunc((np.trunc((self.attack * 40)/(pokemon_adverse.defense *50))+2) * table_types[type_attaque][type_defense1])
+        CM=table_types[type_attaque][type_defense1]
+        if not np.isnan(type_defense2):
+            CM*=type_defense2
+        degats= np.trunc((np.trunc((self.attack * 40)/(pokemon_adverse.defense *50))+2) * CM)
         pokemon_adverse.HP=pokemon_adverse.HP - degats
         if pokemon_adverse.HP<0:
             pokemon_adverse.HP=0
@@ -76,7 +79,10 @@ class PokemonSauvage(Pokemon):
         return super().attaque(pokemon_adverse)
 
 if __name__=="__main__":
-    print(pokemon_pos_arrondies)
+    nidoking=Pokemon("Venusaur")
+    print(nidoking.type2)
+    pikachu=Pokemon("Pikachu")
+    print(pikachu.type2)
 
 
 
