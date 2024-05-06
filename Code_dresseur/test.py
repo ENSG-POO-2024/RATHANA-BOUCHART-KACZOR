@@ -31,8 +31,14 @@ class MainWindow(QMainWindow):
         fond.setScaledContents(True)  # Redimensionner automatiquement l'image pour s'adapter au label
 
         # Créer un label et afficher le perso
+
+        # Réduire la taille de chaque sprite de moitié
+        for i in range(len(sprites_individuels)):
+            sprite_reduit = sprites_individuels[i].scaled(sprites_individuels[i].width() // 2, sprites_individuels[i].height() // 2)
+            sprites_individuels[i] = sprite_reduit
+
         joueur = QLabel(self)
-        joueur.setPixmap(sprites_individuels[2])  # Afficher le sprite individuel au choix
+        joueur.setPixmap(sprites_individuels[0])  # Afficher le sprite individuel au choix
         joueur.setGeometry(50 , 50 , largeur_sprite, hauteur_sprite)  # Définir la position et la taille du joueur
         joueur.show()
 
