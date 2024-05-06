@@ -2,7 +2,7 @@ from PIL import Image
 from matplotlib import pyplot as plt
 
 # Charger l'image depuis le fichier
-image = Image.open("../documents/images/fond_pokemon.png")
+image = Image.open("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/fond_pokemon.jpg")
 
 # Afficher l'image
 plt.imshow(image)
