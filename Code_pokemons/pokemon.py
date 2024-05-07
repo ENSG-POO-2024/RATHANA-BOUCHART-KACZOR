@@ -4,10 +4,16 @@ import ast
 from abc import ABC, abstractmethod
 import os 
 
+
+path=os.path.dirname(os.path.abspath(__file__))
+path1=os.path.join(path,"..\data\pokemon_first_gen.csv")
+path2=os.path.join(path,"..\data\pokemon_coordinates.csv")
+path3=os.path.join(path,"..\data\Table_des_types.csv")
+
 # On recupere les données dont j'ai besoin qu'on met dans un dataframe
-pokemon_stat_df = pd.read_csv("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\data\pokemon_first_gen.csv", skiprows=1)
-pokemon_position_df=pd.read_csv("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\data\pokemon_coordinates.csv",skiprows=1)
-table_des_types_df=pd.read_csv("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\data\Table_des_types.csv")
+pokemon_stat_df = pd.read_csv(path1, skiprows=1)
+pokemon_position_df=pd.read_csv(path2,skiprows=1)
+table_des_types_df=pd.read_csv(path3)
 
 # Je les convertis en matrices pour mieux les manipuler
 pokemon_stat=pokemon_stat_df.values
