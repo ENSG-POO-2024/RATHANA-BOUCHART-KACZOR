@@ -107,8 +107,19 @@ class PokemonSauvage(Pokemon):
             type_attaque=dico_types["Normal"]
         if nb_aleatoire==2:
             type_attaque=dico_types[self.type1]
-            if self.type1=="Normal" and self.type2 !="Rien":
-                type_attaque=dico_types[self.type2]
+        if self.type1=="Normal" and self.type2 !="Rien":
+            type_attaque=dico_types[self.type2]
+        
+        if self.attack>=self.sp_atk:
+            nom_attaque_normale=nom_attaques[0][0]
+            nom_attaque_type=nom_attaques[dico_types[self.type1]][0]
+            stat_attaque=self.attack
+            stat_defense=self.defense
+        else:
+            nom_attaque_normale=nom_attaques[0][1]
+            nom_attaque_type=nom_attaques[dico_types[self.type1]][1]
+            stat_attaque=self.sp_atk
+            stat_defense=self.spe_def
         type_defense1=dico_types[pokemon_adverse.type1] #On recupere le type de defense
         if pokemon_adverse.type2 != "Rien":
             type_defense2=dico_types[pokemon_adverse.type2]
@@ -116,12 +127,11 @@ class PokemonSauvage(Pokemon):
         CM=table_types[type_attaque][type_defense1]
         if pokemon_adverse.type2 != "Rien":
             CM*=table_types[type_attaque][type_defense2]
-        degats= np.trunc((np.trunc((2*stat_attaque * 55)/(stat_defense *50))+2) * CM)
+        degats= np.trunc((np.trunc((5*stat_attaque * 55)/(stat_defense *50))+2) * CM)
         pokemon_adverse.HP=pokemon_adverse.HP - degats
         if pokemon_adverse.HP<0:
             pokemon_adverse.HP=0
-        return pokemon_adverse.HP, degats, type_attaque
-
+        return pokemon_adverse.HP, degats, nom_attaque_normale, nom_attaque_type
 
 if __name__=="__main__":
     mew=Pokemon("Mew")
