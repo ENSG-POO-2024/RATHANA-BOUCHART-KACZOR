@@ -11,8 +11,10 @@ class Window(QMainWindow):
     
     def __init__(self):
         super().__init__()
-        self.taille_fen = 300
-        self.setGeometry(400, 400, self.taille_fen, self.taille_fen) #fenêtre principale
+        
+        self.vision = 200
+        
+        self.setGeometry(400, 400, self.vision, self.vision) #fenêtre principale
         
         self.carte()
         
@@ -30,7 +32,7 @@ class Window(QMainWindow):
         
         
     def dresseur(self):
-        sprite_sheet = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
+        sprite_sheet = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
 
         hauteur_sprite = sprite_sheet.height()//4
         largeur_sprite = sprite_sheet.width()//4
@@ -51,7 +53,7 @@ class Window(QMainWindow):
         
             
     def carte(self):
-        pixmap = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/map.png")
+        pixmap = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/map.png")
         self.fond = QLabel(self)
         self.fond.setPixmap(pixmap)
         self.x_map = -120
@@ -139,61 +141,36 @@ class Window(QMainWindow):
         if event.key() == Qt.Key_Up :
             #if y > self.speed :
             self.fond.move(x, y + self.speed)
-            #self.mew1.move(self.mew1.x(), self.mew1.y() + self.speed)
-            for label in self.dict_connus.values() :
-                label.move(label.x(), label.y() + self.speed)
-            for i in range(len(pokemon_pos_arrondies)):
-                pokemon_pos_arrondies[i][2] += self.speed
-            for i in range(len(self.connus)):
-                self.connus[i][2] += self.speed
-            print(self.connus[0][2])
-            for i in range(len(self.inconnus)):
-                self.inconnus[i][2] += self.speed
-            self.discover()
                 
         if event.key() == Qt.Key_Down :
             #if y <= self.L_window - self.diametre_fond - self.speed :
             self.fond.move(x, y - self.speed)
-            #self.mew1.move(self.mew1.x(), self.mew1.y() - self.speed)
-            for label in self.dict_connus.values() :
-                label.move(label.x(), label.y() - self.speed)
-            for i in range(len(pokemon_pos_arrondies)):
-                pokemon_pos_arrondies[i][2] -= self.speed
-            for i in range(len(self.connus)):
-                self.connus[i][2] -= self.speed
-            for i in range(len(self.inconnus)):
-                self.inconnus[i][2] -= self.speed
-            self.discover()
                 
         if event.key() == Qt.Key_Left :
             #if x > self.speed :
             self.fond.move(x + self.speed, y)
-            #self.mew1.move(self.mew1.x() + self.speed, self.mew1.y())
-            for label in self.dict_connus.values() :
-                label.move(label.x() + self.speed, label.y())
-            for i in range(len(pokemon_pos_arrondies)):
-                pokemon_pos_arrondies[i][1] += self.speed
-            for i in range(len(self.connus)):
-                self.connus[i][1] += self.speed
-            for i in range(len(self.inconnus)):
-                self.inconnus[i][1] += self.speed
-            self.discover()
     
         if event.key() == Qt.Key_Right :
             #if x <= self.l_window - self.diametre_fond - self.speed :
             self.fond.move(x - self.speed, y)
-            #self.mew1.move(self.mew1.x() - self.speed, self.mew1.y())
-            for label in self.dict_connus.values() :
-                label.move(label.x() - self.speed, label.y())
-            for i in range(len(pokemon_pos_arrondies)):
-                pokemon_pos_arrondies[i][1] -= self.speed
-            for i in range(len(self.connus)):
-                self.connus[i][1] -= self.speed
-            for i in range(len(self.inconnus)):
-                self.inconnus[i][1] -= self.speed
-            self.discover()
+        """
+        for i in range(self.nb_pokemons):
+                if Window.dist(self, i) <= (self.diametre_dresseur + self.diametre_pokemon)/2 :
+                    pixmap = QPixmap(self.diametre_pokemon, self.diametre_pokemon)
+                    pixmap.fill(Qt.transparent)
+                    painter = QPainter(pixmap)
+                    painter.setRenderHint(QPainter.Antialiasing)
+                    
+                    # Dessiner le disque noir
+                    painter.setPen(Qt.NoPen)
+                    painter.setBrush(QColor(0, 0, 0))
+                    painter.drawEllipse(0, 0, self.diametre_pokemon, self.diametre_pokemon)
+                    
+                    painter.end()
+            
+                    exec(f"self.p{i}.setPixmap(pixmap)")
                                         
-                                
+        """                          
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
