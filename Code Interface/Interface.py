@@ -11,9 +11,9 @@ class Window(QMainWindow):
     def __init__(self):
         super().__init__()
         
-        self.vision = 200
+        self.vision = 400
         
-        self.setGeometry(400, 400, self.vision, self.vision) #fenêtre principale
+        self.setGeometry(400, 100, self.vision, self.vision) #fenêtre principale
         
         self.carte()
         self.dresseur()
