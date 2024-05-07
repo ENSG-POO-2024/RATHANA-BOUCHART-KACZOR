@@ -22,7 +22,7 @@ class Window(QMainWindow):
         
         
     def dresseur(self):
-        sprite_sheet = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
+        sprite_sheet = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
 
         hauteur_sprite = sprite_sheet.height()//4
         largeur_sprite = sprite_sheet.width()//4
@@ -42,7 +42,7 @@ class Window(QMainWindow):
         self.speed = 10
             
     def carte(self):
-        pixmap = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/map.png")
+        pixmap = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/map.png")
         self.fond = QLabel(self)
         self.fond.setPixmap(pixmap)
         self.fond.setGeometry(0, 0, pixmap.width(), pixmap.height())
@@ -65,18 +65,22 @@ class Window(QMainWindow):
         if event.key() == Qt.Key_Up :
             #if y > self.speed :
             self.fond.move(x, y + self.speed)
-                
+            self.joueur.setPixmap(self.sprites_individuels[2])
+
         if event.key() == Qt.Key_Down :
             #if y <= self.L_window - self.diametre_fond - self.speed :
             self.fond.move(x, y - self.speed)
-                
+            self.joueur.setPixmap(self.sprites_individuels[0]) 
+
         if event.key() == Qt.Key_Left :
             #if x > self.speed :
             self.fond.move(x + self.speed, y)
+            self.joueur.setPixmap(self.sprites_individuels[3])
     
         if event.key() == Qt.Key_Right :
             #if x <= self.l_window - self.diametre_fond - self.speed :
             self.fond.move(x - self.speed, y)
+            self.joueur.setPixmap(self.sprites_individuels[1])
         """
         for i in range(self.nb_pokemons):
                 if Window.dist(self, i) <= (self.diametre_dresseur + self.diametre_pokemon)/2 :
