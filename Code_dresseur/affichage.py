@@ -38,10 +38,10 @@ class MainWindow(QMainWindow):
             sprite_reduit = self.sprites_individuels[i].scaled(self.sprites_individuels[i].width() // 2, self.sprites_individuels[i].height() // 2)
             self.sprites_individuels[i] = sprite_reduit
 
-        self.joueur = QLabel(self)
+        """self.joueur = QLabel(self)
         self.joueur.setPixmap(self.sprites_individuels[0])  # Afficher le sprite individuel au choix
         self.joueur.setGeometry(50 , 50 , largeur_sprite, hauteur_sprite)  # Définir la position et la taille du joueur
-        self.joueur.show()
+        self.joueur.show()"""
 
         # Redimensionner la fenêtre à la taille de l'image
         self.resize(pixmap.width() + 100, pixmap.height() + 100)
@@ -49,6 +49,8 @@ class MainWindow(QMainWindow):
         self.UiComponents()
 
         self.speed = 10
+
+        
 
     def draw_disk(self):
         pixmap = QPixmap(self.diametre_dresseur, self.diametre_dresseur)
@@ -85,18 +87,22 @@ class MainWindow(QMainWindow):
         if event.key() == Qt.Key_Up :
             if y > self.speed :
                 self.joueur.move(x, y - self.speed)
+                self.joueur.setPixmap(self.sprites_individuels[2])
                 
         if event.key() == Qt.Key_Down :
             if y <= self.height() - self.diametre_dresseur - self.speed :
                 self.joueur.move(x, y + self.speed)
+                self.joueur.setPixmap(self.sprites_individuels[0])
                 
         if event.key() == Qt.Key_Left :
             if x > self.speed :
                 self.joueur.move(x - self.speed, y)
+                self.joueur.setPixmap(self.sprites_individuels[3])
     
         if event.key() == Qt.Key_Right :
             if x <= self.width() - self.diametre_dresseur - self.speed :
                 self.joueur.move(x + self.speed, y)
+                self.joueur.setPixmap(self.sprites_individuels[1])
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
