@@ -28,8 +28,8 @@ class MainWindow(QMainWindow):
         # Créer un label pour afficher l'image
         self.fond = QLabel(self)
         self.fond.setPixmap(pixmap)
-        self.fond.setGeometry(50, 50, pixmap.width(), pixmap.height())  # Définir la position et la taille du label
-        self.fond.setScaledContents(True)  # Redimensionner automatiquement l'image pour s'adapter au label
+        self.fond.setGeometry(50, 50, pixmap.width()//2, pixmap.height()//2)  # Définir la position et la taille du label
+        #self.fond.setScaledContents(True)  # Redimensionner automatiquement l'image pour s'adapter au label
 
         # Créer un label et afficher le perso
 
