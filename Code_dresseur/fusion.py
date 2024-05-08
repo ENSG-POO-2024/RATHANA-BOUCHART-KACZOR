@@ -21,14 +21,15 @@ class Window(QMainWindow):
         self.apparence_actuelle = 4
         
         self.music_player = Music()  # Ajout de l'objet Music
+
     def dresseur(self):
         sprite_sheet = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
 
-        hauteur_sprite = sprite_sheet.height()//4
-        largeur_sprite = sprite_sheet.width()//4
+        self.hauteur_sprite = sprite_sheet.height()//4
+        self.largeur_sprite = sprite_sheet.width()//4
         
         # Découper le sprite sheet
-        coordonnees_sprites = [(x, y, largeur_sprite, hauteur_sprite) for x in range(2, sprite_sheet.width(), largeur_sprite + 15) for y in range(0, sprite_sheet.height(), hauteur_sprite)]
+        coordonnees_sprites = [(x, y, self.largeur_sprite, self.hauteur_sprite) for x in range(2, sprite_sheet.width(), self.largeur_sprite + 15) for y in range(0, sprite_sheet.height(), self.hauteur_sprite)]
         self.sprites_individuels = []
         for coordonnees_sprite in coordonnees_sprites:
             sprite_individuel = sprite_sheet.copy(*coordonnees_sprite)
@@ -36,7 +37,7 @@ class Window(QMainWindow):
         sprite = QPixmap(self.sprites_individuels[4])
         
         self.joueur = QLabel(self)
-        self.joueur.setGeometry(self.vision//2 + 5, self.vision//2 +10, largeur_sprite, hauteur_sprite)
+        self.joueur.setGeometry(self.vision//2 + 5, self.vision//2 +10, self.largeur_sprite, self.hauteur_sprite)
         self.joueur.setPixmap(sprite)
         
         self.speed = 20
@@ -53,17 +54,14 @@ class Window(QMainWindow):
     def keyPressEvent(self, event):
         x = self.fond.x()
         y = self.fond.y()
-        bruit_action = Music()
         x_joueur = self.joueur.x() - self.fond.x()
         y_joueur = self.joueur.y() - self.fond.y() 
-        if event.key() == Qt.Key_Up :
-            
-            couleur_pixel = self.fond.pixmap().toImage().pixelColor(x_joueur, y_joueur - self.speed)
 
+        if event.key() == Qt.Key_Up :
+            couleur_pixel = self.fond.pixmap().toImage().pixelColor(x_joueur, y_joueur - self.speed)
             if (couleur_pixel != Qt.black) :
-                bruit_action.bruit_bump()
+                self.music_player.bruit_bump()
             elif (couleur_pixel == Qt.black) :
-                print("pixel noir")
                 self.fond.move(x, y + self.speed)
                 if (self.apparence_actuelle == 2) or (self.apparence_actuelle == 6) or (self.apparence_actuelle == 10) :
                     self.changer_apparence()
@@ -72,29 +70,40 @@ class Window(QMainWindow):
                 self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
 
         if event.key() == Qt.Key_Down :
-            self.fond.move(x, y - self.speed)
-            if (self.apparence_actuelle == 0) or (self.apparence_actuelle == 4) or (self.apparence_actuelle == 8) :
-                self.changer_apparence()
-            else : 
-                self.apparence_actuelle = 4
-            self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
+            couleur_pixel = self.fond.pixmap().toImage().pixelColor(x_joueur, y_joueur + self.hauteur_sprite - self.speed)
+            if (couleur_pixel != Qt.black) :
+                self.music_player.bruit_bump()
+            elif (couleur_pixel == Qt.black) :
+                self.fond.move(x, y - self.speed)
+                if (self.apparence_actuelle == 0) or (self.apparence_actuelle == 4) or (self.apparence_actuelle == 8) :
+                    self.changer_apparence()
+                else : 
+                    self.apparence_actuelle = 4
+                self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
 
         if event.key() == Qt.Key_Left :
-            self.fond.move(x + self.speed, y)
-            if (self.apparence_actuelle == 3) or (self.apparence_actuelle == 7) or (self.apparence_actuelle == 11) :
-                self.changer_apparence()
-            else : 
-                self.apparence_actuelle = 7
-            
-            self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
+            couleur_pixel = self.fond.pixmap().toImage().pixelColor(x_joueur - self.speed, y_joueur)
+            if (couleur_pixel != Qt.black) :
+                self.music_player.bruit_bump()
+            elif (couleur_pixel == Qt.black) :
+                self.fond.move(x + self.speed, y)
+                if (self.apparence_actuelle == 3) or (self.apparence_actuelle == 7) or (self.apparence_actuelle == 11) :
+                    self.changer_apparence()
+                else : 
+                    self.apparence_actuelle = 7
+                self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
     
         if event.key() == Qt.Key_Right :
-            self.fond.move(x - self.speed, y)
-            if (self.apparence_actuelle == 1) or (self.apparence_actuelle == 5) or (self.apparence_actuelle == 9) :
-                self.changer_apparence()
-            else : 
-                self.apparence_actuelle = 5
-            self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
+            couleur_pixel = self.fond.pixmap().toImage().pixelColor(x_joueur - self.speed + self.largeur_sprite, y_joueur)
+            if (couleur_pixel != Qt.black) :
+                self.music_player.bruit_bump()
+            elif (couleur_pixel == Qt.black) :
+                self.fond.move(x - self.speed, y)
+                if (self.apparence_actuelle == 1) or (self.apparence_actuelle == 5) or (self.apparence_actuelle == 9) :
+                    self.changer_apparence()
+                else : 
+                    self.apparence_actuelle = 5
+                self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
     
     def changer_apparence(self):
         self.apparence_actuelle = (self.apparence_actuelle + 4) % len(self.apparences_joueur)
@@ -127,28 +136,6 @@ class Music():
         self.bump.setMedia(QMediaContent(QUrl.fromLocalFile(son_bump)))
         self.bump.setVolume(50)
         self.bump.play()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
