@@ -48,30 +48,6 @@ class Window(QMainWindow):
         self.fond.setPixmap(pixmap)
         self.fond.setGeometry(0, 0, pixmap.width(), pixmap.height())
     
-
-    def check_collision_up(self):
-        x = self.fond.x()
-        y = self.fond.y()
-        player_width = self.joueur.width()
-        collision_detected = False
-
-    # Déterminer la zone de vérification au-dessus du joueur
-        check_x = x
-        check_y = y - self.speed  # Vérification de la ligne juste au-dessus du joueur
-        check_width = player_width
-        check_height = 1  # Une seule ligne de pixels
-
-    # Parcourir chaque pixel dans la zone de vérification
-        for i in range(check_width):
-            pixel_x = check_x + i
-            pixel_y = check_y
-            pixel_color = self.fond.pixmap().toImage().pixelColor(pixel_x, pixel_y )
-            if pixel_color != Qt.black:
-                collision_detected = True
-                break
-
-        return collision_detected
-    
     def keyPressEvent(self, event):
         x = self.fond.x()
         y = self.fond.y()
@@ -83,6 +59,8 @@ class Window(QMainWindow):
             for i in range(self.largeur_sprite):
                 if (couleur_pixel[i] != Qt.black) :
                     self.music_player.bruit_bump()
+                    self.apparence_actuelle = 6
+                    self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                     break
                 elif (couleur_pixel[i] == Qt.black) and (i == self.largeur_sprite - 1) :
                     self.fond.move(x, y + self.speed)
@@ -97,6 +75,8 @@ class Window(QMainWindow):
             for i in range(self.largeur_sprite):
                 if (couleur_pixel[i] != Qt.black) :
                     self.music_player.bruit_bump()
+                    self.apparence_actuelle = 4
+                    self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                     break
                 elif (couleur_pixel[i] == Qt.black) and (i == self.largeur_sprite - 1) :
                     self.fond.move(x, y - self.speed)
@@ -111,6 +91,8 @@ class Window(QMainWindow):
             for i in range(self.hauteur_sprite) :
                 if (couleur_pixel[i] != Qt.black) :
                     self.music_player.bruit_bump()
+                    self.apparence_actuelle = 7
+                    self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                     break
                 elif (couleur_pixel[i] == Qt.black) and (i == self.hauteur_sprite - 1):
                     self.fond.move(x + self.speed, y)
@@ -125,6 +107,8 @@ class Window(QMainWindow):
             for i in range(self.hauteur_sprite):
                 if (couleur_pixel[i] != Qt.black) :
                     self.music_player.bruit_bump()
+                    self.apparence_actuelle = 5
+                    self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                     break
                 elif (couleur_pixel[i] == Qt.black) and (i == self.hauteur_sprite - 1):
                     self.fond.move(x - self.speed, y)
