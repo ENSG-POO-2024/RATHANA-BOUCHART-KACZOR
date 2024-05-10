@@ -5,6 +5,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 import sys
 import random as rd
+import numpy as np
 from pokemon import pokemon_pos_arrondies
 
 
@@ -21,10 +22,25 @@ class Window(QMainWindow):
                          self.taille_fen, 
                          self.taille_fen) 
         
+        self.layout = QVBoxLayout()
+        
         self.carte()
         
         self.dresseur()
         
+        self.button = QPushButton("map", self)
+        self.button.setFixedSize(50, 20)  # Définir une taille fixe pour le bouton
+        self.button.clicked.connect(self.FullScreen)
+        
+        self.layout.addWidget(self.fond)
+        self.layout.addWidget(self.joueur)
+        self.layout.addWidget(self.button)
+        self.setLayout(self.layout)
+        
+        global pokemon_pos_arrondies
+        pokemon_pos_arrondies[:, 1] = np.random.randint(0, self.fond.width()-112, len(pokemon_pos_arrondies))
+        pokemon_pos_arrondies[:, 2] = np.random.randint(0, self.fond.height()-112, len(pokemon_pos_arrondies))
+        pokemon_pos_arrondies = np.append(pokemon_pos_arrondies, [[pokemon_pos_arrondies[i][0].lower()+"_map.png"]for i in range(len(pokemon_pos_arrondies))], axis=1)
         pokemon_pos_arrondies[:, 1] += self.x_map
         pokemon_pos_arrondies[:, 2] += self.y_map
         self.inconnus = list(pokemon_pos_arrondies.copy())
@@ -32,16 +48,12 @@ class Window(QMainWindow):
         self.connus = []
         self.dict_repet = {}  
         self.discover()
-        
-        
-        
+                
         self.speed = 10
         
-        self.button = QPushButton("Passer en mode plein écran", self)
-        self.button.setFixedSize(200, 50)  # Définir une taille fixe pour le bouton
-        self.button.clicked.connect(self.FullScreen)
-        
         self.show()
+        
+                
     def FullScreen(self):
         if self.width() == self.taille_fen and self.height() == self.taille_fen :
             self.resize(self.plein_ecran.width(), self.plein_ecran.height())
@@ -98,9 +110,6 @@ class Window(QMainWindow):
                                 (self.taille_fen - hauteur_sprite)//2, 
                                 largeur_sprite, hauteur_sprite)
         self.joueur.setPixmap(sprite)
-        layout = QVBoxLayout()
-        layout.addWidget(self.fond)
-        self.setLayout(layout)
         
             
     def carte(self):
@@ -138,6 +147,9 @@ class Window(QMainWindow):
                 label_pokemon.move(x, y)
                 label_pokemon.setFixedSize(pixmap.size())
                 label_pokemon.show()
+                self.layout.addWidget(label_pokemon)
+                self.joueur.raise_()
+                self.button.raise_()
                 
                 self.dict_connus[name] = label_pokemon
                 self.connus.append(self.inconnus[i])
