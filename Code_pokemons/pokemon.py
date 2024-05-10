@@ -56,17 +56,23 @@ class Pokemon:
         self.generation=pokemon_stat[nb_pkm][11]
         self.legendary=pokemon_stat[nb_pkm][12]
 
-    def attaque(self,pokemon_adverse):
         if self.attack>=self.sp_atk:
             nom_attaque_normale=nom_attaques[0][0]
             nom_attaque_type=nom_attaques[dico_types[self.type1]][0]
-            stat_attaque=self.attack
-            stat_defense=self.defense
         else:
             nom_attaque_normale=nom_attaques[0][1]
             nom_attaque_type=nom_attaques[dico_types[self.type1]][1]
+
+        self.attaque_normale =nom_attaque_normale
+        self.attaque_type = nom_attaque_type
+
+    def attaque(self,pokemon_adverse):
+        if self.attack>=self.sp_atk:
+            stat_attaque=self.attack
+            stat_defense=pokemon_adverse.defense
+        else:
             stat_attaque=self.sp_atk
-            stat_defense=self.spe_def
+            stat_defense=pokemon_adverse.spe_def
         attaque=int(input("Quelle attaque choisir: L'attaque 1 (type normal) ou l'attaque 2 (type de votre pokemon)? :"))
         while attaque != 1 and attaque !=2:
             attaque=int(input("Choississez soit l'attaque 1 soit l'attaque 2 (écrivez 1 ou 2):"))
@@ -88,7 +94,7 @@ class Pokemon:
         pokemon_adverse.HP=pokemon_adverse.HP - degats
         if pokemon_adverse.HP<0:
             pokemon_adverse.HP=0
-        return pokemon_adverse.HP, degats, nom_attaque_normale, nom_attaque_type
+        return pokemon_adverse.HP, degats,
         
 
 
@@ -111,15 +117,13 @@ class PokemonSauvage(Pokemon):
             type_attaque=dico_types[self.type2]
         
         if self.attack>=self.sp_atk:
-            nom_attaque_normale=nom_attaques[0][0]
-            nom_attaque_type=nom_attaques[dico_types[self.type1]][0]
             stat_attaque=self.attack
-            stat_defense=self.defense
+            stat_defense=pokemon_adverse.defense
         else:
             nom_attaque_normale=nom_attaques[0][1]
             nom_attaque_type=nom_attaques[dico_types[self.type1]][1]
             stat_attaque=self.sp_atk
-            stat_defense=self.spe_def
+            stat_defense=pokemon_adverse.spe_def
         type_defense1=dico_types[pokemon_adverse.type1] #On recupere le type de defense
         if pokemon_adverse.type2 != "Rien":
             type_defense2=dico_types[pokemon_adverse.type2]
