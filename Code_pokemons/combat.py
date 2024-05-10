@@ -18,7 +18,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl
 import sys
-
+import os
 class CombatPokemon(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -31,7 +31,10 @@ class CombatPokemon(QMainWindow):
         background_label = QLabel(self)
         
         # Charger l'image dans le QLabel
-        pixmap = QPixmap("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\Code_pokemons\images_combat\combat_pokemon.jpg")  
+        
+        path=os.path.dirname(os.path.abspath(__file__))
+        path1=os.path.join(path,"VFX_SFX\combat_pokemon.jpg")
+        pixmap = QPixmap(path1)  
         # Redimensionner l'image pour correspondre à la taille de la fenêtre
         pixmap = pixmap.scaled(self.size())  # Redimensionner l'image pour correspondre à la taille de la fenêtre
         background_label.setPixmap(pixmap)
@@ -40,9 +43,10 @@ class CombatPokemon(QMainWindow):
         background_label.setGeometry(0, 0, self.width(), self.height())
 
         #Affichage du pokemon du dresseur
+        path2=os.path.join(path, "../documents/images/pokemons")
         self.pokemon_dresseur = QLabel(self)
         self.pokemon_dresseur.setGeometry(0,0,300,300)
-        pkm_dresseur = QPixmap("C:/ENSG/Projet_Info/RATHANA-BOUCHART-KACZOR/documents/images/pokemons/" + equipe_dresseur[0].name.lower() +"_dos.png")  
+        pkm_dresseur = QPixmap(path2 +"/" + equipe_dresseur[0].name.lower() +"_dos.png")  
 
         pkm_dresseur = pkm_dresseur.scaled(200, 200, Qt.KeepAspectRatio)
 
@@ -60,7 +64,7 @@ class CombatPokemon(QMainWindow):
         #Affichage du pokemon sauvage
         self.pokemon_sauvage = QLabel(self)
         self.pokemon_sauvage.setGeometry(0,0,300,300)
-        overlay_pixmap = QPixmap("C:/ENSG/Projet_Info/RATHANA-BOUCHART-KACZOR/documents/images/pokemons/" + pokemon_adverse.name.lower() +"_face.png")  
+        overlay_pixmap = QPixmap(path2 + "/" + pokemon_adverse.name.lower() +"_face.png")  
 
         overlay_pixmap = overlay_pixmap.scaled(200, 200, Qt.KeepAspectRatio)
 
@@ -76,8 +80,9 @@ class CombatPokemon(QMainWindow):
         self.nom_pkm.move(200,0) 
 
         #Musique des combats
+        path_musique=os.path.join(path, "VFX_SFX/Battle! (Wild Pokémon)[Pokémon Diamond & Pearl].mp3")
         self.mediaPlayer = QMediaPlayer()
-        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\Code_pokemons\Battle! (Wild Pokémon)[Pokémon Diamond & Pearl].mp3")))
+        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
         self.mediaPlayer.play()
 
 
