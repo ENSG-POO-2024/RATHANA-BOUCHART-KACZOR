@@ -3,12 +3,13 @@ import pokemon as pk
 carapuce = pk.Pokemon("Squirtle")
 salameche= pk.Pokemon("Charmander")
 bulbizare= pk.Pokemon("Bulbasaur")
-dracolosse=pk.Pokemon("Charmander")
+dracolosse=pk.Pokemon("Bulbasaur")
 
 
 equipe_dresseur = [dracolosse, salameche,bulbizare,salameche]
+pokemon_allie= equipe_dresseur[0]
 
-pokemon_adverse=pk.PokemonSauvage("Dragonite",0,0)
+pokemon_adverse=pk.PokemonSauvage("Zapdos",0,0)
 
 def find_bottom_position(image):
     image = image.toImage()
@@ -64,7 +65,7 @@ class CombatPokemon(QMainWindow):
         path2=os.path.join(path, "../documents/images/pokemons")
         self.pokemon_dresseur = QLabel(self)
         self.pokemon_dresseur.setGeometry(0,0,300,300)
-        pkm_dresseur = QPixmap(path2 +"/" + equipe_dresseur[0].name.lower() +"_dos.png")  
+        pkm_dresseur = QPixmap(path2 +"/" + pokemon_allie.name.lower() +"_dos.png")  
 
         pkm_dresseur = pkm_dresseur.scaled(200, 200, Qt.KeepAspectRatio)
         self.pokemon_dresseur.setPixmap(pkm_dresseur)
@@ -75,12 +76,20 @@ class CombatPokemon(QMainWindow):
         
 
         #Affichage du nom du pokemon du Dresseur
-        self.nom_pkm = QLabel(equipe_dresseur[0].name, self)
+        self.nom_pkm = QLabel(pokemon_allie.name, self)
         self.nom_pkm.setGeometry(0,0,200,100)
         self.nom_pkm.setAlignment(Qt.AlignLeft | Qt.AlignBottom)  # Alignement en bas à gauche
         self.nom_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
         self.nom_pkm.setMinimumWidth(144)
         self.nom_pkm.move(580,290) 
+
+        #Affichage du nombre de pv du pokemon du dresseur
+        totalHP=pokemon_allie.HP
+        self.pv_pkm= QLabel(str(pokemon_allie.HP) + "/" + str(totalHP), self)
+        self.pv_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
+        self.pv_pkm.setAlignment(Qt.AlignRight)
+        self.pv_pkm.setMinimumWidth(144)
+        self.pv_pkm.move(682,435) 
 
         #Affichage du pokemon sauvage
         self.pokemon_sauvage = QLabel(self)
@@ -99,7 +108,7 @@ class CombatPokemon(QMainWindow):
         self.nom_pkm.setAlignment(Qt.AlignLeft | Qt.AlignBottom)  # Alignement en bas à gauche
         self.nom_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
         self.nom_pkm.setMinimumWidth(144)
-        self.nom_pkm.move(200,0) 
+        self.nom_pkm.move(200,-5) 
 
         #Musique des combats
         path_musique=os.path.join(path, "VFX_SFX/Battle! (Wild Pokémon)[Pokémon Diamond & Pearl].mp3")
