@@ -3,12 +3,30 @@ import pokemon as pk
 carapuce = pk.Pokemon("Squirtle")
 salameche= pk.Pokemon("Charmander")
 bulbizare= pk.Pokemon("Bulbasaur")
+dracolosse=pk.Pokemon("Charmander")
 
 
-equipe_dresseur = [salameche,bulbizare,salameche]
+equipe_dresseur = [dracolosse, salameche,bulbizare,salameche]
 
-pokemon_adverse=pk.PokemonSauvage("Mewtwo",0,0)
+pokemon_adverse=pk.PokemonSauvage("Dragonite",0,0)
 
+def find_bottom_position(image):
+    image = image.toImage()
+    height = image.height()
+    width = image.width()
+
+    # Parcourir les lignes de l'image de bas en haut
+    for y in range(height - 1, -1, -1):
+        # Parcourir les colonnes de gauche à droite
+        for x in range(width):
+            # Obtenir la couleur du pixel
+            color = image.pixelColor(x, y)
+
+            # Si le pixel n'est pas transparent, c'est une ligne contenant des pixels colorés
+            if color.alpha() != 0:
+                return y  # Retourne la position y de la première ligne contenant des pixels colorés
+
+    return 0
 
 
     
@@ -49,9 +67,12 @@ class CombatPokemon(QMainWindow):
         pkm_dresseur = QPixmap(path2 +"/" + equipe_dresseur[0].name.lower() +"_dos.png")  
 
         pkm_dresseur = pkm_dresseur.scaled(200, 200, Qt.KeepAspectRatio)
-
         self.pokemon_dresseur.setPixmap(pkm_dresseur)
-        self.pokemon_dresseur.move(100, 312)
+        image_width = pkm_dresseur.width()
+        bottom_position=find_bottom_position(pkm_dresseur)
+        # Positionnez l'image en soustrayant la largeur et la hauteur de l'image à partir de la position du coin inférieur gauche souhaitée
+        self.pokemon_dresseur.move(0 + int(image_width/2), 483 -bottom_position )
+        
 
         #Affichage du nom du pokemon du Dresseur
         self.nom_pkm = QLabel(equipe_dresseur[0].name, self)
@@ -64,12 +85,13 @@ class CombatPokemon(QMainWindow):
         #Affichage du pokemon sauvage
         self.pokemon_sauvage = QLabel(self)
         self.pokemon_sauvage.setGeometry(0,0,300,300)
-        overlay_pixmap = QPixmap(path2 + "/" + pokemon_adverse.name.lower() +"_face.png")  
+        pkm_sauvage = QPixmap(path2 + "/" + pokemon_adverse.name.lower() +"_face.png")  
 
-        overlay_pixmap = overlay_pixmap.scaled(200, 200, Qt.KeepAspectRatio)
-
-        self.pokemon_sauvage.setPixmap(overlay_pixmap)
-        self.pokemon_sauvage.move(610, 45)
+        pkm_sauvage= pkm_sauvage.scaled(200, 200, Qt.KeepAspectRatio)
+        bottom_position2 = find_bottom_position(pkm_sauvage)
+        self.pokemon_sauvage.setPixmap(pkm_sauvage)
+        image2_width=pkm_sauvage.width()
+        self.pokemon_sauvage.move(525 + int(image2_width/2), 200-bottom_position2)
 
         #Affichage du nom du pokemon sauvage
         self.nom_pkm = QLabel(pokemon_adverse.name, self)
@@ -111,6 +133,7 @@ class CombatPokemon(QMainWindow):
         button4_label.setMinimumWidth(142)
         button4_label.move(700,630)
         # Ajoutez d'autres éléments à votre fenêtre ici # Taille de la fenêtre
+
 
 
 
