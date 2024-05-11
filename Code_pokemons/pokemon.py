@@ -55,6 +55,7 @@ class Pokemon:
         self.speed=pokemon_stat[nb_pkm][10]
         self.generation=pokemon_stat[nb_pkm][11]
         self.legendary=pokemon_stat[nb_pkm][12]
+        self.maxHP=pokemon_stat[nb_pkm][5]
 
         if self.attack>=self.sp_atk:
             nom_attaque_normale=nom_attaques[0][0]
@@ -95,7 +96,12 @@ class Pokemon:
         if pokemon_adverse.HP<0:
             pokemon_adverse.HP=0
         return pokemon_adverse.HP, degats,
-        
+    
+    def potion(self,pokemon):
+        montant_restauré=pokemon.HP + 30
+        if montant_restauré>pokemon.maxHP:
+            montant_restauré=pokemon.maxHP
+        pokemon.HP=montant_restauré
 
 
 
