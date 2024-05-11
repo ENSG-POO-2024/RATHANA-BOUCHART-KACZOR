@@ -81,7 +81,7 @@ class Pokemon:
             type_attaque=dico_types["Normal"]
         else:
             type_attaque=dico_types[self.type1]
-            if self.type1=="Normal" and not self.type2 != "Rien": # Definir le type de l'attaque comme le type 2, s'il existe et que le type 1 est "Normal"
+            if self.type1=="Normal" and not self.type2 == "Rien": # Definir le type de l'attaque comme le type 2, s'il existe et que le type 1 est "Normal"
                 type_attaque=self.type2
 
         type_defense1=dico_types[pokemon_adverse.type1] #On recupere le type de defense
