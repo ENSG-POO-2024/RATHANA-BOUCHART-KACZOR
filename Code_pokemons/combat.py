@@ -15,7 +15,8 @@ dracolosse=pk.Pokemon("Dragonite")
 papilusion=pk.Pokemon("Butterfree")
 arcanin=pk.Pokemon("Arcanine")
 mewtwo=pk.Pokemon("Mewtwo")
-pokemon_au_combat=1
+
+
 
 equipe_dresseur = [dracolosse, salameche, bulbizare, papilusion,arcanin,mewtwo]
 pokemon_allie= equipe_dresseur[0]
@@ -107,8 +108,7 @@ class CombatPokemon(QMainWindow):
         self.nom_pkm.move(580,290) 
 
         #Affichage du nombre de pv du pokemon du dresseur
-        totalHP=pokemon_allie.HP
-        self.pv_pkm= QLabel(str(pokemon_allie.HP) + "/" + str(totalHP), self)
+        self.pv_pkm= QLabel(str(pokemon_allie.HP) + "/" + str(pokemon_allie.maxHP), self)
         self.pv_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
         self.pv_pkm.setAlignment(Qt.AlignRight)
         self.pv_pkm.setMinimumWidth(144)
@@ -288,7 +288,7 @@ class CombatPokemon(QMainWindow):
         
 
 
-
+        self.pokemon_au_combat=1
         self.button1_label.clicked.connect(self.fight)
         self.retour.clicked.connect(self.back)
         self.button3_label.clicked.connect(self.sac)
@@ -296,6 +296,10 @@ class CombatPokemon(QMainWindow):
         self.button2_label.clicked.connect(self.change)
         self.pokemon2.clicked.connect(self.changetopkm2)
         self.pokemon1.clicked.connect(self.changetopkm1)
+        self.pokemon3.clicked.connect(self.changetopkm3)
+        self.pokemon4.clicked.connect(self.changetopkm4)
+        self.pokemon5.clicked.connect(self.changetopkm5)
+        self.pokemon6.clicked.connect(self.changetopkm6)
 
 
 
@@ -381,17 +385,6 @@ class CombatPokemon(QMainWindow):
         self.retour.show()
 
     def changetopkm2(self):
-
-        #Supprime l'interface de changement de pokemon
-        # self.changepkm.hide()
-        # self.pokemon1.hide()
-        # self.pokemon2.hide()
-        # self.pokemon3.hide()
-        # self.pokemon4.hide()
-        # self.pokemon5.hide()
-        # self.pokemon6.hide()
-        # self.retour.hide()
-
         if equipe_dresseur[1].HP==0:
             self.txt1=QLabel(str(equipe_dresseur[1].name).upper() + " is K.O. He can't be sent on the battlefiel.",self)
             self.txt1.setAlignment(Qt.AlignLeft)
@@ -408,7 +401,7 @@ class CombatPokemon(QMainWindow):
 
             self.txt1.hide()
 
-        elif self.pokemon_au_combat != 2:
+        if self.pokemon_au_combat != 2:
 
             self.changepkm.hide()
             self.pokemon1.hide()
@@ -419,7 +412,7 @@ class CombatPokemon(QMainWindow):
             self.pokemon6.hide()
             self.retour.hide()
 
-            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat].name).upper() + ", come back.",self)
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + ", come back.",self)
             self.txt1.setAlignment(Qt.AlignLeft)
             self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
             self.txt1.setMinimumWidth(390)
@@ -499,7 +492,7 @@ class CombatPokemon(QMainWindow):
             self.pokemon_au_combat=2
             
         else:
-            self.txt1=QLabel(str(equipe_dresseur[pokemon_au_combat].name).upper() + " is already on the battlefield.",self)
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + " is already on the battlefield.",self)
             self.txt1.setAlignment(Qt.AlignLeft)
             self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
             self.txt1.setMinimumWidth(390)
@@ -511,6 +504,7 @@ class CombatPokemon(QMainWindow):
             loop=QEventLoop()
             QTimer.singleShot(1500,loop.quit)
             loop.exec_()
+            
             self.txt1.hide()
             self.changepkm.show()
             self.pokemon1.show()
@@ -520,6 +514,7 @@ class CombatPokemon(QMainWindow):
             self.pokemon5.show()
             self.pokemon6.show()
             self.retour.show()
+
 
 
 
@@ -553,7 +548,7 @@ class CombatPokemon(QMainWindow):
             self.pokemon6.hide()
             self.retour.hide()
 
-            self.txt1=QLabel(str(equipe_dresseur[pokemon_au_combat].name).upper() + ", come back.",self)
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + ", come back.",self)
             self.txt1.setAlignment(Qt.AlignLeft)
             self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
             self.txt1.setMinimumWidth(390)
@@ -632,7 +627,7 @@ class CombatPokemon(QMainWindow):
 
             self.pokemon_au_combat=3
         else:
-            self.txt1=QLabel(str(equipe_dresseur[pokemon_au_combat].name).upper() + " is already on the battlefield.",self)
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + " is already on the battlefield.",self)
             self.txt1.setAlignment(Qt.AlignLeft)
             self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
             self.txt1.setMinimumWidth(390)
@@ -683,7 +678,7 @@ class CombatPokemon(QMainWindow):
             self.pokemon6.hide()
             self.retour.hide()
 
-            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat].name).upper() + ", come back.",self)
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + ", come back.",self)
             self.txt1.setAlignment(Qt.AlignLeft)
             self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
             self.txt1.setMinimumWidth(390)
@@ -762,7 +757,7 @@ class CombatPokemon(QMainWindow):
             
             self.pokemon_au_combat=1
         else:
-            self.txt1=QLabel(str(equipe_dresseur[pokemon_au_combat].name).upper() + " is already on the battlefield.",self)
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + " is already on the battlefield.",self)
             self.txt1.setAlignment(Qt.AlignLeft)
             self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
             self.txt1.setMinimumWidth(390)
@@ -784,8 +779,400 @@ class CombatPokemon(QMainWindow):
             self.pokemon6.show()
             self.retour.show()
 
+    
+    def changetopkm4(self):
+        if equipe_dresseur[3].HP==0:
+            self.txt1=QLabel(str(equipe_dresseur[3].name).upper() + " is K.O. He can't be sent on the battlefiel.",self)
+            self.txt1.setAlignment(Qt.AlignLeft)
+            self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt1.setMinimumWidth(390)
+            self.txt1.setMinimumHeight(300)
+            self.txt1.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt1.move(40,570)
+            self.txt1.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+
+            self.txt1.hide()
+
+        if self.pokemon_au_combat != 4:
+
+            self.changepkm.hide()
+            self.pokemon1.hide()
+            self.pokemon2.hide()
+            self.pokemon3.hide()
+            self.pokemon4.hide()
+            self.pokemon5.hide()
+            self.pokemon6.hide()
+            self.retour.hide()
+
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + ", come back.",self)
+            self.txt1.setAlignment(Qt.AlignLeft)
+            self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt1.setMinimumWidth(390)
+            self.txt1.setMinimumHeight(300)
+            self.txt1.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt1.move(40,570)
+            self.txt1.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+
+            self.pokemon_dresseur.hide()
+            self.nom_pkm.hide()
+            self.pv_pkm.hide()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+
+            self.txt1.hide()
+            self.txt2=QLabel(equipe_dresseur[3].name.upper() + ", go!",self)
+            self.txt2.setAlignment(Qt.AlignLeft)
+            self.txt2.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt2.setMinimumWidth(390)
+            self.txt2.setMinimumHeight(300)
+            self.txt2.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt2.move(40,570)
+            self.txt2.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
+
+            ###On charge le nouveau pokemon###
+
+            #Apparence
+            path2=os.path.join(path, "../documents/images/pokemons")
+            self.pokemon_dresseur = QLabel(self)
+            self.pokemon_dresseur.setGeometry(0,0,300,300)
+            pkm_dresseur = QPixmap(path2 +"/" + equipe_dresseur[3].name.lower() +"_dos.png")  
+            pkm_dresseur = pkm_dresseur.scaled(200, 200, Qt.KeepAspectRatio)
+            self.pokemon_dresseur.setPixmap(pkm_dresseur)
+            image_width = pkm_dresseur.width()
+            bottom_position=find_bottom_position(pkm_dresseur)
+            # Positionnez l'image en soustrayant la largeur et la hauteur de l'image à partir de la position du coin inférieur gauche souhaitée
+            self.pokemon_dresseur.move(0 + int(image_width/2), 483 -bottom_position )
+            self.pokemon_dresseur.show()
+
+            #Nom
+            self.nom_pkm = QLabel(equipe_dresseur[3].name, self)
+            self.nom_pkm.setGeometry(0,0,200,100)
+            self.nom_pkm.setAlignment(Qt.AlignLeft | Qt.AlignBottom)  # Alignement en bas à gauche
+            self.nom_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
+            self.nom_pkm.setMinimumWidth(144)
+            self.nom_pkm.move(580,290) 
+            self.nom_pkm.show()
+
+            #PV
+            self.pv_pkm= QLabel(str(equipe_dresseur[3].HP) + "/" + str(equipe_dresseur[3].maxHP), self)
+            self.pv_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
+            self.pv_pkm.setAlignment(Qt.AlignRight)
+            self.pv_pkm.setMinimumWidth(144)
+            self.pv_pkm.move(682,435) 
+            self.pv_pkm.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
+
+            self.txt2.hide()
+            self.button1_label.show()
+            self.button2_label.show()
+            self.button3_label.show()
+            self.button4_label.show()
+
+            self.pokemon_au_combat=4
+            
+        else:
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + " is already on the battlefield.",self)
+            self.txt1.setAlignment(Qt.AlignLeft)
+            self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt1.setMinimumWidth(390)
+            self.txt1.setMinimumHeight(300)
+            self.txt1.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt1.move(40,570)
+            self.txt1.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+            
+            self.txt1.hide()
+            self.changepkm.show()
+            self.pokemon1.show()
+            self.pokemon2.show()
+            self.pokemon3.show()
+            self.pokemon4.show()
+            self.pokemon5.show()
+            self.pokemon6.show()
+            self.retour.show()
 
 
+    def changetopkm5(self):
+        if equipe_dresseur[4].HP==0:
+            self.txt1=QLabel(str(equipe_dresseur[4].name).upper() + " is K.O. He can't be sent on the battlefiel.",self)
+            self.txt1.setAlignment(Qt.AlignLeft)
+            self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt1.setMinimumWidth(390)
+            self.txt1.setMinimumHeight(300)
+            self.txt1.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt1.move(40,570)
+            self.txt1.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+
+            self.txt1.hide()
+
+        if self.pokemon_au_combat != 5:
+
+            self.changepkm.hide()
+            self.pokemon1.hide()
+            self.pokemon2.hide()
+            self.pokemon3.hide()
+            self.pokemon4.hide()
+            self.pokemon5.hide()
+            self.pokemon6.hide()
+            self.retour.hide()
+
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + ", come back.",self)
+            self.txt1.setAlignment(Qt.AlignLeft)
+            self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt1.setMinimumWidth(390)
+            self.txt1.setMinimumHeight(300)
+            self.txt1.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt1.move(40,570)
+            self.txt1.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+
+            self.pokemon_dresseur.hide()
+            self.nom_pkm.hide()
+            self.pv_pkm.hide()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+
+            self.txt1.hide()
+            self.txt2=QLabel(equipe_dresseur[4].name.upper() + ", go!",self)
+            self.txt2.setAlignment(Qt.AlignLeft)
+            self.txt2.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt2.setMinimumWidth(390)
+            self.txt2.setMinimumHeight(300)
+            self.txt2.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt2.move(40,570)
+            self.txt2.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
+
+            ###On charge le nouveau pokemon###
+
+            #Apparence
+            path2=os.path.join(path, "../documents/images/pokemons")
+            self.pokemon_dresseur = QLabel(self)
+            self.pokemon_dresseur.setGeometry(0,0,300,300)
+            pkm_dresseur = QPixmap(path2 +"/" + equipe_dresseur[4].name.lower() +"_dos.png")  
+            pkm_dresseur = pkm_dresseur.scaled(200, 200, Qt.KeepAspectRatio)
+            self.pokemon_dresseur.setPixmap(pkm_dresseur)
+            image_width = pkm_dresseur.width()
+            bottom_position=find_bottom_position(pkm_dresseur)
+            # Positionnez l'image en soustrayant la largeur et la hauteur de l'image à partir de la position du coin inférieur gauche souhaitée
+            self.pokemon_dresseur.move(0 + int(image_width/2), 483 -bottom_position )
+            self.pokemon_dresseur.show()
+
+            #Nom
+            self.nom_pkm = QLabel(equipe_dresseur[4].name, self)
+            self.nom_pkm.setGeometry(0,0,200,100)
+            self.nom_pkm.setAlignment(Qt.AlignLeft | Qt.AlignBottom)  # Alignement en bas à gauche
+            self.nom_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
+            self.nom_pkm.setMinimumWidth(144)
+            self.nom_pkm.move(580,290) 
+            self.nom_pkm.show()
+
+            #PV
+            self.pv_pkm= QLabel(str(equipe_dresseur[4].HP) + "/" + str(equipe_dresseur[4].maxHP), self)
+            self.pv_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
+            self.pv_pkm.setAlignment(Qt.AlignRight)
+            self.pv_pkm.setMinimumWidth(144)
+            self.pv_pkm.move(682,435) 
+            self.pv_pkm.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
+
+            self.txt2.hide()
+            self.button1_label.show()
+            self.button2_label.show()
+            self.button3_label.show()
+            self.button4_label.show()
+
+            self.pokemon_au_combat=5
+            
+        else:
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + " is already on the battlefield.",self)
+            self.txt1.setAlignment(Qt.AlignLeft)
+            self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt1.setMinimumWidth(390)
+            self.txt1.setMinimumHeight(300)
+            self.txt1.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt1.move(40,570)
+            self.txt1.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+            
+            self.txt1.hide()
+            self.changepkm.show()
+            self.pokemon1.show()
+            self.pokemon2.show()
+            self.pokemon3.show()
+            self.pokemon4.show()
+            self.pokemon5.show()
+            self.pokemon6.show()
+            self.retour.show()
+
+    def changetopkm6(self):
+        if equipe_dresseur[5].HP==0:
+            self.txt1=QLabel(str(equipe_dresseur[5].name).upper() + " is K.O. He can't be sent on the battlefiel.",self)
+            self.txt1.setAlignment(Qt.AlignLeft)
+            self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt1.setMinimumWidth(390)
+            self.txt1.setMinimumHeight(300)
+            self.txt1.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt1.move(40,570)
+            self.txt1.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+
+            self.txt1.hide()
+
+        if self.pokemon_au_combat != 6:
+
+            self.changepkm.hide()
+            self.pokemon1.hide()
+            self.pokemon2.hide()
+            self.pokemon3.hide()
+            self.pokemon4.hide()
+            self.pokemon5.hide()
+            self.pokemon6.hide()
+            self.retour.hide()
+
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + ", come back.",self)
+            self.txt1.setAlignment(Qt.AlignLeft)
+            self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt1.setMinimumWidth(390)
+            self.txt1.setMinimumHeight(300)
+            self.txt1.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt1.move(40,570)
+            self.txt1.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+
+            self.pokemon_dresseur.hide()
+            self.nom_pkm.hide()
+            self.pv_pkm.hide()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+
+            self.txt1.hide()
+            self.txt2=QLabel(equipe_dresseur[5].name.upper() + ", go!",self)
+            self.txt2.setAlignment(Qt.AlignLeft)
+            self.txt2.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt2.setMinimumWidth(390)
+            self.txt2.setMinimumHeight(300)
+            self.txt2.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt2.move(40,570)
+            self.txt2.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
+
+            ###On charge le nouveau pokemon###
+
+            #Apparence
+            path2=os.path.join(path, "../documents/images/pokemons")
+            self.pokemon_dresseur = QLabel(self)
+            self.pokemon_dresseur.setGeometry(0,0,300,300)
+            pkm_dresseur = QPixmap(path2 +"/" + equipe_dresseur[5].name.lower() +"_dos.png")  
+            pkm_dresseur = pkm_dresseur.scaled(200, 200, Qt.KeepAspectRatio)
+            self.pokemon_dresseur.setPixmap(pkm_dresseur)
+            image_width = pkm_dresseur.width()
+            bottom_position=find_bottom_position(pkm_dresseur)
+            # Positionnez l'image en soustrayant la largeur et la hauteur de l'image à partir de la position du coin inférieur gauche souhaitée
+            self.pokemon_dresseur.move(0 + int(image_width/2), 483 -bottom_position )
+            self.pokemon_dresseur.show()
+
+            #Nom
+            self.nom_pkm = QLabel(equipe_dresseur[5].name, self)
+            self.nom_pkm.setGeometry(0,0,200,100)
+            self.nom_pkm.setAlignment(Qt.AlignLeft | Qt.AlignBottom)  # Alignement en bas à gauche
+            self.nom_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
+            self.nom_pkm.setMinimumWidth(144)
+            self.nom_pkm.move(580,290) 
+            self.nom_pkm.show()
+
+            #PV
+            self.pv_pkm= QLabel(str(equipe_dresseur[5].HP) + "/" + str(equipe_dresseur[5].maxHP), self)
+            self.pv_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
+            self.pv_pkm.setAlignment(Qt.AlignRight)
+            self.pv_pkm.setMinimumWidth(144)
+            self.pv_pkm.move(682,435) 
+            self.pv_pkm.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
+
+            self.txt2.hide()
+            self.button1_label.show()
+            self.button2_label.show()
+            self.button3_label.show()
+            self.button4_label.show()
+
+            self.pokemon_au_combat=6
+            
+        else:
+            self.txt1=QLabel(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + " is already on the battlefield.",self)
+            self.txt1.setAlignment(Qt.AlignLeft)
+            self.txt1.setStyleSheet("QLabel { color: white; font-size: 17px; font-family: 'Press Start 2P'; }")
+            self.txt1.setMinimumWidth(390)
+            self.txt1.setMinimumHeight(300)
+            self.txt1.setWordWrap(True) #Permet d'aller à la ligne
+            self.txt1.move(40,570)
+            self.txt1.show()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+            
+            self.txt1.hide()
+            self.changepkm.show()
+            self.pokemon1.show()
+            self.pokemon2.show()
+            self.pokemon3.show()
+            self.pokemon4.show()
+            self.pokemon5.show()
+            self.pokemon6.show()
+            self.retour.show()
 
 
 if __name__ == '__main__':
