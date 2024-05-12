@@ -123,6 +123,8 @@ class PokemonSauvage(Pokemon):
             type_attaque=dico_types[self.type2]
         
         if self.attack>=self.sp_atk:
+            nom_attaque_normale=nom_attaques[0][0]
+            nom_attaque_type=nom_attaques[dico_types[self.type1]][0]
             stat_attaque=self.attack
             stat_defense=pokemon_adverse.defense
         else:
@@ -130,6 +132,14 @@ class PokemonSauvage(Pokemon):
             nom_attaque_type=nom_attaques[dico_types[self.type1]][1]
             stat_attaque=self.sp_atk
             stat_defense=pokemon_adverse.spe_def
+        
+        if nb_aleatoire==1:
+            nom_attaque = nom_attaque_normale
+        if nb_aleatoire==2:
+            nom_attaque = nom_attaque_type
+
+        
+
         type_defense1=dico_types[pokemon_adverse.type1] #On recupere le type de defense
         if pokemon_adverse.type2 != "Rien":
             type_defense2=dico_types[pokemon_adverse.type2]
@@ -141,10 +151,10 @@ class PokemonSauvage(Pokemon):
         pokemon_adverse.HP=pokemon_adverse.HP - degats
         if pokemon_adverse.HP<0:
             pokemon_adverse.HP=0
-        return pokemon_adverse.HP, degats, nom_attaque_normale, nom_attaque_type
+        return int(pokemon_adverse.HP), nom_attaque, CM
 
 if __name__=="__main__":
-    mew=Pokemon("Mew")
+    mew=PokemonSauvage("Mew",0,0)
     florizare=Pokemon("Venusaur")
     print(mew.attaque(florizare))
     print(florizare.attaque(mew))
