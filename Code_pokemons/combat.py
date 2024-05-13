@@ -8,20 +8,20 @@ import os
 
 path=os.path.dirname(os.path.abspath(__file__))
 
-carapuce = pk.Pokemon("Squirtle")
+mew = pk.Pokemon("Dratini")
 salameche= pk.Pokemon("Charmander")
 bulbizare= pk.Pokemon("Bulbasaur")
 dracolosse=pk.Pokemon("Dragonite")
 papilusion=pk.Pokemon("Butterfree")
 arcanin=pk.Pokemon("Arcanine")
 mewtwo=pk.Pokemon("Mewtwo")
-salameche.HP=2
+salameche.HP=1
 
 
-equipe_dresseur = [dracolosse, salameche, bulbizare, papilusion,arcanin,mewtwo]
+equipe_dresseur = [mew, salameche, bulbizare, papilusion,arcanin,mewtwo]
 pokemon_allie= equipe_dresseur[0]
 
-pokemon_adverse=pk.PokemonSauvage("Moltres",0,0)
+pokemon_adverse=pk.PokemonSauvage("Ditto",0,0)
 
 def find_bottom_position(image):
     image = image.toImage()
