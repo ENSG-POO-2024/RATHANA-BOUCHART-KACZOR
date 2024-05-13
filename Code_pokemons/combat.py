@@ -16,14 +16,14 @@ bulbizare= pk.Pokemon("Bulbasaur")
 dracolosse=pk.Pokemon("Dragonite")
 papilusion=pk.Pokemon("Butterfree")
 arcanin=pk.Pokemon("Arcanine")
-mewtwo=pk.Pokemon("Mewtwo")
-mew.HP=1
+mewtwo=pk.Pokemon("Ditto")
 
 
-equipe_dresseur = [mew, salameche, bulbizare, papilusion,arcanin,'Vide']
+
+equipe_dresseur = [mew, salameche, bulbizare, dracolosse,papilusion,mewtwo]
 pokemon_allie= equipe_dresseur[0]
 
-pokemon_adverse=pk.PokemonSauvage("Dragonair",0,0)
+pokemon_adverse=pk.PokemonSauvage("Mewtwo",0,0)
 
 def find_bottom_position(image):
     image = image.toImage()
@@ -112,10 +112,10 @@ class CombatPokemon(QMainWindow):
         self.nom_pkm_s.move(200,-5) 
 
         #Musique des combats
-        # path_musique=os.path.join(path, "VFX_SFX/Battle! (Wild Pokémon)[Pokémon Diamond & Pearl].mp3")
-        # self.mediaPlayer = QMediaPlayer()
-        # self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
-        # self.mediaPlayer.play()
+        path_musique=os.path.join(path, "VFX_SFX/Battle! (Wild Pokémon)[Pokémon Diamond & Pearl].mp3")
+        self.mediaPlayer = QMediaPlayer()
+        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
+        self.mediaPlayer.play()
 
 
         #Boutons de choix
@@ -804,8 +804,8 @@ class CombatPokemon(QMainWindow):
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
 
-                    self.affiche_menu_changepkm()
-                    self.retour.hide()
+                self.affiche_menu_changepkm()
+                self.retour.hide()
 
 
             self.pokemon_au_combat=4
@@ -1195,8 +1195,8 @@ class CombatPokemon(QMainWindow):
 
     def all_team_is_KO(self):
         k=0
-        for pokemon in equipe_dresseur:
-            if pokemon.HP==0:
+        for i in range(6):
+            if equipe_dresseur[i].HP==0:
                 k+=1
         if k==6:
             self.txtblanc.hide()
@@ -1344,9 +1344,14 @@ class CombatPokemon(QMainWindow):
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
             
-            if result[1]<1:
+            elif: result[1]<1:
                 self.txtblanc.hide()
                 self.txt_blanc("It's not very effective...")
+                loop=QEventLoop()
+                QTimer.singleShot(1000,loop.quit)
+                loop.exec_()
+            
+            else:
                 loop=QEventLoop()
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
@@ -1380,7 +1385,7 @@ class CombatPokemon(QMainWindow):
             self.is_KO()
             if equipe_dresseur[self.pokemon_au_combat -1].HP!=0:
                 result=allie.attaque(ennemi,1)
-                self.txt_blanc(allie.name.upper() + " uses " +allie.attaque_normale +"!")
+                self.txt_blanc(allie.name.upper() + " uses " +allie.attaque_type +"!")
 
                 loop=QEventLoop()
                 QTimer.singleShot(1500,loop.quit)
@@ -1395,14 +1400,20 @@ class CombatPokemon(QMainWindow):
                     QTimer.singleShot(1000,loop.quit)
                     loop.exec_()
             
-                if result[1]<1:
+                elif result[1]<1:
                     self.txtblanc.hide()
                     self.txt_blanc("It's not very effective...")
                     loop=QEventLoop()
                     QTimer.singleShot(1000,loop.quit)
                     loop.exec_()
-            
+
+                else:
+                    loop=QEventLoop()
+                    QTimer.singleShot(1000,loop.quit)
+                    loop.exec_()
+
                 self.txtblanc.hide()
+            
 
                 if ennemi.HP<=0:
                     self.pokemon_sauvage.hide()
