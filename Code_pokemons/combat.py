@@ -11,7 +11,7 @@ path2=os.path.join(path, "../documents/images/pokemons")
 inventaire=[]
 
 mew = pk.Pokemon("Dratini")
-salameche= pk.Pokemon("Charmander")
+salameche= pk.Pokemon("Blastoise")
 bulbizare= pk.Pokemon("Bulbasaur")
 dracolosse=pk.Pokemon("Dragonite")
 papilusion=pk.Pokemon("Butterfree")
@@ -20,10 +20,10 @@ mewtwo=pk.Pokemon("Ditto")
 
 
 
-equipe_dresseur = [mew, salameche, bulbizare, dracolosse,papilusion,mewtwo]
+equipe_dresseur = [salameche, mew, bulbizare, dracolosse,papilusion,mewtwo]
 pokemon_allie= equipe_dresseur[0]
 
-pokemon_adverse=pk.PokemonSauvage("Mewtwo",0,0)
+pokemon_adverse=pk.PokemonSauvage("Charizard",0,0)
 
 def find_bottom_position(image):
     image = image.toImage()
@@ -1250,6 +1250,11 @@ class CombatPokemon(QMainWindow):
                 loop=QEventLoop()
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
+            else:
+                loop=QEventLoop()
+                QTimer.singleShot(1000,loop.quit)
+                loop.exec_()
+
             
             self.txtblanc.hide()
 
@@ -1295,9 +1300,13 @@ class CombatPokemon(QMainWindow):
                     QTimer.singleShot(1000,loop.quit)
                     loop.exec_()
             
-                if result[1]<1:
+                elif result[1]<1:
                     self.txtblanc.hide()
                     self.txt_blanc("It's not very effective...")
+                    loop=QEventLoop()
+                    QTimer.singleShot(1000,loop.quit)
+                    loop.exec_()
+                elif result[1]==1:
                     loop=QEventLoop()
                     QTimer.singleShot(1000,loop.quit)
                     loop.exec_()
@@ -1307,7 +1316,7 @@ class CombatPokemon(QMainWindow):
                 if ennemi.HP<=0:
                     self.pokemon_sauvage.hide()
                     self.nom_pkm_s.hide()
-                    self.txt_blanc(ennemi.name.upper() + " is K.O. You have catched him!")
+                    self.txt_blanc(ennemi.name.upper() + " is K.O. You catched him!")
 
                     loop=QEventLoop()
                     QTimer.singleShot(1500,loop.quit)
@@ -1344,14 +1353,14 @@ class CombatPokemon(QMainWindow):
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
             
-            elif: result[1]<1:
+            if result[1]<1:
                 self.txtblanc.hide()
                 self.txt_blanc("It's not very effective...")
                 loop=QEventLoop()
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
             
-            else:
+            if result[1]==1:
                 loop=QEventLoop()
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
@@ -1383,6 +1392,7 @@ class CombatPokemon(QMainWindow):
             self.attaque_sauvage()
             self.all_team_is_KO()
             self.is_KO()
+
             if equipe_dresseur[self.pokemon_au_combat -1].HP!=0:
                 result=allie.attaque(ennemi,1)
                 self.txt_blanc(allie.name.upper() + " uses " +allie.attaque_type +"!")
@@ -1392,7 +1402,7 @@ class CombatPokemon(QMainWindow):
                 loop.exec_()
 
                 ennemi.HP=result[0]
-
+                print(result[1])
                 if result[1]>1:
                     self.txtblanc.hide()
                     self.txt_blanc("It's super effective!")
@@ -1400,14 +1410,14 @@ class CombatPokemon(QMainWindow):
                     QTimer.singleShot(1000,loop.quit)
                     loop.exec_()
             
-                elif result[1]<1:
+                if result[1]<1:
                     self.txtblanc.hide()
                     self.txt_blanc("It's not very effective...")
                     loop=QEventLoop()
                     QTimer.singleShot(1000,loop.quit)
                     loop.exec_()
 
-                else:
+                if result[1]==1:
                     loop=QEventLoop()
                     QTimer.singleShot(1000,loop.quit)
                     loop.exec_()
@@ -1429,6 +1439,11 @@ class CombatPokemon(QMainWindow):
                     inventaire.appened(ennemi.name)
 
                     QTimer.singleShot(2000,self.close)
+
+                loop=QEventLoop()
+                QTimer.singleShot(1500,loop.quit)
+                loop.exec_()
+
                 self.affiche_menu_principal
 
 
