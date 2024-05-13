@@ -20,7 +20,7 @@ mewtwo=pk.Pokemon("Mewtwo")
 mew.HP=1
 
 
-equipe_dresseur = [mew, salameche, bulbizare, papilusion,arcanin,mewtwo]
+equipe_dresseur = [mew, salameche, bulbizare, papilusion,arcanin,'Vide']
 pokemon_allie= equipe_dresseur[0]
 
 pokemon_adverse=pk.PokemonSauvage("Dragonair",0,0)
@@ -203,33 +203,41 @@ class CombatPokemon(QMainWindow):
         
             self.pokemon1=ClickableLabel(equipe_dresseur[0].name.upper(), 13,self)
             self.pokemon1.setAlignment(Qt.AlignLeft)
-            self.pokemon1.setMinimumWidth(120)
+            self.pokemon1.setMinimumWidth(130)
+            self.pokemon1.setMaximumHeight(15)
             self.pokemon1.move(510,600)
             self.pokemon1.hide()
+            self.pokemon1.clicked.connect(self.changetopkm1)
 
             if equipe_dresseur[1]!="Vide":
         
                 self.pokemon2=ClickableLabel(equipe_dresseur[1].name.upper(), 13,self)
                 self.pokemon2.setAlignment(Qt.AlignLeft)
                 self.pokemon2.setMinimumWidth(130)
+                self.pokemon2.setMaximumHeight(15)
                 self.pokemon2.move(680,600)
                 self.pokemon2.hide()
+                self.pokemon2.clicked.connect(self.changetopkm2)
 
             if equipe_dresseur[2]!="Vide":
         
                 self.pokemon3=ClickableLabel(equipe_dresseur[2].name.upper(), 13,self)
                 self.pokemon3.setAlignment(Qt.AlignLeft)
                 self.pokemon3.setMinimumWidth(130)
+                self.pokemon3.setMaximumHeight(15)
                 self.pokemon3.move(510,620)
                 self.pokemon3.hide()
+                self.pokemon3.clicked.connect(self.changetopkm3)
             
             if equipe_dresseur[3]!="Vide":
         
                 self.pokemon4=ClickableLabel(equipe_dresseur[3].name.upper(), 13,self)
                 self.pokemon4.setAlignment(Qt.AlignLeft)
                 self.pokemon4.setMinimumWidth(130)
+                self.pokemon4.setMaximumHeight(15)
                 self.pokemon4.move(680,620)
                 self.pokemon4.hide()
+                self.pokemon4.clicked.connect(self.changetopkm4)
 
 
             if equipe_dresseur[4]!="Vide":
@@ -240,6 +248,7 @@ class CombatPokemon(QMainWindow):
                 self.pokemon5.setMaximumHeight(15)
                 self.pokemon5.move(510,640)
                 self.pokemon5.hide()
+                self.pokemon5.clicked.connect(self.changetopkm5)
 
             if equipe_dresseur[5]!="Vide":
         
@@ -249,22 +258,17 @@ class CombatPokemon(QMainWindow):
                 self.pokemon6.setMaximumHeight(15)
                 self.pokemon6.move(680,640)
                 self.pokemon6.hide()
+                self.pokemon6.clicked.connect(self.changetopkm6)
 
         self.txt_blanc("")
-
-        self.pokemon_justKO=(False,0)
+        self.pokemon_justKO=False
         self.pokemon_au_combat=1
+
         self.button1_label.clicked.connect(self.fight)
         self.retour.clicked.connect(self.back)
         self.button3_label.clicked.connect(self.sac)
         self.button4_label.clicked.connect(self.fuite)
         self.button2_label.clicked.connect(self.change)
-        self.pokemon2.clicked.connect(self.changetopkm2)
-        self.pokemon1.clicked.connect(self.changetopkm1)
-        self.pokemon3.clicked.connect(self.changetopkm3)
-        self.pokemon4.clicked.connect(self.changetopkm4)
-        self.pokemon5.clicked.connect(self.changetopkm5)
-        self.pokemon6.clicked.connect(self.changetopkm6)
         self.potion.clicked.connect(self.use_potion)
         self.attaque1.clicked.connect(self.atk1)
         self.attaque2.clicked.connect(self.atk2)
@@ -292,7 +296,6 @@ class CombatPokemon(QMainWindow):
         #Fais apparaitre le menu principal
         self.affiche_menu_principal()
 
-    
     def sac(self):
         self.cache_menu_principal()
         self.potion.show()
@@ -338,29 +341,38 @@ class CombatPokemon(QMainWindow):
     def affiche_menu_changepkm(self):
         self.changepkm.show()
         self.pokemon1.show()
-        self.pokemon2.show()
-        self.pokemon3.show()
-        self.pokemon4.show()
-        self.pokemon5.show()
-        self.pokemon6.show()
+        if equipe_dresseur[1]!="Vide":
+            self.pokemon2.show()
+        if equipe_dresseur[2]!="Vide":
+            self.pokemon3.show()
+        if equipe_dresseur[3]!="Vide":
+            self.pokemon4.show()
+        if equipe_dresseur[4]!="Vide":
+            self.pokemon5.show()
+        if equipe_dresseur[5]!="Vide":
+            self.pokemon6.show()
         self.retour.show()
 
     def cache_menu_changepkm(self):
         self.changepkm.hide()
         self.pokemon1.hide()
-        self.pokemon2.hide()
-        self.pokemon3.hide()
-        self.pokemon4.hide()
-        self.pokemon5.hide()
-        self.pokemon6.hide()
+        if equipe_dresseur[1]!="Vide":
+            self.pokemon2.hide()
+        if equipe_dresseur[2]!="Vide":
+            self.pokemon3.hide()
+        if equipe_dresseur[3]!="Vide":
+            self.pokemon4.hide()
+        if equipe_dresseur[4]!="Vide":
+            self.pokemon5.hide()
+        if equipe_dresseur[5]!="Vide":
+            self.pokemon6.hide()
         self.retour.hide()
-
 
     def changetopkm2(self):
         self.txtblanc.hide()
         if equipe_dresseur[1].HP==0:
             self.txtblanc.hide()
-            self.txt_blanc(str(equipe_dresseur[1].name).upper() + " is K.O. He can't be sent on the battlefiel.")
+            self.txt_blanc(str(equipe_dresseur[1].name).upper() + " is K.O. He can't be sent on the battlefield.")
             
             loop=QEventLoop()
             QTimer.singleShot(1500,loop.quit)
@@ -369,11 +381,11 @@ class CombatPokemon(QMainWindow):
             self.txtblanc.hide()
 
         elif self.pokemon_au_combat != 2:
+
             self.txtblanc.hide()
             self.cache_menu_changepkm()
-            if self.pokemon_justKO[1]==2:
-                self.pokemon_justKO=(False,0)
-            if not self.pokemon_justKO[0]:
+
+            if not self.pokemon_justKO:
                 self.txt_blanc(str(equipe_dresseur[self.pokemon_au_combat-1].name).upper() + ", come back.")
 
                 loop=QEventLoop()
@@ -386,7 +398,7 @@ class CombatPokemon(QMainWindow):
             self.pv_pkm.hide()
 
             loop=QEventLoop()
-            QTimer.singleShot(1500,loop.quit)
+            QTimer.singleShot(1000,loop.quit)
             loop.exec_()
 
             self.txtblanc.hide()
@@ -398,18 +410,6 @@ class CombatPokemon(QMainWindow):
 
             ###On charge le nouveau pokemon###
             self.affiche_pkm_dresseur(equipe_dresseur[1])
-
-            self.attaque1=ClickableLabel(equipe_dresseur[1].attaque_normale.upper(),17, self)
-            self.attaque1.setAlignment(Qt.AlignCenter)
-            self.attaque1.setMinimumWidth(142)
-            self.attaque1.move(480,600)
-            self.attaque1.hide()
-
-            self.attaque2ClickableLabel(equipe_dresseur[1].attaque_type.upper(),17, self)
-            self.attaque2.setAlignment(Qt.AlignCenter)
-            self.attaque2.setMinimumWidth(142)
-            self.attaque2.move(480,600)
-            self.attaque2.hide()
 
             loop=QEventLoop()
             QTimer.singleShot(1000,loop.quit)
@@ -452,22 +452,23 @@ class CombatPokemon(QMainWindow):
                 self.affiche_menu_principal()
                 self.txtblanc.hide()
 
+            self.pokemon_justKO=False
              #Si le pokemon est KO:
-                if equipe_dresseur[1].HP==0:
-                    self.txtblanc.hide()
-                    self.cache_menu_principal()
-                    self.pokemon_justKO[0]=True
-                    self.cache_menu_principal()
-                    self.pokemon_dresseur.hide()
-                    self.txt_blanc(equipe_dresseur[1].name.upper() + " is K.O. Choose an other pokemon.")
+            if equipe_dresseur[1].HP==0:
+                self.txtblanc.hide()
+                self.cache_menu_principal()
+                self.pokemon_justKO[0]=True
+                self.cache_menu_principal()
+                self.pokemon_dresseur.hide()
+                self.txt_blanc(equipe_dresseur[1].name.upper() + " is K.O. Choose an other pokemon.")
 
-                    loop=QEventLoop()
-                    QTimer.singleShot(1000,loop.quit)
-                    loop.exec_()
+                loop=QEventLoop()
+                QTimer.singleShot(1000,loop.quit)
+                loop.exec_()
 
-                    self.affiche_menu_changepkm()
-                    self.retour.hide()
-
+                self.affiche_menu_changepkm()
+                self.retour.hide()
+                
             self.pokemon_au_combat=2
             
         else:
@@ -480,13 +481,6 @@ class CombatPokemon(QMainWindow):
             
             self.txtblanc.hide()
             self.affiche_menu_changepkm()
-
-        
-        
-
-
-
-
 
     def changetopkm1(self):
         self.txtblanc.hide()
@@ -516,7 +510,7 @@ class CombatPokemon(QMainWindow):
             self.pv_pkm.hide()
 
             loop=QEventLoop()
-            QTimer.singleShot(1500,loop.quit)
+            QTimer.singleShot(1000,loop.quit)
             loop.exec_()
 
             self.txtblanc.hide()
@@ -569,24 +563,25 @@ class CombatPokemon(QMainWindow):
 
                 self.affiche_menu_principal()
                 self.txtblanc.hide()
+            self.pokemon_justKO=False
 
              #Si le pokemon est KO:
-                if equipe_dresseur[0].HP==0:
-                    self.txtblanc.hide()
-                    self.cache_menu_principal()
-                    self.pokemon_justKO=True
-                    self.cache_menu_principal()
-                    self.pokemon_dresseur.hide()
-                    self.txt_blanc(equipe_dresseur[0].name.upper() + " is K.O. Choose an other pokemon.")
+            if equipe_dresseur[0].HP==0:
+                self.txtblanc.hide()
+                self.cache_menu_principal()
+                self.pokemon_justKO=True
+                self.cache_menu_principal()
+                self.pokemon_dresseur.hide()
+                self.txt_blanc(equipe_dresseur[0].name.upper() + " is K.O. Choose an other pokemon.")
 
-                    loop=QEventLoop()
-                    QTimer.singleShot(1000,loop.quit)
-                    loop.exec_()
+                loop=QEventLoop()
+                QTimer.singleShot(1000,loop.quit)
+                loop.exec_()
 
-                    self.affiche_menu_changepkm()
-                    self.retour.hide()
+                self.affiche_menu_changepkm()
+                self.retour.hide()
 
-
+            
             self.pokemon_au_combat=1
             
         else:
@@ -682,21 +677,22 @@ class CombatPokemon(QMainWindow):
                 self.affiche_menu_principal()
                 self.txtblanc.hide()
 
+            self.pokemon_justKO=False
              #Si le pokemon est KO:
-                if equipe_dresseur[2].HP==0:
-                    self.txtblanc.hide()
-                    self.cache_menu_principal()
-                    self.pokemon_justKO=True
-                    self.cache_menu_principal()
-                    self.pokemon_dresseur.hide()
-                    self.txt_blanc(equipe_dresseur[2].name.upper() + " is K.O. Choose an other pokemon.")
+            if equipe_dresseur[2].HP==0:
+                self.txtblanc.hide()
+                self.cache_menu_principal()
+                self.pokemon_justKO=True
+                self.cache_menu_principal()
+                self.pokemon_dresseur.hide()
+                self.txt_blanc(equipe_dresseur[2].name.upper() + " is K.O. Choose an other pokemon.")
 
-                    loop=QEventLoop()
-                    QTimer.singleShot(1000,loop.quit)
-                    loop.exec_()
+                loop=QEventLoop()
+                QTimer.singleShot(1000,loop.quit)
+                loop.exec_()
 
-                    self.affiche_menu_changepkm()
-                    self.retour.hide()
+                self.affiche_menu_changepkm()
+                self.retour.hide()
 
 
             self.pokemon_au_combat=3
@@ -794,18 +790,19 @@ class CombatPokemon(QMainWindow):
                 self.affiche_menu_principal()
                 self.txtblanc.hide()
 
+            self.pokemon_justKO=False
              #Si le pokemon est KO:
-                if equipe_dresseur[3].HP==0:
-                    self.txtblanc.hide()
-                    self.cache_menu_principal()
-                    self.pokemon_justKO=True
-                    self.cache_menu_principal()
-                    self.pokemon_dresseur.hide()
-                    self.txt_blanc(equipe_dresseur[3].name.upper() + " is K.O. Choose an other pokemon.")
+            if equipe_dresseur[3].HP==0:
+                self.txtblanc.hide()
+                self.cache_menu_principal()
+                self.pokemon_justKO=True
+                self.cache_menu_principal()
+                self.pokemon_dresseur.hide()
+                self.txt_blanc(equipe_dresseur[3].name.upper() + " is K.O. Choose an other pokemon.")
 
-                    loop=QEventLoop()
-                    QTimer.singleShot(1000,loop.quit)
-                    loop.exec_()
+                loop=QEventLoop()
+                QTimer.singleShot(1000,loop.quit)
+                loop.exec_()
 
                     self.affiche_menu_changepkm()
                     self.retour.hide()
@@ -823,7 +820,6 @@ class CombatPokemon(QMainWindow):
             
             self.txtblanc.hide()
             self.affiche_menu_changepkm()
-
 
     def changetopkm5(self):
         self.txtblanc.hide()
@@ -907,21 +903,22 @@ class CombatPokemon(QMainWindow):
                 self.affiche_menu_principal()
                 self.txtblanc.hide()
 
+            self.pokemon_justKO=False
              #Si le pokemon est KO:
-                if equipe_dresseur[4].HP==0:
-                    self.txtblanc.hide()
-                    self.cache_menu_principal()
-                    self.pokemon_justKO=True
-                    self.cache_menu_principal()
-                    self.pokemon_dresseur.hide()
-                    self.txt_blanc(equipe_dresseur[4].name.upper() + " is K.O. Choose an other pokemon.")
+            if equipe_dresseur[4].HP==0:
+                self.txtblanc.hide()
+                self.cache_menu_principal()
+                self.pokemon_justKO=True
+                self.cache_menu_principal()
+                self.pokemon_dresseur.hide()
+                self.txt_blanc(equipe_dresseur[4].name.upper() + " is K.O. Choose an other pokemon.")
 
-                    loop=QEventLoop()
-                    QTimer.singleShot(1000,loop.quit)
-                    loop.exec_()
+                loop=QEventLoop()
+                QTimer.singleShot(1000,loop.quit)
+                loop.exec_()
 
-                    self.affiche_menu_changepkm()
-                    self.retour.hide()
+                self.affiche_menu_changepkm()
+                self.retour.hide()
 
 
             self.pokemon_au_combat=5
@@ -1019,21 +1016,22 @@ class CombatPokemon(QMainWindow):
                 self.affiche_menu_principal()
                 self.txtblanc.hide()
 
+            self.pokemon_justKO=False
              #Si le pokemon est KO:
-                if equipe_dresseur[5].HP==0:
-                    self.txtblanc.hide()
-                    self.cache_menu_principal()
-                    self.pokemon_justKO=True
-                    self.cache_menu_principal()
-                    self.pokemon_dresseur.hide()
-                    self.txt_blanc(equipe_dresseur[5].name.upper() + " is K.O. Choose an other pokemon.")
+            if equipe_dresseur[5].HP==0:
+                self.txtblanc.hide()
+                self.cache_menu_principal()
+                self.pokemon_justKO=True
+                self.cache_menu_principal()
+                self.pokemon_dresseur.hide()
+                self.txt_blanc(equipe_dresseur[5].name.upper() + " is K.O. Choose an other pokemon.")
 
-                    loop=QEventLoop()
-                    QTimer.singleShot(1000,loop.quit)
-                    loop.exec_()
+                loop=QEventLoop()
+                QTimer.singleShot(1000,loop.quit)
+                loop.exec_()
 
-                    self.affiche_menu_changepkm()
-                    self.retour.hide()
+                self.affiche_menu_changepkm()
+                self.retour.hide()
 
 
             self.pokemon_au_combat=6
@@ -1048,7 +1046,6 @@ class CombatPokemon(QMainWindow):
             
             self.txtblanc.hide()
             self.affiche_menu_changepkm()
-
 
     def affiche_pkm_dresseur(self,pokemon):
          #Affichage du pokemon du dresseur
@@ -1074,7 +1071,7 @@ class CombatPokemon(QMainWindow):
         self.nom_pkm.show()
 
         #Affichage du nombre de pv du pokemon du dresseur
-        self.pv_pkm= QLabel(str(pokemon.HP) + "/" + str(pokemon.maxHP), self)
+        self.pv_pkm= QLabel(str(int(pokemon.HP)) + "/" + str(pokemon.maxHP), self)
         self.pv_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
         self.pv_pkm.setAlignment(Qt.AlignRight)
         self.pv_pkm.setMinimumWidth(144)
@@ -1195,7 +1192,6 @@ class CombatPokemon(QMainWindow):
             self.cache_menu_principal()
             self.txtblanc.hide()
             self.retour.hide()
-
 
     def all_team_is_KO(self):
         k=0
