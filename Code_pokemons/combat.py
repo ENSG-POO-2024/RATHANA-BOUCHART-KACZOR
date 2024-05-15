@@ -106,7 +106,6 @@ class CombatPokemon(QMainWindow):
         self.hpbar_dresseur.setPixmap(barre)
         self.hpbar_dresseur.move(527,367)
 
-
         #Affichage du pokemon sauvage
         self.pokemon_sauvage = QLabel(self)
         self.pokemon_sauvage.setGeometry(0,0,300,300)
