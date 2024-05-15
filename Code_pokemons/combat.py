@@ -24,7 +24,7 @@ vide=pk.Pokemon("Vide")
 equipe_dresseur = [salameche, mew, papilusion, arcanin,dracolosse,vide]
 pokemon_allie= equipe_dresseur[0]
 
-pokemon_adverse=pk.PokemonSauvage("Charizard",0,0)
+pokemon_adverse=pk.PokemonSauvage("Macron",0,0)
 
 
 def find_bottom_position(image):
