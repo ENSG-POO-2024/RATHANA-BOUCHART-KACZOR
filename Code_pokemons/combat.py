@@ -11,16 +11,17 @@ path2=os.path.join(path, "../documents/images/pokemons")
 inventaire=[]
 
 mew = pk.Pokemon("Dratini")
-salameche= pk.Pokemon("Blastoise")
+salameche= pk.Pokemon("Bulbasaur")
 bulbizare= pk.Pokemon("Bulbasaur")
 dracolosse=pk.Pokemon("Dragonite")
 papilusion=pk.Pokemon("Butterfree")
 arcanin=pk.Pokemon("Arcanine")
 mewtwo=pk.Pokemon("Ditto")
+vide=pk.Pokemon("Vide")
 
 
 
-equipe_dresseur = [salameche, mew, bulbizare, dracolosse,arcanin,mewtwo]
+equipe_dresseur = [salameche, vide, vide, vide,vide,vide]
 pokemon_allie= equipe_dresseur[0]
 
 pokemon_adverse=pk.PokemonSauvage("Charizard",0,0)
@@ -214,7 +215,7 @@ class CombatPokemon(QMainWindow):
         self.changepkm.hide()
 
 
-        if equipe_dresseur[0]!="Vide":
+        if equipe_dresseur[0].name!="Vide":
             
             #Cette partie du code marche mais je la mets en pause
 
@@ -367,30 +368,30 @@ class CombatPokemon(QMainWindow):
     def affiche_menu_changepkm(self):
         self.changepkm.show()
         self.pokemon1.show()
-        if equipe_dresseur[1]!="Vide":
+        if equipe_dresseur[1].name!="Vide":
             self.pokemon2.show()
-        if equipe_dresseur[2]!="Vide":
+        if equipe_dresseur[2].name!="Vide":
             self.pokemon3.show()
-        if equipe_dresseur[3]!="Vide":
+        if equipe_dresseur[3].name!="Vide":
             self.pokemon4.show()
-        if equipe_dresseur[4]!="Vide":
+        if equipe_dresseur[4].name!="Vide":
             self.pokemon5.show()
-        if equipe_dresseur[5]!="Vide":
+        if equipe_dresseur[5].name!="Vide":
             self.pokemon6.show()
         self.retour.show()
 
     def cache_menu_changepkm(self):
         self.changepkm.hide()
         self.pokemon1.hide()
-        if equipe_dresseur[1]!="Vide":
+        if equipe_dresseur[1].name!="Vide":
             self.pokemon2.hide()
-        if equipe_dresseur[2]!="Vide":
+        if equipe_dresseur[2].name!="Vide":
             self.pokemon3.hide()
-        if equipe_dresseur[3]!="Vide":
+        if equipe_dresseur[3].name!="Vide":
             self.pokemon4.hide()
-        if equipe_dresseur[4]!="Vide":
+        if equipe_dresseur[4].name!="Vide":
             self.pokemon5.hide()
-        if equipe_dresseur[5]!="Vide":
+        if equipe_dresseur[5].name!="Vide":
             self.pokemon6.hide()
         self.retour.hide()
 
@@ -1235,25 +1236,7 @@ class CombatPokemon(QMainWindow):
         self.txtblanc.hide()
 
     def is_KO(self):
-        if equipe_dresseur[self.pokemon_au_combat -1].HP==0:
-            self.txtblanc.hide()
-            self.cache_menu_changepkm()
-            self.cache_menu_principal()
-            self.potion.hide()
-            self.pokemon_justKO=True
-            self.pokemon_dresseur.hide()
-            self.txt_blanc(equipe_dresseur[self.pokemon_au_combat -1].name.upper() + " is K.O. Choose an other pokemon.")
 
-            loop=QEventLoop()
-            QTimer.singleShot(1500,loop.quit)
-            loop.exec_()
-
-            self.affiche_menu_changepkm()
-            self.cache_menu_principal()
-            self.txtblanc.hide()
-            self.retour.hide()
-
-    def all_team_is_KO(self):
         k=0
         for i in range(6):
             if equipe_dresseur[i].HP==0:
@@ -1270,15 +1253,31 @@ class CombatPokemon(QMainWindow):
             self.pv_pkm.hide()
 
             loop=QEventLoop()
-            QTimer.singleShot(1000,loop.quit)
+            QTimer.singleShot(1500,loop.quit)
             loop.exec_()
 
-
+            self.txtblanc.hide()
             self.txt_blanc("All your Pokemons are K.O. You run back home to heal them.")
+
+            QTimer.singleShot(3000,self.close)
+
+        elif equipe_dresseur[self.pokemon_au_combat -1].HP==0:
+            self.txtblanc.hide()
+            self.cache_menu_changepkm()
+            self.cache_menu_principal()
+            self.potion.hide()
+            self.pokemon_justKO=True
+            self.pokemon_dresseur.hide()
+            self.txt_blanc(equipe_dresseur[self.pokemon_au_combat -1].name.upper() + " is K.O. Choose an other pokemon.")
 
             loop=QEventLoop()
             QTimer.singleShot(1500,loop.quit)
             loop.exec_()
+
+            self.affiche_menu_changepkm()
+            self.cache_menu_principal()
+            self.txtblanc.hide()
+            self.retour.hide()
 
     def atk1(self):
         self.attaque1.hide()
@@ -1322,6 +1321,10 @@ class CombatPokemon(QMainWindow):
             self.txtblanc.hide()
 
             if ennemi.HP<=0:
+                path_musique=os.path.join(path, "VFX_SFX\Victory! Wild Pokemon - Pokémon Diamond & Pearl.mp3")
+                self.mediaPlayer = QMediaPlayer()
+                self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
+                self.mediaPlayer.play()
                 self.cache_menu_principal
                 self.pokemon_sauvage.hide()
                 self.nom_pkm_s.hide()
@@ -1339,12 +1342,10 @@ class CombatPokemon(QMainWindow):
             
             else:
                 self.attaque_sauvage()
-                self.all_team_is_KO()
                 self.is_KO()
 
         else:
             self.attaque_sauvage()
-            self.all_team_is_KO()
             self.is_KO()
             if equipe_dresseur[self.pokemon_au_combat -1].HP!=0:
                 result=allie.attaque(ennemi,1)
@@ -1377,6 +1378,10 @@ class CombatPokemon(QMainWindow):
                 self.txtblanc.hide()
 
                 if ennemi.HP<=0:
+                    path_musique=os.path.join(path, "VFX_SFX\Victory! Wild Pokemon - Pokémon Diamond & Pearl.mp3")
+                    self.mediaPlayer = QMediaPlayer()
+                    self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
+                    self.mediaPlayer.play()
                     self.pokemon_sauvage.hide()
                     self.nom_pkm_s.hide()
                     self.txt_blanc(ennemi.name.upper() + " is K.O. You catched him!")
@@ -1389,7 +1394,7 @@ class CombatPokemon(QMainWindow):
                     self.txt_blanc("He got sent in your inventory")
                     inventaire.append(ennemi.name)
 
-                    QTimer.singleShot(2000,self.close)
+                    QTimer.singleShot(4000,self.close)
                 else:
                     self.affiche_menu_principal()
 
@@ -1436,6 +1441,10 @@ class CombatPokemon(QMainWindow):
             self.txtblanc.hide()
 
             if ennemi.HP<=0:
+                path_musique=os.path.join(path, "VFX_SFX\Victory! Wild Pokemon - Pokémon Diamond & Pearl.mp3")
+                self.mediaPlayer = QMediaPlayer()
+                self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
+                self.mediaPlayer.play()
                 self.cache_menu_principal()
                 self.pokemon_sauvage.hide()
                 self.nom_pkm_s.hide()
@@ -1446,19 +1455,17 @@ class CombatPokemon(QMainWindow):
                 loop.exec_()
 
                 self.txtblanc.hide()
-                self.txt_blanc("He got sent in your inventory")
+                self.txt_blanc("He got sent in your inventory.")
                 inventaire.append(ennemi.name)
 
                 QTimer.singleShot(2000,self.close)
             
             else:
                 self.attaque_sauvage()
-                self.all_team_is_KO()
                 self.is_KO()
 
         else:
             self.attaque_sauvage()
-            self.all_team_is_KO()
             self.is_KO()
 
             if equipe_dresseur[self.pokemon_au_combat -1].HP!=0:
@@ -1494,6 +1501,10 @@ class CombatPokemon(QMainWindow):
             
 
                 if ennemi.HP<=0:
+                    path_musique=os.path.join(path, "VFX_SFX\Victory! Wild Pokemon - Pokémon Diamond & Pearl.mp3")
+                    self.mediaPlayer = QMediaPlayer()
+                    self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
+                    self.mediaPlayer.play()
                     self.pokemon_sauvage.hide()
                     self.nom_pkm_s.hide()
                     self.txt_blanc(ennemi.name.upper() + " is K.O. You catched him!")
@@ -1506,7 +1517,7 @@ class CombatPokemon(QMainWindow):
                     self.txt_blanc("He got sent in your inventory.")
                     inventaire.append(ennemi.name)
 
-                    QTimer.singleShot(2000,self.close)
+                    QTimer.singleShot(4000,self.close)
 
                 else:
                     self.affiche_menu_principal()
