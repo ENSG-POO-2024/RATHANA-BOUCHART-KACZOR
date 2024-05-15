@@ -89,7 +89,7 @@ class Pokemon:
         CM=table_types[type_attaque][type_defense1]
         if pokemon_adverse.type2 != "Rien":
             CM*=table_types[type_attaque][type_defense2]
-        degats= np.trunc((np.trunc((5*stat_attaque * 55)/(stat_defense *50))+2) * CM)
+        degats= np.trunc((np.trunc((15*stat_attaque * 55)/(stat_defense *50))+2) * CM)
         pokemon_adverse.HP=pokemon_adverse.HP - degats
         if pokemon_adverse.HP<0:
             pokemon_adverse.HP=0
@@ -148,7 +148,7 @@ class PokemonSauvage(Pokemon):
         CM=table_types[type_attaque][type_defense1]
         if pokemon_adverse.type2 != "Rien":
             CM*=table_types[type_attaque][type_defense2]
-        degats= np.trunc((np.trunc((5*stat_attaque * 55)/(stat_defense *50))+2) * CM)
+        degats= np.trunc((np.trunc((15*stat_attaque * 55)/(stat_defense *50))+2) * CM)
         pokemon_adverse.HP=pokemon_adverse.HP - degats
         if pokemon_adverse.HP<0:
             pokemon_adverse.HP=0
