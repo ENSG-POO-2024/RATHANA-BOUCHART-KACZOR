@@ -11,7 +11,7 @@ path2=os.path.join(path, "../documents/images/pokemons")
 inventaire=[]
 
 mew = pk.Pokemon("Dratini")
-salameche= pk.Pokemon("Bulbasaur")
+salameche= pk.Pokemon("Blastoise")
 bulbizare= pk.Pokemon("Bulbasaur")
 dracolosse=pk.Pokemon("Dragonite")
 papilusion=pk.Pokemon("Butterfree")
@@ -21,7 +21,7 @@ vide=pk.Pokemon("Vide")
 
 
 
-equipe_dresseur = [salameche, vide, vide, vide,vide,vide]
+equipe_dresseur = [salameche, mew, papilusion, arcanin,dracolosse,vide]
 pokemon_allie= equipe_dresseur[0]
 
 pokemon_adverse=pk.PokemonSauvage("Charizard",0,0)
@@ -470,7 +470,7 @@ class CombatPokemon(QMainWindow):
                 self.pv_pkm.show()
 
                 self.hpbar_dresseur.hide()
-                self.maj_barre_hp_sauvage(equipe_dresseur[1])
+                self.maj_barre_hp_dresseur(equipe_dresseur[1])
 
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
@@ -1176,7 +1176,7 @@ class CombatPokemon(QMainWindow):
 
             #Mise a jour des HP
             self.pv_pkm.hide()
-            self.pv_pkm= QLabel(str(equipe_dresseur[self.pokemon_au_combat -1].HP) + "/" + str(equipe_dresseur[self.pokemon_au_combat -1].maxHP), self)
+            self.pv_pkm= QLabel(str(int(equipe_dresseur[self.pokemon_au_combat -1].HP)) + "/" + str(equipe_dresseur[self.pokemon_au_combat -1].maxHP), self)
             self.pv_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
             self.pv_pkm.setAlignment(Qt.AlignRight)
             self.pv_pkm.setMinimumWidth(144)
@@ -1195,7 +1195,6 @@ class CombatPokemon(QMainWindow):
             
             #Au tour du pokemon adverse d'attaquer
             self.attaque_sauvage()
-            self.all_team_is_KO()
             self.is_KO()
             self.affiche_menu_principal()
 

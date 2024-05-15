@@ -154,11 +154,3 @@ class PokemonSauvage(Pokemon):
             pokemon_adverse.HP=0
         return int(pokemon_adverse.HP), nom_attaque, CM
 
-if __name__=="__main__":
-
-
-
-
-
-
-
