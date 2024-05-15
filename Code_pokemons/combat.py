@@ -25,6 +25,7 @@ pokemon_allie= equipe_dresseur[0]
 
 pokemon_adverse=pk.PokemonSauvage("Charizard",0,0)
 
+
 def find_bottom_position(image):
     image = image.toImage()
     height = image.height()
@@ -102,6 +103,16 @@ class CombatPokemon(QMainWindow):
         self.pokemon_sauvage.setPixmap(pkm_sauvage)
         image2_width=pkm_sauvage.width()
         self.pokemon_sauvage.move(525 + int(image2_width/2), 200-bottom_position2)
+
+        #Barre d'HP
+        self.hpbar_sauvage=QLabel(self)
+        self.hpbar_sauvage.setGeometry(0,0,300,300)
+        barre = QPixmap("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\Code_pokemons\VFX_SFX\barre_hp.png")  
+        barre= barre.scaled(500, 500, Qt.KeepAspectRatio)
+        self.hpbar_sauvage.setPixmap(barre)
+        self.hpbar_sauvage.move(200,200)
+
+
 
         #Affichage du nom du pokemon sauvage
         self.nom_pkm_s = QLabel(pokemon_adverse.name, self)
@@ -1171,7 +1182,7 @@ class CombatPokemon(QMainWindow):
         QTimer.singleShot(1000,loop.quit)
         loop.exec_()
 
-        self.affiche_menu_principal()
+        #self.affiche_menu_principal()
         self.txtblanc.hide()
 
     def is_KO(self):
@@ -1228,7 +1239,7 @@ class CombatPokemon(QMainWindow):
         allie=equipe_dresseur[self.pokemon_au_combat -1]
         ennemi=pokemon_adverse
         if allie.speed>=ennemi.speed:
-            result=allie.attaque(ennemi,0)
+            result=allie.attaque(ennemi,1)
             self.txt_blanc(allie.name.upper() + " uses " +allie.attaque_normale +"!")
 
             loop=QEventLoop()
@@ -1284,7 +1295,7 @@ class CombatPokemon(QMainWindow):
             self.all_team_is_KO()
             self.is_KO()
             if equipe_dresseur[self.pokemon_au_combat -1].HP!=0:
-                result=allie.attaque(ennemi,0)
+                result=allie.attaque(ennemi,1)
                 self.txt_blanc(allie.name.upper() + " uses " +allie.attaque_normale +"!")
 
                 loop=QEventLoop()
@@ -1306,10 +1317,6 @@ class CombatPokemon(QMainWindow):
                     loop=QEventLoop()
                     QTimer.singleShot(1000,loop.quit)
                     loop.exec_()
-                elif result[1]==1:
-                    loop=QEventLoop()
-                    QTimer.singleShot(1000,loop.quit)
-                    loop.exec_()
             
                 self.txtblanc.hide()
 
@@ -1324,10 +1331,12 @@ class CombatPokemon(QMainWindow):
 
                     self.txtblanc.hide()
                     self.txt_blanc("He got sent in your inventory")
-                    inventaire.appened(ennemi.name)
+                    inventaire.append(ennemi.name)
 
                     QTimer.singleShot(2000,self.close)
-                self.affiche_menu_principal
+                else:
+                    self.affiche_menu_principal()
+
 
     def atk2(self):
         self.attaque1.hide()
@@ -1337,7 +1346,7 @@ class CombatPokemon(QMainWindow):
         allie=equipe_dresseur[self.pokemon_au_combat -1]
         ennemi=pokemon_adverse
         if allie.speed>=ennemi.speed:
-            result=allie.attaque(ennemi,1)
+            result=allie.attaque(ennemi,2)
             self.txt_blanc(allie.name.upper() + " uses " +allie.attaque_type +"!")
 
             loop=QEventLoop()
@@ -1394,7 +1403,7 @@ class CombatPokemon(QMainWindow):
             self.is_KO()
 
             if equipe_dresseur[self.pokemon_au_combat -1].HP!=0:
-                result=allie.attaque(ennemi,1)
+                result=allie.attaque(ennemi,2)
                 self.txt_blanc(allie.name.upper() + " uses " +allie.attaque_type +"!")
 
                 loop=QEventLoop()
@@ -1417,10 +1426,6 @@ class CombatPokemon(QMainWindow):
                     QTimer.singleShot(1000,loop.quit)
                     loop.exec_()
 
-                if result[1]==1:
-                    loop=QEventLoop()
-                    QTimer.singleShot(1000,loop.quit)
-                    loop.exec_()
 
                 self.txtblanc.hide()
             
@@ -1428,23 +1433,20 @@ class CombatPokemon(QMainWindow):
                 if ennemi.HP<=0:
                     self.pokemon_sauvage.hide()
                     self.nom_pkm_s.hide()
-                    self.txt_blanc(ennemi.name.upper() + " is K.O. You have catched him!")
+                    self.txt_blanc(ennemi.name.upper() + " is K.O. You catched him!")
 
                     loop=QEventLoop()
                     QTimer.singleShot(1500,loop.quit)
                     loop.exec_()
 
                     self.txtblanc.hide()
-                    self.txt_blanc("He got sent in your inventory")
-                    inventaire.appened(ennemi.name)
+                    self.txt_blanc("He got sent in your inventory.")
+                    inventaire.append(ennemi.name)
 
                     QTimer.singleShot(2000,self.close)
 
-                loop=QEventLoop()
-                QTimer.singleShot(1500,loop.quit)
-                loop.exec_()
-
-                self.affiche_menu_principal
+                else:
+                    self.affiche_menu_principal()
 
 
 
