@@ -107,10 +107,11 @@ class CombatPokemon(QMainWindow):
         #Barre d'HP
         self.hpbar_sauvage=QLabel(self)
         self.hpbar_sauvage.setGeometry(0,0,300,300)
-        barre = QPixmap("C:\ENSG\Projet_Info\RATHANA-BOUCHART-KACZOR\Code_pokemons\VFX_SFX\barre_hp.png")  
-        barre= barre.scaled(500, 500, Qt.KeepAspectRatio)
+        path_hpbar=os.path.join(path,"VFX_SFX\Barre_hp.png")
+        barre = QPixmap(path_hpbar)  
+        barre= barre.scaled(170, 170, Qt.KeepAspectRatio)
         self.hpbar_sauvage.setPixmap(barre)
-        self.hpbar_sauvage.move(200,200)
+        self.hpbar_sauvage.move(317,7)
 
 
 
@@ -123,10 +124,10 @@ class CombatPokemon(QMainWindow):
         self.nom_pkm_s.move(200,-5) 
 
         #Musique des combats
-        path_musique=os.path.join(path, "VFX_SFX/Battle! (Wild Pokémon)[Pokémon Diamond & Pearl].mp3")
-        self.mediaPlayer = QMediaPlayer()
-        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
-        self.mediaPlayer.play()
+        # path_musique=os.path.join(path, "VFX_SFX/Battle! (Wild Pokémon)[Pokémon Diamond & Pearl].mp3")
+        # self.mediaPlayer = QMediaPlayer()
+        # self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
+        # self.mediaPlayer.play()
 
 
         #Boutons de choix
