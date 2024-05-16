@@ -17,13 +17,14 @@ dracolosse=pk.Pokemon("Dragonite")
 papilusion=pk.Pokemon("Butterfree")
 arcanin=pk.Pokemon("Arcanine")
 mewtwo=pk.Pokemon("Ditto")
+vide=pk.Pokemon("Vide")
 
 
 
-equipe_dresseur = [salameche, mew, bulbizare, dracolosse,papilusion,mewtwo]
+equipe_dresseur = [salameche, mew, papilusion, arcanin,dracolosse,vide]
 pokemon_allie= equipe_dresseur[0]
 
-pokemon_adverse=pk.PokemonSauvage("Charizard",0,0)
+pokemon_adverse=pk.PokemonSauvage("Macron",0,0)
 
 
 def find_bottom_position(image):
@@ -93,6 +94,18 @@ class CombatPokemon(QMainWindow):
         #Affichage du pokemon du dresseur
         self.affiche_pkm_dresseur(pokemon_allie)
 
+        #Affichage de la barre d'HP du pokemon du dresseur
+        self.hpbar_dresseur=QLabel(self)
+        self.hpbar_dresseur.setGeometry(0,0,300,50)
+        self.hpbar_dresseur.setAlignment(Qt.AlignRight)
+        path_hpbar=os.path.join(path,"VFX_SFX\Barre_hp.png")
+        barre = QPixmap(path_hpbar)  
+        pourcentage=pokemon_allie.HP/pokemon_allie.maxHP
+        taille_barre=int(148-148*pourcentage)
+        barre= barre.scaled(taille_barre, 150)  #148
+        self.hpbar_dresseur.setPixmap(barre)
+        self.hpbar_dresseur.move(527,367)
+
         #Affichage du pokemon sauvage
         self.pokemon_sauvage = QLabel(self)
         self.pokemon_sauvage.setGeometry(0,0,300,300)
@@ -107,11 +120,12 @@ class CombatPokemon(QMainWindow):
         #Barre d'HP
         self.hpbar_sauvage=QLabel(self)
         self.hpbar_sauvage.setGeometry(0,0,300,300)
+        self.hpbar_sauvage.setAlignment(Qt.AlignRight)
         path_hpbar=os.path.join(path,"VFX_SFX\Barre_hp.png")
         barre = QPixmap(path_hpbar)  
-        barre= barre.scaled(170, 170, Qt.KeepAspectRatio)
+        barre= barre.scaled(0, 170)       #167
         self.hpbar_sauvage.setPixmap(barre)
-        self.hpbar_sauvage.move(317,7)
+        self.hpbar_sauvage.move(183,72)
 
 
 
@@ -124,10 +138,10 @@ class CombatPokemon(QMainWindow):
         self.nom_pkm_s.move(200,-5) 
 
         #Musique des combats
-        # path_musique=os.path.join(path, "VFX_SFX/Battle! (Wild Pokémon)[Pokémon Diamond & Pearl].mp3")
-        # self.mediaPlayer = QMediaPlayer()
-        # self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
-        # self.mediaPlayer.play()
+        path_musique=os.path.join(path, "VFX_SFX/Battle! (Wild Pokémon)[Pokémon Diamond & Pearl].mp3")
+        self.mediaPlayer = QMediaPlayer()
+        self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
+        self.mediaPlayer.play()
 
 
         #Boutons de choix
@@ -200,7 +214,7 @@ class CombatPokemon(QMainWindow):
         self.changepkm.hide()
 
 
-        if equipe_dresseur[0]!="Vide":
+        if equipe_dresseur[0].name!="Vide":
             
             #Cette partie du code marche mais je la mets en pause
 
@@ -221,7 +235,7 @@ class CombatPokemon(QMainWindow):
             self.pokemon1.hide()
             self.pokemon1.clicked.connect(self.changetopkm1)
 
-            if equipe_dresseur[1]!="Vide":
+            if equipe_dresseur[1].name!="Vide":
         
                 self.pokemon2=ClickableLabel(equipe_dresseur[1].name.upper(), 13,self)
                 self.pokemon2.setAlignment(Qt.AlignLeft)
@@ -231,7 +245,7 @@ class CombatPokemon(QMainWindow):
                 self.pokemon2.hide()
                 self.pokemon2.clicked.connect(self.changetopkm2)
 
-            if equipe_dresseur[2]!="Vide":
+            if equipe_dresseur[2].name!="Vide":
         
                 self.pokemon3=ClickableLabel(equipe_dresseur[2].name.upper(), 13,self)
                 self.pokemon3.setAlignment(Qt.AlignLeft)
@@ -241,7 +255,7 @@ class CombatPokemon(QMainWindow):
                 self.pokemon3.hide()
                 self.pokemon3.clicked.connect(self.changetopkm3)
             
-            if equipe_dresseur[3]!="Vide":
+            if equipe_dresseur[3].name!="Vide":
         
                 self.pokemon4=ClickableLabel(equipe_dresseur[3].name.upper(), 13,self)
                 self.pokemon4.setAlignment(Qt.AlignLeft)
@@ -252,7 +266,7 @@ class CombatPokemon(QMainWindow):
                 self.pokemon4.clicked.connect(self.changetopkm4)
 
 
-            if equipe_dresseur[4]!="Vide":
+            if equipe_dresseur[4].name!="Vide":
         
                 self.pokemon5=ClickableLabel(equipe_dresseur[4].name.upper(), 13,self)
                 self.pokemon5.setAlignment(Qt.AlignLeft)
@@ -262,7 +276,7 @@ class CombatPokemon(QMainWindow):
                 self.pokemon5.hide()
                 self.pokemon5.clicked.connect(self.changetopkm5)
 
-            if equipe_dresseur[5]!="Vide":
+            if equipe_dresseur[5].name!="Vide":
         
                 self.pokemon6=ClickableLabel(equipe_dresseur[5].name.upper(), 13,self)
                 self.pokemon6.setAlignment(Qt.AlignLeft)
@@ -353,30 +367,30 @@ class CombatPokemon(QMainWindow):
     def affiche_menu_changepkm(self):
         self.changepkm.show()
         self.pokemon1.show()
-        if equipe_dresseur[1]!="Vide":
+        if equipe_dresseur[1].name!="Vide":
             self.pokemon2.show()
-        if equipe_dresseur[2]!="Vide":
+        if equipe_dresseur[2].name!="Vide":
             self.pokemon3.show()
-        if equipe_dresseur[3]!="Vide":
+        if equipe_dresseur[3].name!="Vide":
             self.pokemon4.show()
-        if equipe_dresseur[4]!="Vide":
+        if equipe_dresseur[4].name!="Vide":
             self.pokemon5.show()
-        if equipe_dresseur[5]!="Vide":
+        if equipe_dresseur[5].name!="Vide":
             self.pokemon6.show()
         self.retour.show()
 
     def cache_menu_changepkm(self):
         self.changepkm.hide()
         self.pokemon1.hide()
-        if equipe_dresseur[1]!="Vide":
+        if equipe_dresseur[1].name!="Vide":
             self.pokemon2.hide()
-        if equipe_dresseur[2]!="Vide":
+        if equipe_dresseur[2].name!="Vide":
             self.pokemon3.hide()
-        if equipe_dresseur[3]!="Vide":
+        if equipe_dresseur[3].name!="Vide":
             self.pokemon4.hide()
-        if equipe_dresseur[4]!="Vide":
+        if equipe_dresseur[4].name!="Vide":
             self.pokemon5.hide()
-        if equipe_dresseur[5]!="Vide":
+        if equipe_dresseur[5].name!="Vide":
             self.pokemon6.hide()
         self.retour.hide()
 
@@ -408,6 +422,7 @@ class CombatPokemon(QMainWindow):
             self.pokemon_dresseur.hide()
             self.nom_pkm.hide()
             self.pv_pkm.hide()
+            self.hpbar_dresseur.hide()
 
             loop=QEventLoop()
             QTimer.singleShot(1000,loop.quit)
@@ -422,6 +437,8 @@ class CombatPokemon(QMainWindow):
 
             ###On charge le nouveau pokemon###
             self.affiche_pkm_dresseur(equipe_dresseur[1])
+            self.hpbar_dresseur.hide()
+            self.maj_barre_hp_dresseur(equipe_dresseur[1])
 
             loop=QEventLoop()
             QTimer.singleShot(1000,loop.quit)
@@ -450,6 +467,9 @@ class CombatPokemon(QMainWindow):
                 self.pv_pkm.setMinimumWidth(144)
                 self.pv_pkm.move(682,435) 
                 self.pv_pkm.show()
+
+                self.hpbar_dresseur.hide()
+                self.maj_barre_hp_dresseur(equipe_dresseur[1])
 
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
@@ -534,6 +554,8 @@ class CombatPokemon(QMainWindow):
 
             ###On charge le nouveau pokemon###
             self.affiche_pkm_dresseur(equipe_dresseur[0])
+            self.hpbar_dresseur.hide()
+            self.maj_barre_hp_dresseur(equipe_dresseur[0])
 
             loop=QEventLoop()
             QTimer.singleShot(1000,loop.quit)
@@ -562,6 +584,9 @@ class CombatPokemon(QMainWindow):
                 self.pv_pkm.setMinimumWidth(144)
                 self.pv_pkm.move(682,435) 
                 self.pv_pkm.show()
+
+                self.hpbar_dresseur.hide()
+                self.maj_barre_hp_dresseur(equipe_dresseur[0])
 
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
@@ -647,6 +672,8 @@ class CombatPokemon(QMainWindow):
 
             ###On charge le nouveau pokemon###
             self.affiche_pkm_dresseur(equipe_dresseur[2])
+            self.hpbar_dresseur.hide()
+            self.maj_barre_hp_dresseur(equipe_dresseur[2])
 
             loop=QEventLoop()
             QTimer.singleShot(1000,loop.quit)
@@ -675,6 +702,8 @@ class CombatPokemon(QMainWindow):
                 self.pv_pkm.setMinimumWidth(144)
                 self.pv_pkm.move(682,435) 
                 self.pv_pkm.show()
+                self.hpbar_dresseur.hide()
+                self.maj_barre_hp_dresseur(equipe_dresseur[2])
 
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
@@ -760,6 +789,8 @@ class CombatPokemon(QMainWindow):
 
             ###On charge le nouveau pokemon###
             self.affiche_pkm_dresseur(equipe_dresseur[3])
+            self.hpbar_dresseur.hide()
+            self.maj_barre_hp_dresseur(equipe_dresseur[3])
 
             loop=QEventLoop()
             QTimer.singleShot(1000,loop.quit)
@@ -788,6 +819,8 @@ class CombatPokemon(QMainWindow):
                 self.pv_pkm.setMinimumWidth(144)
                 self.pv_pkm.move(682,435) 
                 self.pv_pkm.show()
+                self.hpbar_dresseur.hide()
+                self.maj_barre_hp_dresseur(equipe_dresseur[3])
 
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
@@ -873,6 +906,8 @@ class CombatPokemon(QMainWindow):
 
             ###On charge le nouveau pokemon###
             self.affiche_pkm_dresseur(equipe_dresseur[4])
+            self.hpbar_dresseur.hide()
+            self.maj_barre_hp_dresseur(equipe_dresseur[4])
 
             loop=QEventLoop()
             QTimer.singleShot(1000,loop.quit)
@@ -901,6 +936,8 @@ class CombatPokemon(QMainWindow):
                 self.pv_pkm.setMinimumWidth(144)
                 self.pv_pkm.move(682,435) 
                 self.pv_pkm.show()
+                self.hpbar_dresseur.hide()
+                self.maj_barre_hp_dresseur(equipe_dresseur[4])
 
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
@@ -986,6 +1023,8 @@ class CombatPokemon(QMainWindow):
 
             ###On charge le nouveau pokemon###
             self.affiche_pkm_dresseur(equipe_dresseur[5])
+            self.hpbar_dresseur.hide()
+            self.maj_barre_hp_dresseur(equipe_dresseur[5])
 
             loop=QEventLoop()
             QTimer.singleShot(1000,loop.quit)
@@ -1014,6 +1053,8 @@ class CombatPokemon(QMainWindow):
                 self.pv_pkm.setMinimumWidth(144)
                 self.pv_pkm.move(682,435) 
                 self.pv_pkm.show()
+                self.hpbar_dresseur.hide()
+                self.maj_barre_hp_dresseur(equipe_dresseur[5])
 
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
@@ -1134,12 +1175,16 @@ class CombatPokemon(QMainWindow):
 
             #Mise a jour des HP
             self.pv_pkm.hide()
-            self.pv_pkm= QLabel(str(equipe_dresseur[self.pokemon_au_combat -1].HP) + "/" + str(equipe_dresseur[self.pokemon_au_combat -1].maxHP), self)
+            self.pv_pkm= QLabel(str(int(equipe_dresseur[self.pokemon_au_combat -1].HP)) + "/" + str(equipe_dresseur[self.pokemon_au_combat -1].maxHP), self)
             self.pv_pkm.setStyleSheet("QLabel { color: black; font-size: 19px; font-family: 'Press Start 2P'; }")  # Style du texte
             self.pv_pkm.setAlignment(Qt.AlignRight)
             self.pv_pkm.setMinimumWidth(144)
             self.pv_pkm.move(682,435) 
             self.pv_pkm.show()
+            #Mise a jour de la barre des HP du dresseur
+            self.hpbar_dresseur.hide()
+            self.maj_barre_hp_dresseur(equipe_dresseur[self.pokemon_au_combat -1])
+
 
             loop=QEventLoop()
             QTimer.singleShot(2000,loop.quit)
@@ -1149,8 +1194,8 @@ class CombatPokemon(QMainWindow):
             
             #Au tour du pokemon adverse d'attaquer
             self.attaque_sauvage()
-            self.all_team_is_KO()
             self.is_KO()
+            self.affiche_menu_principal()
 
     def attaque_sauvage(self):
 
@@ -1172,6 +1217,8 @@ class CombatPokemon(QMainWindow):
         self.pv_pkm.setMinimumWidth(144)
         self.pv_pkm.move(682,435) 
         self.pv_pkm.show()
+        self.hpbar_dresseur.hide()
+        self.maj_barre_hp_dresseur(equipe_dresseur[self.pokemon_au_combat -1])
 
         if result[2]<1:
             self.txt_blanc("This isn't very effective...")
@@ -1187,7 +1234,32 @@ class CombatPokemon(QMainWindow):
         self.txtblanc.hide()
 
     def is_KO(self):
-        if equipe_dresseur[self.pokemon_au_combat -1].HP==0:
+
+        k=0
+        for i in range(6):
+            if equipe_dresseur[i].HP==0:
+                k+=1
+        if k==6:
+            self.txtblanc.hide()
+            self.cache_menu_changepkm()
+            self.cache_menu_principal()
+            self.potion.hide()
+            self.txt_blanc(equipe_dresseur[self.pokemon_au_combat -1].name.upper() + " is K.O.")
+            self.pokemon_dresseur.hide()
+            self.pokemon_dresseur.hide()
+            self.nom_pkm.hide()
+            self.pv_pkm.hide()
+
+            loop=QEventLoop()
+            QTimer.singleShot(1500,loop.quit)
+            loop.exec_()
+
+            self.txtblanc.hide()
+            self.txt_blanc("All your Pokemons are K.O. You run back home to heal them.")
+
+            QTimer.singleShot(3000,self.close)
+
+        elif equipe_dresseur[self.pokemon_au_combat -1].HP==0:
             self.txtblanc.hide()
             self.cache_menu_changepkm()
             self.cache_menu_principal()
@@ -1205,33 +1277,6 @@ class CombatPokemon(QMainWindow):
             self.txtblanc.hide()
             self.retour.hide()
 
-    def all_team_is_KO(self):
-        k=0
-        for i in range(6):
-            if equipe_dresseur[i].HP==0:
-                k+=1
-        if k==6:
-            self.txtblanc.hide()
-            self.cache_menu_changepkm()
-            self.cache_menu_principal()
-            self.potion.hide()
-            self.txt_blanc(equipe_dresseur[self.pokemon_au_combat -1].name.upper() + " is K.O.")
-            self.pokemon_dresseur.hide()
-            self.pokemon_dresseur.hide()
-            self.nom_pkm.hide()
-            self.pv_pkm.hide()
-
-            loop=QEventLoop()
-            QTimer.singleShot(1000,loop.quit)
-            loop.exec_()
-
-
-            self.txt_blanc("All your Pokemons are K.O. You run back home to heal them.")
-
-            loop=QEventLoop()
-            QTimer.singleShot(1500,loop.quit)
-            loop.exec_()
-
     def atk1(self):
         self.attaque1.hide()
         self.attaque2.hide()
@@ -1246,8 +1291,11 @@ class CombatPokemon(QMainWindow):
             loop=QEventLoop()
             QTimer.singleShot(1500,loop.quit)
             loop.exec_()
-
             ennemi.HP=result[0]
+            if ennemi.HP<0:
+                    ennemi.HP=0
+            self.hpbar_sauvage.hide()
+            self.maj_barre_hp_sauvage(ennemi)
 
             if result[1]>1:
                 self.txtblanc.hide()
@@ -1271,6 +1319,10 @@ class CombatPokemon(QMainWindow):
             self.txtblanc.hide()
 
             if ennemi.HP<=0:
+                path_musique=os.path.join(path, "VFX_SFX\Victory! Wild Pokemon - Pokémon Diamond & Pearl.mp3")
+                self.mediaPlayer = QMediaPlayer()
+                self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
+                self.mediaPlayer.play()
                 self.cache_menu_principal
                 self.pokemon_sauvage.hide()
                 self.nom_pkm_s.hide()
@@ -1288,12 +1340,10 @@ class CombatPokemon(QMainWindow):
             
             else:
                 self.attaque_sauvage()
-                self.all_team_is_KO()
                 self.is_KO()
 
         else:
             self.attaque_sauvage()
-            self.all_team_is_KO()
             self.is_KO()
             if equipe_dresseur[self.pokemon_au_combat -1].HP!=0:
                 result=allie.attaque(ennemi,1)
@@ -1304,6 +1354,10 @@ class CombatPokemon(QMainWindow):
                 loop.exec_()
 
                 ennemi.HP=result[0]
+                if ennemi.HP<0:
+                    ennemi.HP=0
+                self.hpbar_sauvage.hide()
+                self.maj_barre_hp_sauvage(ennemi)
 
                 if result[1]>1:
                     self.txtblanc.hide()
@@ -1322,6 +1376,10 @@ class CombatPokemon(QMainWindow):
                 self.txtblanc.hide()
 
                 if ennemi.HP<=0:
+                    path_musique=os.path.join(path, "VFX_SFX\Victory! Wild Pokemon - Pokémon Diamond & Pearl.mp3")
+                    self.mediaPlayer = QMediaPlayer()
+                    self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
+                    self.mediaPlayer.play()
                     self.pokemon_sauvage.hide()
                     self.nom_pkm_s.hide()
                     self.txt_blanc(ennemi.name.upper() + " is K.O. You catched him!")
@@ -1334,10 +1392,9 @@ class CombatPokemon(QMainWindow):
                     self.txt_blanc("He got sent in your inventory")
                     inventaire.append(ennemi.name)
 
-                    QTimer.singleShot(2000,self.close)
+                    QTimer.singleShot(4000,self.close)
                 else:
                     self.affiche_menu_principal()
-
 
     def atk2(self):
         self.attaque1.hide()
@@ -1355,6 +1412,10 @@ class CombatPokemon(QMainWindow):
             loop.exec_()
 
             ennemi.HP=result[0]
+            if ennemi.HP<0:
+                ennemi.HP=0
+            self.hpbar_sauvage.hide()
+            self.maj_barre_hp_sauvage(ennemi)
 
             if result[1]>1:
                 self.txtblanc.hide()
@@ -1378,7 +1439,11 @@ class CombatPokemon(QMainWindow):
             self.txtblanc.hide()
 
             if ennemi.HP<=0:
-                self.cache_menu_principal
+                path_musique=os.path.join(path, "VFX_SFX\Victory! Wild Pokemon - Pokémon Diamond & Pearl.mp3")
+                self.mediaPlayer = QMediaPlayer()
+                self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
+                self.mediaPlayer.play()
+                self.cache_menu_principal()
                 self.pokemon_sauvage.hide()
                 self.nom_pkm_s.hide()
                 self.txt_blanc(ennemi.name.upper() + "is K.O. You catch him!")
@@ -1388,19 +1453,17 @@ class CombatPokemon(QMainWindow):
                 loop.exec_()
 
                 self.txtblanc.hide()
-                self.txt_blanc("He got sent in your inventory")
+                self.txt_blanc("He got sent in your inventory.")
                 inventaire.append(ennemi.name)
 
                 QTimer.singleShot(2000,self.close)
             
             else:
                 self.attaque_sauvage()
-                self.all_team_is_KO()
                 self.is_KO()
 
         else:
             self.attaque_sauvage()
-            self.all_team_is_KO()
             self.is_KO()
 
             if equipe_dresseur[self.pokemon_au_combat -1].HP!=0:
@@ -1412,7 +1475,11 @@ class CombatPokemon(QMainWindow):
                 loop.exec_()
 
                 ennemi.HP=result[0]
-                print(result[1])
+                if ennemi.HP<0:
+                    ennemi.HP=0
+                self.hpbar_sauvage.hide()
+                self.maj_barre_hp_sauvage(ennemi)
+
                 if result[1]>1:
                     self.txtblanc.hide()
                     self.txt_blanc("It's super effective!")
@@ -1432,6 +1499,10 @@ class CombatPokemon(QMainWindow):
             
 
                 if ennemi.HP<=0:
+                    path_musique=os.path.join(path, "VFX_SFX\Victory! Wild Pokemon - Pokémon Diamond & Pearl.mp3")
+                    self.mediaPlayer = QMediaPlayer()
+                    self.mediaPlayer.setMedia(QMediaContent(QUrl.fromLocalFile(path_musique)))
+                    self.mediaPlayer.play()
                     self.pokemon_sauvage.hide()
                     self.nom_pkm_s.hide()
                     self.txt_blanc(ennemi.name.upper() + " is K.O. You catched him!")
@@ -1444,10 +1515,44 @@ class CombatPokemon(QMainWindow):
                     self.txt_blanc("He got sent in your inventory.")
                     inventaire.append(ennemi.name)
 
-                    QTimer.singleShot(2000,self.close)
+                    QTimer.singleShot(4000,self.close)
 
                 else:
                     self.affiche_menu_principal()
+
+    def maj_barre_hp_dresseur(self,pokemon):
+        self.hpbar_dresseur.hide()
+        self.hpbar_dresseur=QLabel(self)
+        self.hpbar_dresseur.setGeometry(0,0,300,50)
+        self.hpbar_dresseur.setAlignment(Qt.AlignRight)
+        path_hpbar=os.path.join(path,"VFX_SFX\Barre_hp.png")
+        barre = QPixmap(path_hpbar)  
+
+        #Calcul du pourcentage de PV qui restent au pokemon:
+        pourcentage=pokemon.HP/pokemon.maxHP
+        taille_barre=148 - 148*pourcentage
+        taille_barre=int(taille_barre)
+        barre= barre.scaled(taille_barre, 150)  #148
+        self.hpbar_dresseur.setPixmap(barre)
+        self.hpbar_dresseur.move(527,367)
+        self.hpbar_dresseur.show()
+
+    def maj_barre_hp_sauvage(self,pokemon):
+        self.hpbar_sauvage.hide()
+        self.hpbar_sauvage=QLabel(self)
+        self.hpbar_sauvage.setGeometry(0,0,300,300)
+        self.hpbar_sauvage.setAlignment(Qt.AlignRight)
+        path_hpbar=os.path.join(path,"VFX_SFX\Barre_hp.png")
+        barre = QPixmap(path_hpbar)  
+
+        #Calcul du pourcentage de PV qui restent au pokemon:
+        pourcentage=pokemon.HP/pokemon.maxHP
+        taille_barre=int(167 - 167*pourcentage)
+        barre= barre.scaled(taille_barre, 170) 
+        self.hpbar_sauvage.setPixmap(barre)
+        self.hpbar_sauvage.move(183,72)
+        self.hpbar_sauvage.show()
+
 
 
 
