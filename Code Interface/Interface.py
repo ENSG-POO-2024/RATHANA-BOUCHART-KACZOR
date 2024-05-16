@@ -22,6 +22,8 @@ class Window(QMainWindow):
                          self.taille_fen, 
                          self.taille_fen) 
         
+        self.pokemon_path = "C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/pokemons/"
+        
         self.layout = QVBoxLayout()
         
         self.carte()
@@ -39,9 +41,26 @@ class Window(QMainWindow):
         self.setLayout(self.layout)
         
         global pokemon_pos_arrondies
-        pokemon_pos_arrondies[:, 1] = np.random.randint(0, self.fond.width()-112, len(pokemon_pos_arrondies))
-        pokemon_pos_arrondies[:, 2] = np.random.randint(0, self.fond.height()-112, len(pokemon_pos_arrondies))
         pokemon_pos_arrondies = np.append(pokemon_pos_arrondies, [[pokemon_pos_arrondies[i][0].lower()+"_map.png"]for i in range(len(pokemon_pos_arrondies))], axis=1)
+        pokemon_pos_arrondies = np.append(pokemon_pos_arrondies, [[Window.find_left_position(QPixmap(self.pokemon_path + pokemon_pos_arrondies[i][3])) + (Window.find_right_position(QPixmap(self.pokemon_path + pokemon_pos_arrondies[i][3])) - Window.find_left_position(QPixmap(self.pokemon_path + pokemon_pos_arrondies[i][3])))//2]for i in range(len(pokemon_pos_arrondies))], axis=1)
+        pokemon_pos_arrondies = np.append(pokemon_pos_arrondies, [[Window.find_top_position(QPixmap(self.pokemon_path + pokemon_pos_arrondies[i][3])) + (Window.find_bottom_position(QPixmap(self.pokemon_path + pokemon_pos_arrondies[i][3])) - Window.find_top_position(QPixmap(self.pokemon_path + pokemon_pos_arrondies[i][3])))//2]for i in range(len(pokemon_pos_arrondies))], axis=1)
+        compteur = 0
+        while compteur != len(pokemon_pos_arrondies):
+            pixmap = QPixmap(self.pokemon_path + pokemon_pos_arrondies[compteur][3])
+            width = pixmap.width()
+            height = pixmap.height()
+            x = rd.randrange(0, self.fond.width() - width)
+            y = rd.randrange(0, self.fond.height() - height)
+            x_baryc_pokemon = x + pokemon_pos_arrondies[compteur][4]
+            y_baryc_pokemon = y + pokemon_pos_arrondies[compteur][5]
+            pixel = self.fond_collisions.pixmap().toImage().pixelColor(x_baryc_pokemon, y_baryc_pokemon)
+            color = (pixel.red(), pixel.green(), pixel.blue())     
+            if color != (0,0,0):
+                pokemon_pos_arrondies[compteur][1] = x
+                pokemon_pos_arrondies[compteur][2] = y
+                compteur += 1
+        #pokemon_pos_arrondies[:, 1] = np.random.randint(0, self.fond.width()-112, len(pokemon_pos_arrondies))
+        #pokemon_pos_arrondies[:, 2] = np.random.randint(0, self.fond.height()-112, len(pokemon_pos_arrondies))
         pokemon_pos_arrondies[:, 1] += self.x_map
         pokemon_pos_arrondies[:, 2] += self.y_map
         self.inconnus = list(pokemon_pos_arrondies.copy())
@@ -137,10 +156,12 @@ class Window(QMainWindow):
         self.compteur_sup = -1
         self.inconnus_intermediaire = self.inconnus.copy()
         for i in range(len(self.inconnus)):
-            name, x, y, image_path = self.inconnus[i]
-            pixmap = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/pokemons/"+image_path)
-            x_baryc_pokemon = x + pixmap.width()//2
-            y_baryc_pokemon = y + pixmap.height()//2
+            name, x, y, image_path, x_moy, y_moy = self.inconnus[i]
+            pixmap = QPixmap(self.pokemon_path + image_path)
+            x_baryc_pokemon = x + x_moy
+            y_baryc_pokemon = y + y_moy
+            #x_baryc_pokemon = x + pixmap.width()//2
+            #y_baryc_pokemon = y + pixmap.height()//2
             x_baryc_joueur = self.joueur.x() + self.joueur.width()//2
             y_baryc_joueur = self.joueur.y() + self.joueur.height()//2
             x_c = x_baryc_joueur - self.vision//2
@@ -167,6 +188,80 @@ class Window(QMainWindow):
                 self.connus.append(self.inconnus[i])
                 del self.inconnus_intermediaire[i-self.compteur_sup]
         self.inconnus = self.inconnus_intermediaire.copy()
+        
+    def find_bottom_position(image):
+        image = image.toImage()
+        height = image.height()
+        width = image.width()
+
+        # Parcourir les lignes de l'image de bas en haut
+        for y in range(height - 1, -1, -1):
+            # Parcourir les colonnes de gauche à droite
+            for x in range(width):
+                # Obtenir la couleur du pixel
+                pixel = image.pixelColor(x, y)
+                color = (pixel.red(), pixel.green(), pixel.blue())
+                # Si le pixel n'est pas transparent, c'est une ligne contenant des pixels colorés
+                if color != (0,0,0):
+                    return y  # Retourne la position y de la dernière ligne contenant des pixels colorés
+
+        return 0
+
+    def find_top_position(image):
+        image = image.toImage()
+        height = image.height()
+        width = image.width()
+
+        # Parcourir les lignes de l'image de bas en haut
+        for y in range(height):
+            # Parcourir les colonnes de gauche à droite
+            for x in range(width):
+                # Obtenir la couleur du pixel
+                pixel = image.pixelColor(x, y)
+                color = (pixel.red(), pixel.green(), pixel.blue())
+                # Si le pixel n'est pas transparent, c'est une ligne contenant des pixels colorés
+                if color != (0,0,0):
+                    return y  # Retourne la position y de la première ligne contenant des pixels colorés
+
+        return height
+
+    def find_left_position(image):
+        image = image.toImage()
+        height = image.height()
+        width = image.width()
+
+        # Parcourir les lignes de l'image de gauche à droite
+        for x in range(width):
+            # Parcourir les colonnes de haut en bas
+            for y in range(height):
+                # Obtenir la couleur du pixel
+                pixel = image.pixelColor(x, y)
+                color = (pixel.red(), pixel.green(), pixel.blue())
+
+                # Si le pixel n'est pas transparent, c'est une colonne contenant des pixels colorés
+                if color != (0,0,0):
+                    return x  # Retourne la position x de la première colonne contenant des pixels colorés
+
+        return width
+
+    def find_right_position(image):
+        image = image.toImage()
+        height = image.height()
+        width = image.width()
+
+        # Parcourir les colonnes de l'image de droite à gauche
+        for x in range(width - 1, -1, -1):
+            # Parcourir les lignes de haut en bas
+            for y in range(height):
+                # Obtenir la couleur du pixel
+                pixel = image.pixelColor(x, y)
+                color = (pixel.red(), pixel.green(), pixel.blue())
+
+                # Si le pixel n'est pas transparent, c'est une colonne contenant des pixels colorés
+                if color != (0,0,0):
+                    return x  # Retourne la position x de la dernière colonne contenant des pixels colorés
+
+        return 0
 
 
     def point_dans_rectangle(x, y, x_c, y_c, L, l):
@@ -210,7 +305,7 @@ class Window(QMainWindow):
                 y_max = y_map + self.fond.height() + (self.joueur.height() - self.taille_fen)//2
                 obstacle = False
                 
-                if key == Qt.Key_Up :          
+                if key == Qt.Key_Up :
                     if (y_joueur - self.speed < y_map) :
                         for y in range(self.row_mat - 1, self.row_mat - (y_joueur - y_map) - 1, -1):
                             pixels = [self.fond_collisions.pixmap().toImage().pixelColor(x, y) for x in range (self.col_mat, self.col_mat + self.joueur.width())]
@@ -519,11 +614,12 @@ class Window(QMainWindow):
             
                 self.discover()
                 
-                for key in self.dict_connus :
-                    x_pokemon = self.dict_connus[key].x()
-                    x_baryc_pokemon = x_pokemon + self.dict_connus[key].width()//2
-                    y_pokemon = self.dict_connus[key].y()
-                    y_baryc_pokemon = y_pokemon + self.dict_connus[key].height()//2
+                list_keys = list(self.dict_connus.keys())
+                for i in range(len(self.connus)) :
+                    x_pokemon = self.dict_connus[list_keys[i]].x()
+                    x_baryc_pokemon = x_pokemon + self.connus[i][4]
+                    y_pokemon = self.dict_connus[list_keys[i]].y()
+                    y_baryc_pokemon = y_pokemon + self.connus[i][5]
                     x_dresseur = self.joueur.x()
                     y_dresseur = self.joueur.y()
                     L = self.joueur.width()
