@@ -6,7 +6,7 @@ from PyQt5.QtGui import QMouseEvent, QPixmap, QIcon
 
 
 class Fenetre(QMainWindow):
-
+    lancerJeux = pyqtSignal()
     def __init__(self):
         super().__init__()
 
@@ -76,6 +76,10 @@ class Fenetre(QMainWindow):
         self.bouton_start = ClickableLabel('START', 25, self)
         self.bouton_start.setGeometry(550, 100, 130, 35)
         self.bouton_start.show()
+        self.bouton_start.clicked.connect(self.lancerSignal)
+
+    def lancerSignal(self):
+        self.lancerJeux.emit()
 
     def jouer_acquisition(self):
         chemin_son = "C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/son/acquisition.mp3"
