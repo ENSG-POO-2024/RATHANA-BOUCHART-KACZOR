@@ -5,13 +5,25 @@ from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 import sys
+import os
 import subprocess
 import random as rd
 import numpy as np
+
+
+path = os.path.dirname(os.path.abspath(__file__))
+
+#module_path2 = os.path.join(path, "../Code_pokemons/pokemon.py")
+#if module_path2 not in sys.path :
+ #   sys.path.append(module_path2)
 import pokemon as pk
 from pokemon import pokemon_pos_arrondies
+
+#module_path1 = os.path.join(path, "../Code_pokemons/combat.py")
+#if module_path1 not in sys.path :
+ #   sys.path.append(module_path1) 
+import combat
 from combat import CombatPokemon, launch_combat_pokemon
-#from creation_carte import mat_width, mat_height, mat_map
 
 class Window(QMainWindow):
     
@@ -26,7 +38,7 @@ class Window(QMainWindow):
                          self.taille_fen, 
                          self.taille_fen) 
         
-        self.pokemon_path = "C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/pokemons/"
+        self.pokemon_path = os.path.join(path, "RATHANA-BOUCHART-KACZOR/documents/images/pokemons/")
         
         self.layout = QVBoxLayout()
         
@@ -96,6 +108,7 @@ class Window(QMainWindow):
         mewtwo=pk.Pokemon("Ditto")
         vide=pk.Pokemon("Vide")
         self.equipe_dresseur = [salameche, mew, papilusion, arcanin,dracolosse,vide]
+        self.inventaire = []
         
                 
     def FullScreen(self):
@@ -154,7 +167,8 @@ class Window(QMainWindow):
         None.
 
         """
-        sprite_sheet = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
+        path_dresseur = os.path.join(path, "RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
+        sprite_sheet = QPixmap(path_dresseur)
 
         hauteur_sprite = sprite_sheet.height()//4
         largeur_sprite = sprite_sheet.width()//4
@@ -194,14 +208,16 @@ class Window(QMainWindow):
         None.
 
         """
-        pixmap = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/collisions.png")
+        path_collisions = os.path.join(path, "RATHANA-BOUCHART-KACZOR/documents/images/collisions.png")
+        pixmap = QPixmap(path_collisions)
         self.fond_collisions = QLabel(self)
         self.fond_collisions.setPixmap(pixmap)
         x_map = (self.width() - pixmap.width())//2
         y_map = (self.height() - pixmap.height())//2
         self.fond_collisions.setGeometry(x_map, y_map, pixmap.width(), pixmap.height())
         
-        pixmap = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/fond.png")
+        path_fond = os.path.join(path, "RATHANA-BOUCHART-KACZOR/documents/images/fond.png")
+        pixmap = QPixmap(path_fond)
         self.fond = QLabel(self)
         self.fond.setPixmap(pixmap)
         self.x_map = (self.width() - pixmap.width())//2
@@ -765,7 +781,7 @@ class Window(QMainWindow):
                         #self.combat_window.show()
                         #self.combat_app.exec_()
                         #self.setEnabled(False)
-                        self.combat_window = launch_combat_pokemon(pokemon_adverse, self.equipe_dresseur)
+                        self.combat_window = launch_combat_pokemon(self.equipe_dresseur, pokemon_adverse, self.inventaire)
                         break
                     elif i == len(self.connus) - 1 and not Window.point_dans_rectangle(x_baryc_pokemon, y_baryc_pokemon, 
                                                                                        x_dresseur, y_dresseur,
@@ -786,7 +802,7 @@ class Music():
 
     def loadAndPlayMusic(self):
         # Chemin vers le fichier audio
-        music_file_path = "C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/son/son.mp3" # Remplacez par le chemin de votre musique
+        music_file_path = os.path.join(path, "RATHANA-BOUCHART-KACZOR/son/son.mp3") # Remplacez par le chemin de votre musique
         self.player.setMedia(QMediaContent(QUrl.fromLocalFile(music_file_path)))
         self.player.setVolume(50)  # Réglez le volume (0-100)
         self.player.play()  # Commence à jouer
@@ -801,7 +817,7 @@ class Music():
             self.player.play()
 
     def bruit_bump(self):
-        son_bump = "C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/son/bump.mp3"
+        son_bump = os.path.join(path, "RATHANA-BOUCHART-KACZOR/son/bump.mp3")
         self.bump.setMedia(QMediaContent(QUrl.fromLocalFile(son_bump)))
         self.bump.setVolume(50)
         self.bump.play()
