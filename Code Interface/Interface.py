@@ -11,7 +11,7 @@ import numpy as np
 import pokemon as pk
 from pokemon import pokemon_pos_arrondies
 from combat import CombatPokemon, launch_combat_pokemon
-from creation_carte import mat_width, mat_height, mat_map
+#from creation_carte import mat_width, mat_height, mat_map
 
 class Window(QMainWindow):
     
@@ -194,14 +194,14 @@ class Window(QMainWindow):
         None.
 
         """
-        pixmap = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/carte_collisions.png")
+        pixmap = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/collisions.png")
         self.fond_collisions = QLabel(self)
         self.fond_collisions.setPixmap(pixmap)
         x_map = (self.width() - pixmap.width())//2
         y_map = (self.height() - pixmap.height())//2
         self.fond_collisions.setGeometry(x_map, y_map, pixmap.width(), pixmap.height())
         
-        pixmap = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/carte.png")
+        pixmap = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/fond.png")
         self.fond = QLabel(self)
         self.fond.setPixmap(pixmap)
         self.x_map = (self.width() - pixmap.width())//2
@@ -812,4 +812,4 @@ if __name__ == "__main__":
     window = Window()
     app.installEventFilter(window)
     window.show()
-    sys.exit(app.exec_()) 
+    sys.exit(app.exec_())
