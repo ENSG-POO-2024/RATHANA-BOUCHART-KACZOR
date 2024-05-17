@@ -30,6 +30,11 @@ sys.path.append(os.path.abspath('Code_pokemons'))
 import combat
 from combat import CombatPokemon, launch_combat_pokemon
 
+sys.path.append(os.path.abspath('Code_Interface'))
+
+import accueil
+from accueil import Fenetre
+
 class Window(QMainWindow):
     
     def __init__(self):
@@ -41,7 +46,7 @@ class Window(QMainWindow):
         self.setGeometry((self.plein_ecran.width() - self.taille_fen)//2, 
                          (self.plein_ecran.height() - self.taille_fen)//2, 
                          self.taille_fen, 
-                         self.taille_fen) 
+                         self.taille_fen)
         
         self.pokemon_path = os.path.join(path, "documents/images/pokemons/")
         
@@ -870,6 +875,11 @@ class Music():
         
 
 if __name__ == "__main__":
+    app_accueil = QApplication(sys.argv)
+    interface = Fenetre()
+    interface.show()
+    sys.exit(app_accueil.exec_())
+    
     app = QApplication(sys.argv)
     window = Window()
     app.installEventFilter(window)
