@@ -16,12 +16,17 @@ path = os.path.dirname(os.path.abspath(__file__))
 #module_path2 = os.path.join(path, "../Code_pokemons/pokemon.py")
 #if module_path2 not in sys.path :
  #   sys.path.append(module_path2)
+sys.path.append(os.path.abspath('Code_pokemons'))
+
 import pokemon as pk
 from pokemon import pokemon_pos_arrondies
 
 #module_path1 = os.path.join(path, "../Code_pokemons/combat.py")
 #if module_path1 not in sys.path :
  #   sys.path.append(module_path1) 
+
+sys.path.append(os.path.abspath('Code_pokemons')) 
+
 import combat
 from combat import CombatPokemon, launch_combat_pokemon
 
@@ -38,7 +43,7 @@ class Window(QMainWindow):
                          self.taille_fen, 
                          self.taille_fen) 
         
-        self.pokemon_path = os.path.join(path, "RATHANA-BOUCHART-KACZOR/documents/images/pokemons/")
+        self.pokemon_path = os.path.join(path, "documents/images/pokemons/")
         
         self.layout = QVBoxLayout()
         
@@ -167,7 +172,7 @@ class Window(QMainWindow):
         None.
 
         """
-        path_dresseur = os.path.join(path, "RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
+        path_dresseur = os.path.join(path, "documents/images/SpriteSheet.png")
         sprite_sheet = QPixmap(path_dresseur)
 
         hauteur_sprite = sprite_sheet.height()//4
@@ -208,7 +213,7 @@ class Window(QMainWindow):
         None.
 
         """
-        path_collisions = os.path.join(path, "RATHANA-BOUCHART-KACZOR/documents/images/collisions.png")
+        path_collisions = os.path.join(path, "documents/images/collisions.png")
         pixmap = QPixmap(path_collisions)
         self.fond_collisions = QLabel(self)
         self.fond_collisions.setPixmap(pixmap)
@@ -216,7 +221,7 @@ class Window(QMainWindow):
         y_map = (self.height() - pixmap.height())//2
         self.fond_collisions.setGeometry(x_map, y_map, pixmap.width(), pixmap.height())
         
-        path_fond = os.path.join(path, "RATHANA-BOUCHART-KACZOR/documents/images/fond.png")
+        path_fond = os.path.join(path, "documents/images/fond.png")
         pixmap = QPixmap(path_fond)
         self.fond = QLabel(self)
         self.fond.setPixmap(pixmap)
@@ -802,7 +807,7 @@ class Music():
 
     def loadAndPlayMusic(self):
         # Chemin vers le fichier audio
-        music_file_path = os.path.join(path, "RATHANA-BOUCHART-KACZOR/son/son.mp3") # Remplacez par le chemin de votre musique
+        music_file_path = os.path.join(path, "son/son.mp3") # Remplacez par le chemin de votre musique
         self.player.setMedia(QMediaContent(QUrl.fromLocalFile(music_file_path)))
         self.player.setVolume(50)  # Réglez le volume (0-100)
         self.player.play()  # Commence à jouer
@@ -817,7 +822,7 @@ class Music():
             self.player.play()
 
     def bruit_bump(self):
-        son_bump = os.path.join(path, "RATHANA-BOUCHART-KACZOR/son/bump.mp3")
+        son_bump = os.path.join(path, "son/bump.mp3")
         self.bump.setMedia(QMediaContent(QUrl.fromLocalFile(son_bump)))
         self.bump.setVolume(50)
         self.bump.play()
