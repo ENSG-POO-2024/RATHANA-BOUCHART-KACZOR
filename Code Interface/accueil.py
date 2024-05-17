@@ -51,11 +51,12 @@ class Fenetre(QMainWindow):
         self.txt_noir("Choose your first Pokémon")
 
     def pokeballs(self):
-        self.poke_bulb_fermee = PokeballFermee(self)
+        self.poke_bulb_fermee = Pokeball(self)
         self.poke_bulb_fermee.setGeometry(320, 200, self.poke_bulb_fermee.width(), self.poke_bulb_fermee.height())
+        self.poke_bulb_fermee.setMinimumHeight(129)
         self.poke_bulb_fermee.show()
 
-        self.poke_bulb_ouverte = PokeballOuverte(self)
+        self.poke_bulb_ouverte = Pokeball(self)
         self.poke_bulb_ouverte.setGeometry(320, 200, self.poke_bulb_ouverte.width(), self.poke_bulb_ouverte.height())
         self.poke_bulb_ouverte.hide()   
 
@@ -90,24 +91,13 @@ class Musique():
         self.intro.setVolume(50)
         self.intro.play()
 
-class PokeballOuverte(QLabel):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setPixmap(QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/pokeballOuverte.png"))
-
-    def enterEvent(self, event):
-        self.setPixmap(QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/pokeballOuverte.png"))
-
-    def leaveEvent(self, event):
-        self.hide()
-
-class PokeballFermee(QLabel):
+class Pokeball(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setPixmap(QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/pokeballFermee.png"))
 
     def enterEvent(self, event):
-        self.hide()
+        self.setPixmap(QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/pokeballOuverte.png"))
 
     def leaveEvent(self, event):
         self.setPixmap(QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/pokeballFermee.png"))
