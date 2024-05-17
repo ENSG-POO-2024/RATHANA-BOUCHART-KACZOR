@@ -8,7 +8,7 @@ import os
 
 path=os.path.dirname(os.path.abspath(__file__))
 path2=os.path.join(path, "../documents/images/pokemons")
-inventaire=[]
+
 
 mew = pk.Pokemon("Dratini")
 salameche= pk.Pokemon("Mewtwo")
@@ -17,14 +17,14 @@ dracolosse=pk.Pokemon("Dragonite")
 papilusion=pk.Pokemon("Butterfree")
 arcanin=pk.Pokemon("Arcanine")
 mewtwo=pk.Pokemon("Ditto")
-vide=pk.Pokemon("Mewtwo")
+vide=pk.Pokemon("Vide")
 
 
-
-equipe_dresseur = [salameche, mew, papilusion, arcanin,dracolosse,vide]
+inventaire=[]
+equipe_dresseur = [mew,salameche,vide,vide,vide,vide]
 pokemon_allie= equipe_dresseur[0]
 
-pokemon_adverse=pk.PokemonSauvage("Ditto",0,0)
+pokemon_adverse=pk.PokemonSauvage("Moltres",0,0)
 
 
 def find_bottom_position(image):
@@ -214,7 +214,7 @@ class CombatPokemon(QMainWindow):
         self.changepkm.hide()
 
 
-        if equipe_dresseur[0].name!="Vide":
+        if equipe_dresseur[0].generation!=2:
             
             #Cette partie du code marche mais je la mets en pause
 
@@ -235,7 +235,7 @@ class CombatPokemon(QMainWindow):
             self.pokemon1.hide()
             self.pokemon1.clicked.connect(self.changetopkm1)
 
-            if equipe_dresseur[1].name!="Vide":
+            if equipe_dresseur[1].generation!=2:
         
                 self.pokemon2=ClickableLabel(equipe_dresseur[1].name.upper(), 13,self)
                 self.pokemon2.setAlignment(Qt.AlignLeft)
@@ -245,7 +245,7 @@ class CombatPokemon(QMainWindow):
                 self.pokemon2.hide()
                 self.pokemon2.clicked.connect(self.changetopkm2)
 
-            if equipe_dresseur[2].name!="Vide":
+            if equipe_dresseur[2].generation!=2:
         
                 self.pokemon3=ClickableLabel(equipe_dresseur[2].name.upper(), 13,self)
                 self.pokemon3.setAlignment(Qt.AlignLeft)
@@ -255,7 +255,7 @@ class CombatPokemon(QMainWindow):
                 self.pokemon3.hide()
                 self.pokemon3.clicked.connect(self.changetopkm3)
             
-            if equipe_dresseur[3].name!="Vide":
+            if equipe_dresseur[3].generation!=2:
         
                 self.pokemon4=ClickableLabel(equipe_dresseur[3].name.upper(), 13,self)
                 self.pokemon4.setAlignment(Qt.AlignLeft)
@@ -266,7 +266,7 @@ class CombatPokemon(QMainWindow):
                 self.pokemon4.clicked.connect(self.changetopkm4)
 
 
-            if equipe_dresseur[4].name!="Vide":
+            if equipe_dresseur[4].generation!=2:
         
                 self.pokemon5=ClickableLabel(equipe_dresseur[4].name.upper(), 13,self)
                 self.pokemon5.setAlignment(Qt.AlignLeft)
@@ -276,7 +276,7 @@ class CombatPokemon(QMainWindow):
                 self.pokemon5.hide()
                 self.pokemon5.clicked.connect(self.changetopkm5)
 
-            if equipe_dresseur[5].name!="Vide":
+            if equipe_dresseur[5].generation!=2:
         
                 self.pokemon6=ClickableLabel(equipe_dresseur[5].name.upper(), 13,self)
                 self.pokemon6.setAlignment(Qt.AlignLeft)
@@ -367,30 +367,30 @@ class CombatPokemon(QMainWindow):
     def affiche_menu_changepkm(self):
         self.changepkm.show()
         self.pokemon1.show()
-        if equipe_dresseur[1].name!="Vide":
+        if equipe_dresseur[1].generation!=2:
             self.pokemon2.show()
-        if equipe_dresseur[2].name!="Vide":
+        if equipe_dresseur[2].generation!=2:
             self.pokemon3.show()
-        if equipe_dresseur[3].name!="Vide":
+        if equipe_dresseur[3].generation!=2:
             self.pokemon4.show()
-        if equipe_dresseur[4].name!="Vide":
+        if equipe_dresseur[4].generation!=2:
             self.pokemon5.show()
-        if equipe_dresseur[5].name!="Vide":
+        if equipe_dresseur[5].generation!=2:
             self.pokemon6.show()
         self.retour.show()
 
     def cache_menu_changepkm(self):
         self.changepkm.hide()
         self.pokemon1.hide()
-        if equipe_dresseur[1].name!="Vide":
+        if equipe_dresseur[1].generation!=2:
             self.pokemon2.hide()
-        if equipe_dresseur[2].name!="Vide":
+        if equipe_dresseur[2].generation!=2:
             self.pokemon3.hide()
-        if equipe_dresseur[3].name!="Vide":
+        if equipe_dresseur[3].generation!=2:
             self.pokemon4.hide()
-        if equipe_dresseur[4].name!="Vide":
+        if equipe_dresseur[4].generation!=2:
             self.pokemon5.hide()
-        if equipe_dresseur[5].name!="Vide":
+        if equipe_dresseur[5].generation!=2:
             self.pokemon6.hide()
         self.retour.hide()
 
@@ -1425,12 +1425,19 @@ class CombatPokemon(QMainWindow):
                     self.txt_blanc(ennemi.name.upper() + " is K.O. You catched him!")
 
                     loop=QEventLoop()
-                    QTimer.singleShot(1500,loop.quit)
+                    QTimer.singleShot(3000,loop.quit)
                     loop.exec_()
 
                     self.txtblanc.hide()
                     self.txt_blanc("He got sent in your inventory")
-                    inventaire.append(ennemi.name)
+                    k=0
+                    while equipe_dresseur[k].name!='Vide':
+                        k+=1
+                    if k==6:
+                        inventaire.append(ennemi.name)
+                    else:
+
+                        equipe_dresseur[k]=pk.Pokemon(ennemi.name)
 
                     QTimer.singleShot(4000,self.close)
                 else:
@@ -1570,7 +1577,13 @@ class CombatPokemon(QMainWindow):
 
                     self.txtblanc.hide()
                     self.txt_blanc("He got sent in your inventory.")
-                    inventaire.append(ennemi.name)
+                    while equipe_dresseur[k].name!='Vide':
+                        k+=1
+                    if k==6:
+                        inventaire.append(ennemi.name)
+                    else:
+                        str()
+                        equipe_dresseur[k]=pk.Pokemon(ennemi.name)
 
                     QTimer.singleShot(4000,self.close)
 
