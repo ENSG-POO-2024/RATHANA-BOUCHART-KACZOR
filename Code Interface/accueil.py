@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
-from PyQt5.QtCore import QUrl, Qt
+from PyQt5.QtCore import QUrl, Qt, pyqtSignal
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtGui import QPixmap
 
@@ -37,8 +37,8 @@ class Fenetre(QMainWindow):
         self.sorbier.setGeometry(100, 200, pixmap.width(), pixmap.height())
 
     def bouton(self):
-        self.bouton = QPushButton('Next', self)
-        self.bouton.setGeometry(1042, 530, 40, 30)
+        self.bouton = ClickableLabel('Next', 17, self)
+        self.bouton.setGeometry(940, 540, 70, 20)
         self.bouton.clicked.connect(self.dialogue_suivant)
         self.bouton.clicked.connect(self.pokeballs)
     
@@ -97,6 +97,24 @@ class Pokeball(QLabel):
 
     def leaveEvent(self, event):
         self.setPixmap(QPixmap(f"C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/pokeballFermee.png"))
+
+class ClickableLabel(QLabel):
+    clicked = pyqtSignal()
+
+    def __init__(self, text, taille, parent=None):
+        super().__init__(text, parent)
+        self.setStyleSheet("QLabel { color: black; font-size: " + str(taille)+"px; font-family: 'Press Start 2P'; }")  # Style du texte
+        self.taille=taille
+
+    def mousePressEvent(self, event):
+        if event.buttons() & Qt.LeftButton:
+            self.clicked.emit()
+    
+    def enterEvent(self,event):
+        self.setStyleSheet("QLabel { color: darkgrey; font-size: " +str(self.taille) +"px; font-family: 'Press Start 2P'; }")
+
+    def leaveEvent(self,event):
+        self.setStyleSheet("QLabel { color: black; font-size: " + str(self.taille) +"px; font-family: 'Press Start 2P'; }")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
