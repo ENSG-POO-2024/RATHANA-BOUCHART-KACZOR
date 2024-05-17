@@ -813,5 +813,3 @@ if __name__ == "__main__":
     app.installEventFilter(window)
     window.show()
     sys.exit(app.exec_()) 
-    
-x = 3
