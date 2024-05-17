@@ -11,20 +11,20 @@ path2=os.path.join(path, "../documents/images/pokemons")
 inventaire=[]
 
 mew = pk.Pokemon("Dratini")
-salameche= pk.Pokemon("Blastoise")
+salameche= pk.Pokemon("Mewtwo")
 bulbizare= pk.Pokemon("Bulbasaur")
 dracolosse=pk.Pokemon("Dragonite")
 papilusion=pk.Pokemon("Butterfree")
 arcanin=pk.Pokemon("Arcanine")
 mewtwo=pk.Pokemon("Ditto")
-vide=pk.Pokemon("Vide")
+vide=pk.Pokemon("Mewtwo")
 
 
 
 equipe_dresseur = [salameche, mew, papilusion, arcanin,dracolosse,vide]
 pokemon_allie= equipe_dresseur[0]
 
-pokemon_adverse=pk.PokemonSauvage("Macron",0,0)
+pokemon_adverse=pk.PokemonSauvage("Ditto",0,0)
 
 
 def find_bottom_position(image):
@@ -474,8 +474,12 @@ class CombatPokemon(QMainWindow):
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
 
-                if result[2]>1:
+                elif result[2]==0:
+                    self.txt_blanc("It doesn't affect " + equipe_dresseur[self.pokemon_au_combat-1].name +".")
+
+                elif result[2]>1:
                     self.txt_blanc("It's super effective !")
+                
 
                 loop=QEventLoop()
                 QTimer.singleShot(1000,loop.quit)
@@ -591,7 +595,10 @@ class CombatPokemon(QMainWindow):
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
 
-                if result[2]>1:
+                elif result[2]==0:
+                    self.txt_blanc("It doesn't affect " + equipe_dresseur[self.pokemon_au_combat-1].name +".")
+
+                elif result[2]>1:
                     self.txt_blanc("It's super effective !")
 
                 loop=QEventLoop()
@@ -708,8 +715,12 @@ class CombatPokemon(QMainWindow):
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
 
-                if result[2]>1:
+                elif result[2]==0:
+                    self.txt_blanc("It doesn't affect " + equipe_dresseur[self.pokemon_au_combat-1].name +".")
+
+                elif result[2]>1:
                     self.txt_blanc("It's super effective !")
+
 
                 loop=QEventLoop()
                 QTimer.singleShot(1000,loop.quit)
@@ -825,7 +836,10 @@ class CombatPokemon(QMainWindow):
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
 
-                if result[2]>1:
+                elif result[2]==0:
+                    self.txt_blanc("It doesn't affect " + equipe_dresseur[self.pokemon_au_combat-1].name +".")
+
+                elif result[2]>1:
                     self.txt_blanc("It's super effective !")
 
                 loop=QEventLoop()
@@ -942,8 +956,12 @@ class CombatPokemon(QMainWindow):
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
 
-                if result[2]>1:
+                elif result[2]==0:
+                    self.txt_blanc("It doesn't affect " + equipe_dresseur[self.pokemon_au_combat-1].name +".")
+
+                elif result[2]>1:
                     self.txt_blanc("It's super effective !")
+                
 
                 loop=QEventLoop()
                 QTimer.singleShot(1000,loop.quit)
@@ -1059,7 +1077,10 @@ class CombatPokemon(QMainWindow):
                 if result[2]<1:
                     self.txt_blanc("This isn't very effective...")
 
-                if result[2]>1:
+                elif result[2]==0:
+                    self.txt_blanc("It doesn't affect " + equipe_dresseur[self.pokemon_au_combat-1].name +".")
+
+                elif result[2]>1:
                     self.txt_blanc("It's super effective !")
 
                 loop=QEventLoop()
@@ -1220,12 +1241,14 @@ class CombatPokemon(QMainWindow):
         self.hpbar_dresseur.hide()
         self.maj_barre_hp_dresseur(equipe_dresseur[self.pokemon_au_combat -1])
 
-        if result[2]<1:
-            self.txt_blanc("This isn't very effective...")
 
-        if result[2]>1:
+        if result[2]==0:
+            self.txt_blanc("It doesn't affect " + equipe_dresseur[self.pokemon_au_combat-1].name +".")
+        elif result[2]<1:
+            self.txt_blanc=("It's not really effective...")
+        elif result[2]>1:
             self.txt_blanc("It's super effective !")
-
+        
         loop=QEventLoop()
         QTimer.singleShot(1000,loop.quit)
         loop.exec_()
@@ -1276,6 +1299,8 @@ class CombatPokemon(QMainWindow):
             self.cache_menu_principal()
             self.txtblanc.hide()
             self.retour.hide()
+        else:
+            self.affiche_menu_principal()
 
     def atk1(self):
         self.attaque1.hide()
@@ -1304,12 +1329,20 @@ class CombatPokemon(QMainWindow):
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
             
-            if result[1]<1:
+            elif result[1]==0:
+                self.txtblanc.hide()
+                self.txt_blanc("It doesn't affect ennemy " + ennemi.name +".")
+                loop=QEventLoop()
+                QTimer.singleShot(1000,loop.quit)
+                loop.exec_()
+
+            elif result[1]<1:
                 self.txtblanc.hide()
                 self.txt_blanc("It's not very effective...")
                 loop=QEventLoop()
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
+
             else:
                 loop=QEventLoop()
                 QTimer.singleShot(1000,loop.quit)
@@ -1362,6 +1395,13 @@ class CombatPokemon(QMainWindow):
                 if result[1]>1:
                     self.txtblanc.hide()
                     self.txt_blanc("It's super effective!")
+                    loop=QEventLoop()
+                    QTimer.singleShot(1000,loop.quit)
+                    loop.exec_()
+
+                elif result[1]==0:
+                    self.txtblanc.hide()
+                    self.txt_blanc("It doesn't affect ennemy " + ennemi.name +".")
                     loop=QEventLoop()
                     QTimer.singleShot(1000,loop.quit)
                     loop.exec_()
@@ -1424,17 +1464,26 @@ class CombatPokemon(QMainWindow):
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
             
-            if result[1]<1:
+            elif result[1]==0:
+                self.txtblanc.hide()
+                self.txt_blanc("It doesn't affect " + ennemi.name +".")
+                loop=QEventLoop()
+                QTimer.singleShot(1000,loop.quit)
+                loop.exec_()
+
+            elif result[1]<1:
                 self.txtblanc.hide()
                 self.txt_blanc("It's not very effective...")
                 loop=QEventLoop()
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
+
             
             if result[1]==1:
                 loop=QEventLoop()
                 QTimer.singleShot(1000,loop.quit)
                 loop.exec_()
+
             
             self.txtblanc.hide()
 
@@ -1461,6 +1510,7 @@ class CombatPokemon(QMainWindow):
             else:
                 self.attaque_sauvage()
                 self.is_KO()
+                
 
         else:
             self.attaque_sauvage()
@@ -1487,7 +1537,14 @@ class CombatPokemon(QMainWindow):
                     QTimer.singleShot(1000,loop.quit)
                     loop.exec_()
             
-                if result[1]<1:
+                elif result[1]==0:
+                    self.txtblanc.hide()
+                    self.txt_blanc("It doesn't affect " + ennemi.name +".")
+                    loop=QEventLoop()
+                    QTimer.singleShot(1000,loop.quit)
+                    loop.exec_()
+
+                elif result[1]<1:
                     self.txtblanc.hide()
                     self.txt_blanc("It's not very effective...")
                     loop=QEventLoop()
