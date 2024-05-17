@@ -30,10 +30,15 @@ sys.path.append(os.path.abspath('Code_pokemons'))
 import combat
 from combat import CombatPokemon, launch_combat_pokemon
 
-sys.path.append(os.path.abspath('Code_Interface'))
+sys.path.append(os.path.abspath('Code Interface'))
 
 import accueil
 from accueil import Fenetre
+
+app_accueil = QApplication(sys.argv)
+interface = Fenetre()
+interface.show()
+sys.exit(app_accueil.exec_())
 
 class Window(QMainWindow):
     

@@ -9,7 +9,7 @@ from PyQt5.QtGui import QMouseEvent, QPixmap, QIcon
 path = os.path.dirname(os.path.abspath(__file__))
 
 class Fenetre(QMainWindow):
-    lancerJeux = pyqtSignal()
+
     def __init__(self):
         super().__init__()
 
