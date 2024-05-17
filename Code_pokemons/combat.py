@@ -1228,17 +1228,26 @@ class CombatPokemon(QMainWindow):
         self.hpbar_dresseur.hide()
         self.maj_barre_hp_dresseur(self.equipe_dresseur[self.pokemon_au_combat -1])
 
+        if result[2]>1:
+            self.txtblanc.hide()
+            self.txt_blanc("It's super effective!")
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
+            
+        elif result[2]==0:
+            self.txtblanc.hide()
+            self.txt_blanc("It doesn't affect ennemy " + self.equipe_dresseur[self.pokemon_au_combat -1].name +".")
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
 
-        if result[2]==0:
-            self.txt_blanc("It doesn't affect " + self.equipe_dresseur[self.pokemon_au_combat-1].name +".")
         elif result[2]<1:
-            self.txt_blanc=("It's not really effective...")
-        elif result[2]>1:
-            self.txt_blanc("It's super effective !")
-        
-        loop=QEventLoop()
-        QTimer.singleShot(1000,loop.quit)
-        loop.exec_()
+            self.txtblanc.hide()
+            self.txt_blanc("It's not very effective...")
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
 
         #self.affiche_menu_principal()
         self.txtblanc.hide()
@@ -1286,8 +1295,6 @@ class CombatPokemon(QMainWindow):
             self.cache_menu_principal()
             self.txtblanc.hide()
             self.retour.hide()
-        else:
-            self.affiche_menu_principal()
 
     def atk1(self):
         self.attaque1.hide()
@@ -1361,6 +1368,7 @@ class CombatPokemon(QMainWindow):
             else:
                 self.attaque_sauvage()
                 self.is_KO()
+                self.affiche_menu_principal()
 
         else:
             self.attaque_sauvage()
@@ -1503,7 +1511,7 @@ class CombatPokemon(QMainWindow):
             else:
                 self.attaque_sauvage()
                 self.is_KO()
-                
+                self.affiche_menu_principal()
 
         else:
             self.attaque_sauvage()
@@ -1563,6 +1571,7 @@ class CombatPokemon(QMainWindow):
 
                     self.txtblanc.hide()
                     self.txt_blanc("He got sent in your inventory.")
+                    k=0
                     while self.equipe_dresseur[k].name!='Vide':
                         k+=1
                     if k==6:
@@ -1609,9 +1618,15 @@ class CombatPokemon(QMainWindow):
         self.hpbar_sauvage.move(183,72)
         self.hpbar_sauvage.show()
 
+def launch_combat_pokemon(equipe_dresseur,pokemon_adverse,inventaire):
+    combat_window=CombatPokemon(equipe_dresseur,pokemon_adverse,inventaire)
+    combat_window.show()
+    return combat_window
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = CombatPokemon([pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo")],pk.PokemonSauvage("Mew",0,0),[])
+    window = CombatPokemon([pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo")],pk.PokemonSauvage("Machop",0,0),[])
     window.show()
     sys.exit(app.exec_())
 
