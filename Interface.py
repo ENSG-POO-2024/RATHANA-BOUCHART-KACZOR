@@ -38,7 +38,7 @@ from accueil import Fenetre
 app_accueil = QApplication(sys.argv)
 interface = Fenetre()
 interface.show()
-sys.exit(app_accueil.exec_())
+
 
 class Window(QMainWindow):
     
@@ -129,7 +129,7 @@ class Window(QMainWindow):
         arcanin=pk.Pokemon("Arcanine")
         mewtwo=pk.Pokemon("Snorlax")
         vide=pk.Pokemon("Vide")
-        self.equipe_dresseur = [mewtwo, vide, vide, vide,vide,vide]
+        self.equipe_dresseur = [mewtwo, salameche, vide, vide,vide,vide]
         self.inventaire = []
         
                 
@@ -191,7 +191,7 @@ class Window(QMainWindow):
         None.
 
         """
-        self.new_window = Inventory()
+        self.new_window = Inventory(self.equipe_dresseur)
         self.new_window.show()
 
     def dresseur(self):
@@ -881,18 +881,66 @@ class Music():
         self.bump.play()
         
 class Inventory(QMainWindow):
-    def __init__(self):
+    def __init__(self, equipe):
         super().__init__()
-
+        self.equipe = equipe
         self.setGeometry(80, 50, 256, 192) 
+        
+        self.case10 = QPixmap(os.path.join(path, "documents/images/case1.png"))
+        self.case20 = QPixmap(os.path.join(path, "documents/images/case2.png"))
+        self.case1selectionnee0 = QPixmap(os.path.join(path, "documents/images/case1selectionnee.png"))
+        self.case2selectionnee0 = QPixmap(os.path.join(path, "documents/images/case2selectionnee.png"))
+
+        self.case1 = QLabel(self)
+        self.case2 = QLabel(self)
+        self.case3 = QLabel(self)
+        self.case4 = QLabel(self)
+        self.case5 = QLabel(self)
+        self.case6 = QLabel(self)
+
         self.setBackground()
+        self.firstPokemon()
 
     def setBackground(self):
         pixmap = QPixmap(os.path.join(path, "documents/images/inventaireFond.png"))
         self.fond = QLabel(self)
         self.fond.setPixmap(pixmap)
         self.fond.setGeometry(0, 0, pixmap.width(), pixmap.height())
-    
+
+        self.case1.setPixmap(self.case20)
+        self.case1.setGeometry(1,2, self.case20.width() ,self.case20.height())
+        self.case1.hide()
+
+        self.case2.setPixmap(self.case20)
+        self.case2.setGeometry(130,10, self.case20.width() ,self.case20.height())
+        self.case2.hide()
+
+        self.case3.setPixmap(self.case20)
+        self.case3.setGeometry(1,50, self.case20.width() ,self.case20.height())
+        self.case3.hide()
+
+        self.case4.setPixmap(self.case20)
+        self.case4.setGeometry(130,58, self.case20.width() ,self.case20.height())
+        self.case4.hide()
+
+        self.case5.setPixmap(self.case20)
+        self.case5.setGeometry(1,100, self.case20.width() ,self.case20.height())    
+        self.case5.hide()   
+
+        self.case6.setPixmap(self.case20)
+        self.case6.setGeometry(130,107, self.case20.width() ,self.case20.height())
+        self.case6.hide()
+
+    def firstPokemon(self):
+        l = [self.case1,self.case2,self.case3,self.case4,self.case5,self.case6]
+        for i in range(6):
+            if (self.equipe[i].name == "Vide"):
+                pass
+            else:
+                l[i].show()
+
+
+
 
 if __name__ == "__main__":
     # app_accueil = QApplication(sys.argv)
