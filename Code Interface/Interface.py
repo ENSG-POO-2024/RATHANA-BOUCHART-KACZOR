@@ -812,4 +812,6 @@ if __name__ == "__main__":
     window = Window()
     app.installEventFilter(window)
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec_()) 
+    
+x = 3
