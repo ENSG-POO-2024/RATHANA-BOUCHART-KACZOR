@@ -60,6 +60,10 @@ class ClickableLabel(QLabel):
 
 
 class CombatPokemon(QMainWindow):
+    
+    all_pokemons_ko = pyqtSignal()
+    captured = pyqtSignal()
+    
     def __init__(self,equipe_pokemon,pokemon_adverse,inventaire):
         super().__init__()
         self.equipe_dresseur=equipe_pokemon
@@ -1276,8 +1280,11 @@ class CombatPokemon(QMainWindow):
 
             self.txtblanc.hide()
             self.txt_blanc("All your Pokemons are K.O. You run back home to heal them.")
-
+            
             QTimer.singleShot(3000,self.close)
+            
+            self.all_pokemons_ko.emit()
+            
 
         if self.equipe_dresseur[self.pokemon_au_combat -1].HP==0:
             self.txtblanc.hide()
@@ -1422,6 +1429,8 @@ class CombatPokemon(QMainWindow):
                     self.pokemon_sauvage.hide()
                     self.nom_pkm_s.hide()
                     self.txt_blanc(ennemi.name.upper() + " is K.O. You catched him!")
+                    
+                    self.captured.emit()
 
                     loop=QEventLoop()
                     QTimer.singleShot(3000,loop.quit)
@@ -1567,6 +1576,8 @@ class CombatPokemon(QMainWindow):
                     self.pokemon_sauvage.hide()
                     self.nom_pkm_s.hide()
                     self.txt_blanc(ennemi.name.upper() + " is K.O. You catched him!")
+                    
+                    self.captured.emit()
 
                     loop=QEventLoop()
                     QTimer.singleShot(1500,loop.quit)
