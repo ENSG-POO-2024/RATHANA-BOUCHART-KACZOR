@@ -1279,7 +1279,7 @@ class CombatPokemon(QMainWindow):
 
             QTimer.singleShot(3000,self.close)
 
-        elif self.equipe_dresseur[self.pokemon_au_combat -1].HP==0:
+        if self.equipe_dresseur[self.pokemon_au_combat -1].HP==0:
             self.txtblanc.hide()
             self.cache_menu_changepkm()
             self.cache_menu_principal()
@@ -1296,6 +1296,9 @@ class CombatPokemon(QMainWindow):
             self.cache_menu_principal()
             self.txtblanc.hide()
             self.retour.hide()
+        else: 
+            self.affiche_menu_principal()
+
 
     def atk1(self):
         self.attaque1.hide()
@@ -1369,11 +1372,11 @@ class CombatPokemon(QMainWindow):
             else:
                 self.attaque_sauvage()
                 self.is_KO()
-                self.affiche_menu_principal()
 
         else:
             self.attaque_sauvage()
             self.is_KO()
+            self.cache_menu_principal()
             if self.equipe_dresseur[self.pokemon_au_combat -1].HP!=0:
                 result=allie.attaque(ennemi,1)
                 self.txt_blanc(allie.name.upper() + " uses " +allie.attaque_normale +"!")
@@ -1512,12 +1515,11 @@ class CombatPokemon(QMainWindow):
             else:
                 self.attaque_sauvage()
                 self.is_KO()
-                self.affiche_menu_principal()
 
         else:
             self.attaque_sauvage()
             self.is_KO()
-
+            self.cache_menu_principal()
             if self.equipe_dresseur[self.pokemon_au_combat -1].HP!=0:
                 result=allie.attaque(ennemi,2)
                 self.txt_blanc(allie.name.upper() + " uses " +allie.attaque_type +"!")
@@ -1627,7 +1629,7 @@ def launch_combat_pokemon(equipe_dresseur,pokemon_adverse,inventaire):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = CombatPokemon([pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo")],pk.PokemonSauvage("Machop",0,0),[])
+    window = CombatPokemon([pk.Pokemon("Machop"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo")],pk.PokemonSauvage("Mewtwo",0,0),[])
     window.show()
     sys.exit(app.exec_())
 
