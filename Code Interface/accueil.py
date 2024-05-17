@@ -1,9 +1,12 @@
 import sys
+import os
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QMessageBox
 from PyQt5.QtCore import QUrl, Qt, pyqtSignal, QRect, QTimer
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QSound, QSoundEffect
 from PyQt5.QtGui import QMouseEvent, QPixmap, QIcon
 
+
+path = os.path.dirname(os.path.abspath(__file__))
 
 class Fenetre(QMainWindow):
     lancerJeux = pyqtSignal()
@@ -79,27 +82,27 @@ class Fenetre(QMainWindow):
         self.bouton_start.clicked.connect(self.lancerSignal)
 
     def lancerSignal(self):
-        self.lancerJeux.emit()
+        self.close()
 
     def jouer_acquisition(self):
-        chemin_son = "C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/son/acquisition.mp3"
+        chemin_son = os.path.join(path, "../son/acquisition.mp3")
         self.aquisition.setMedia(QMediaContent(QUrl.fromLocalFile(chemin_son)))
         self.aquisition.setVolume(100)
         self.aquisition.play()
 
     def afficherFond(self):
-        pixmap = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/accueil.png")
+        pixmap = QPixmap(os.path.join(path, "../documents/images/accueil.png"))
         self.fond = QLabel(self)
         self.fond.setPixmap(pixmap)
         self.fond.setGeometry(0, 0, pixmap.width(), pixmap.height())
 
-        pixmap = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/dialogue.png")
+        pixmap = QPixmap(os.path.join(path, "../documents/images/dialogue.png"))
         self.dialogue = QLabel(self)
         self.dialogue.setPixmap(pixmap)
         self.dialogue.setGeometry(100, 405, pixmap.width(), pixmap.height())
 
     def afficherSorbier(self):
-        pixmap = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/sorbier.png")
+        pixmap = QPixmap(os.path.join(path, "../documents/images/sorbier.png"))
         self.sorbier = QLabel(self)
         self.sorbier.setPixmap(pixmap)
         self.sorbier.setGeometry(100, 200, pixmap.width(), pixmap.height())
@@ -116,7 +119,7 @@ class Fenetre(QMainWindow):
 
 
     def jouer_son(self):
-        chemin_son = "C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/son/click.mp3"
+        chemin_son = os.path.join(path, "../son/click.mp3")
         self.click.setMedia(QMediaContent(QUrl.fromLocalFile(chemin_son)))
         self.click.setVolume(50)
         self.click.play()
@@ -162,7 +165,7 @@ class Musique():
         self.chargerEtJouerMusique()
 
     def chargerEtJouerMusique(self):
-        chemin_intro = "C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/son/intro.mp3"
+        chemin_intro = os.path.join(path,"../son/intro.mp3")
         self.intro.setMedia(QMediaContent(QUrl.fromLocalFile(chemin_intro)))
         self.intro.setVolume(50)
         self.intro.play()
@@ -175,7 +178,7 @@ class ClickableLabel(QLabel):
         super().__init__(text, parent)
         self.setStyleSheet("QLabel { color: black; font-size: " + str(taille)+"px; font-family: 'Press Start 2P'; }")  # Style du texte
         self.taille=taille
-        self.sound = QSound("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/son/click.mp3")
+        self.sound = QSound(os.path.join(path,"../son/click.mp3"))
 
     def mousePressEvent(self, event):
         self.sound.play()
@@ -192,14 +195,14 @@ class Pokeball(QLabel):
     def __init__(self, parent=None, poke_type=""):
         super().__init__(parent)
         self.poke_type = poke_type
-        self.setPixmap(QPixmap(f"C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/pokeballFermee.png"))
+        self.setPixmap(QPixmap(os.path.join(path, f"../documents/images/pokeballFermee.png")))
         self.setMinimumHeight(129)
 
     def enterEvent(self, event):
-        self.setPixmap(QPixmap(f"C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/{self.poke_type}Ouverte.png"))
+        self.setPixmap(QPixmap(os.path.join(path, f"../documents/images/{self.poke_type}Ouverte.png")))
 
     def leaveEvent(self, event):
-        self.setPixmap(QPixmap(f"C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/pokeballFermee.png"))
+        self.setPixmap(QPixmap(os.path.join(path, f"../documents/images/pokeballFermee.png")))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
