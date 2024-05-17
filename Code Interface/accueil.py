@@ -17,9 +17,12 @@ class Fenetre(QMainWindow):
         self.zone_cara = QRect(770, 200, 100, 100)
         self.choix_possible = False
 
+
+
         self.afficherFond()
         self.afficherSorbier()
-        self.dialogues()
+        self.dialogues()        
+        self.bouton_next = ClickableLabel('Next', 17, self)
         self.bouton()
 
         self.show()
@@ -29,6 +32,7 @@ class Fenetre(QMainWindow):
         self.poke_sala = Pokeball(self, "sala")
 
         self.poke_cara = Pokeball(self, "cara")
+
 
         self.music_player = Musique()  # Ajout de l'objet Music
         self.click = QMediaPlayer()
@@ -47,6 +51,7 @@ class Fenetre(QMainWindow):
             self.poke_cara.hide()
             self.choix_possible = False
             self.timer.start(3000)
+            self.bouton_next.hide()
             
         elif self.zone_sala.contains(event.pos()) and self.choix_possible:
             self.txt_noir("Congratulations! You choose Charmander.")
@@ -55,6 +60,7 @@ class Fenetre(QMainWindow):
             self.poke_bulb.hide()
             self.choix_possible = False
             self.timer.start(3000)
+            self.bouton_next.hide()
 
         elif self.zone_cara.contains(event.pos()) and self.choix_possible:
             self.txt_noir("Congratulations! You choose Squirtle.")
@@ -63,6 +69,7 @@ class Fenetre(QMainWindow):
             self.poke_sala.hide()
             self.choix_possible = False
             self.timer.start(3000)
+            self.bouton_next.hide()
 
     def start(self):
         self.txt_noir("Press START to begin your journey.")
@@ -94,12 +101,11 @@ class Fenetre(QMainWindow):
         self.sorbier.setGeometry(100, 200, pixmap.width(), pixmap.height())
 
     def bouton(self):
-        self.bouton = ClickableLabel('Next', 17, self)
-        self.bouton.setGeometry(940, 540, 70, 20)
-        self.bouton.clicked.connect(self.dialogue_suivant)
-        self.bouton.clicked.connect(self.pokeballs)
-        self.bouton.clicked.connect(self.jouer_son)
-        self.bouton.clicked.connect(self.setchoix_possible)
+        self.bouton_next.setGeometry(940, 540, 70, 20)
+        self.bouton_next.clicked.connect(self.dialogue_suivant)
+        self.bouton_next.clicked.connect(self.pokeballs)
+        self.bouton_next.clicked.connect(self.jouer_son)
+        self.bouton_next.clicked.connect(self.setchoix_possible)
 
     def setchoix_possible(self):
         self.choix_possible = True
