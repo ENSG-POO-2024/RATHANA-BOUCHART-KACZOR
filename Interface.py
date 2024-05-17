@@ -35,10 +35,6 @@ sys.path.append(os.path.abspath('Code Interface'))
 import accueil
 from accueil import Fenetre
 
-app_accueil = QApplication(sys.argv)
-interface = Fenetre()
-interface.show()
-sys.exit(app_accueil.exec_())
 
 class Window(QMainWindow):
     
@@ -127,7 +123,7 @@ class Window(QMainWindow):
         dracolosse=pk.Pokemon("Dragonite")
         papilusion=pk.Pokemon("Butterfree")
         arcanin=pk.Pokemon("Arcanine")
-        mewtwo=pk.Pokemon("Snorlax")
+        mewtwo=pk.Pokemon("Magikarp")
         vide=pk.Pokemon("Vide")
         self.equipe_dresseur = [mewtwo, vide, vide, vide,vide,vide]
         self.inventaire = []
@@ -836,7 +832,7 @@ class Window(QMainWindow):
                         print(self.equipe_dresseur)
                         print(self.inventaire)
                         print("===============================================")
-                        #self.combat_window.all_pokemons_ko.connect(self.handle_all_pokemons_ko(x_map, y_map))
+                        self.combat_window.all_pokemons_ko.connect(self.handle_all_pokemons_ko(x_map, y_map))
                         self.combat_window.captured.connect(self.handle_captured(i))
                         
                         
