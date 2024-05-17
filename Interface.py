@@ -62,6 +62,11 @@ class Window(QMainWindow):
         self.button.setFixedSize(50, 20)  # Définir une taille fixe pour le bouton
         self.button.clicked.connect(self.FullScreen)
         
+        self.inventory = QPushButton("Inventory" , self)
+        self.inventory.setFixedSize(100, 20)
+        self.inventory.setGeometry(0, 25,100, 20)
+        self.inventory.clicked.connect(self.inventoryScreen)
+
         #On ordonne les différents éléments qui vont être affichés pour gérer les superpositions
         self.layout.addWidget(self.fond_collisions)
         self.layout.addWidget(self.fond)
@@ -172,7 +177,16 @@ class Window(QMainWindow):
             self.inconnus[i][1] += translation_x
             self.inconnus[i][2] += translation_y
             
-        
+    def inventoryScreen(self):
+        """
+        Permet d'ouvrir et fermer l'inventaire du joueur
+
+        Returns
+        -------
+        None.
+
+        """
+
     def dresseur(self):
         """
         Permet d'initialiser l'affichage du dresseur
