@@ -906,7 +906,7 @@ class Inventory(QMainWindow):
 
         self.arriere()
 
-        self.afficheEquipe()
+        self.affichePokemon1()
 
     def setBackground(self):
 
@@ -948,11 +948,10 @@ class Inventory(QMainWindow):
                 self.nombre_pokemons += 1
                 l[i].show()
 
-    def afficheEquipe(self):
-        for i in range(self.nombre_pokemons):
-            self.p1.setPixmap(self.path)
-            self.p1.setGeometry(1, 1, self.path.width(), self.path.height())
-            self.p1.show()
+    def affichePokemon1(self):
+        self.p1.setPixmap(self.path)
+        self.p1.setGeometry(1, 1, self.path.width(), self.path.height())
+        self.p1.show()
 
 
 
