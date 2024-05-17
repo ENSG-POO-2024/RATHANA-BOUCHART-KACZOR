@@ -1228,17 +1228,26 @@ class CombatPokemon(QMainWindow):
         self.hpbar_dresseur.hide()
         self.maj_barre_hp_dresseur(self.equipe_dresseur[self.pokemon_au_combat -1])
 
+        if result[2]>1:
+            self.txtblanc.hide()
+            self.txt_blanc("It's super effective!")
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
+            
+        elif result[2]==0:
+            self.txtblanc.hide()
+            self.txt_blanc("It doesn't affect ennemy " + self.equipe_dresseur[self.pokemon_au_combat -1].name +".")
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
 
-        if result[2]==0:
-            self.txt_blanc("It doesn't affect " + self.equipe_dresseur[self.pokemon_au_combat-1].name +".")
         elif result[2]<1:
-            self.txt_blanc=("It's not really effective...")
-        elif result[2]>1:
-            self.txt_blanc("It's super effective !")
-        
-        loop=QEventLoop()
-        QTimer.singleShot(1000,loop.quit)
-        loop.exec_()
+            self.txtblanc.hide()
+            self.txt_blanc("It's not very effective...")
+            loop=QEventLoop()
+            QTimer.singleShot(1000,loop.quit)
+            loop.exec_()
 
         #self.affiche_menu_principal()
         self.txtblanc.hide()
@@ -1611,7 +1620,7 @@ class CombatPokemon(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = CombatPokemon([pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo")],pk.PokemonSauvage("Mew",0,0),[])
+    window = CombatPokemon([pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo")],pk.PokemonSauvage("Machop",0,0),[])
     window.show()
     sys.exit(app.exec_())
 
