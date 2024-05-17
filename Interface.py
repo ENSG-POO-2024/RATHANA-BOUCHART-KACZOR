@@ -874,19 +874,25 @@ class Music():
         son_bump = os.path.join(path, "son/bump.mp3")
         self.bump.setMedia(QMediaContent(QUrl.fromLocalFile(son_bump)))
         self.bump.setVolume(50)
-        self.bump.play()
+        self.bump.play() 
         
 class Inventory(QMainWindow):
     def __init__(self, equipe):
         super().__init__()
         self.equipe = equipe
-        self.setGeometry(80, 50, 256, 192) 
+        self.nombre_pokemons = 0
+        self.path = QPixmap(os.path.join(path, f"documents/images/pokemons/{self.equipe[0].name}_map.png")) 
         
+        self.setGeometry(80, 50, 256, 192) 
+
+        self.pixmap = QPixmap(os.path.join(path, "documents/images/inventaireFond.png"))        
         self.case10 = QPixmap(os.path.join(path, "documents/images/case1.png"))
         self.case20 = QPixmap(os.path.join(path, "documents/images/case2.png"))
         self.case1selectionnee0 = QPixmap(os.path.join(path, "documents/images/case1selectionnee.png"))
         self.case2selectionnee0 = QPixmap(os.path.join(path, "documents/images/case2selectionnee.png"))
 
+
+        self.fond = QLabel(self)
         self.case1 = QLabel(self)
         self.case2 = QLabel(self)
         self.case3 = QLabel(self)
@@ -894,14 +900,18 @@ class Inventory(QMainWindow):
         self.case5 = QLabel(self)
         self.case6 = QLabel(self)
 
+        self.p1 = QLabel(self)
+
         self.setBackground()
-        self.firstPokemon()
+
+        self.arriere()
+
+        self.afficheEquipe()
 
     def setBackground(self):
-        pixmap = QPixmap(os.path.join(path, "documents/images/inventaireFond.png"))
-        self.fond = QLabel(self)
-        self.fond.setPixmap(pixmap)
-        self.fond.setGeometry(0, 0, pixmap.width(), pixmap.height())
+
+        self.fond.setPixmap(self.pixmap)
+        self.fond.setGeometry(0, 0, self.pixmap.width(), self.pixmap.height())
 
         self.case1.setPixmap(self.case20)
         self.case1.setGeometry(1,2, self.case20.width() ,self.case20.height())
@@ -927,13 +937,22 @@ class Inventory(QMainWindow):
         self.case6.setGeometry(130,107, self.case20.width() ,self.case20.height())
         self.case6.hide()
 
-    def firstPokemon(self):
+    def arriere(self):
         l = [self.case1,self.case2,self.case3,self.case4,self.case5,self.case6]
+        pokemons = []
         for i in range(6):
+            print(self.equipe[i].name)
             if (self.equipe[i].name == "Vide"):
-                pass
+                break
             else:
+                self.nombre_pokemons += 1
                 l[i].show()
+
+    def afficheEquipe(self):
+        for i in range(self.nombre_pokemons):
+            self.p1.setPixmap(self.path)
+            self.p1.setGeometry(1, 1, self.path.width(), self.path.height())
+            self.p1.show()
 
 
 
