@@ -1,0 +1,37 @@
+import cv2
+import os
+
+# Chemin du dossier contenant les images
+dossier_images = "chemin/vers/le/dossier/avec/images"
+
+# Parcours de toutes les images dans le dossier
+for filename in os.listdir(dossier_images):
+    if filename.endswith("_map.png"):
+        # Charger l'image
+        image_path = os.path.join(dossier_images, filename)
+        image = cv2.imread(image_path)
+        
+        # Convertir en niveaux de gris pour la détection de contours
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        
+        # Trouver les contours de l'objet Pokémon
+        contours, _ = cv2.findContours(gray, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        
+        # Trouver le contour le plus grand
+        largest_contour = max(contours, key=cv2.contourArea)
+        
+        # Calculer le rectangle englobant du contour
+        x, y, w, h = cv2.boundingRect(largest_contour)
+        
+        height, width, _ = image.shape
+        
+        # Calculer le décalage nécessaire pour centrer l'objet
+        offset_x = (width - w) // 2
+        offset_y = (height - h) // 2
+        
+        # Déplacer l'objet vers le centre de l'image
+        centered_image = image[y:y+h, x:x+w]
+        centered_image = cv2.copyMakeBorder(centered_image, offset_y, offset_y, offset_x, offset_x, cv2.BORDER_CONSTANT, value=(255, 255, 255))
+        
+        # Enregistrer l'image centrée
+        cv2.imwrite(os.path.join(dossier_images, filename + "_centered"), centered_image)

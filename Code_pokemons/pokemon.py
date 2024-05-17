@@ -67,16 +67,14 @@ class Pokemon:
         self.attaque_normale =nom_attaque_normale
         self.attaque_type = nom_attaque_type
 
-    def attaque(self,pokemon_adverse):
+    def attaque(self,pokemon_adverse,attaque):
         if self.attack>=self.sp_atk:
             stat_attaque=self.attack
             stat_defense=pokemon_adverse.defense
         else:
             stat_attaque=self.sp_atk
             stat_defense=pokemon_adverse.spe_def
-        attaque=int(input("Quelle attaque choisir: L'attaque 1 (type normal) ou l'attaque 2 (type de votre pokemon)? :"))
-        while attaque != 1 and attaque !=2:
-            attaque=int(input("Choississez soit l'attaque 1 soit l'attaque 2 (écrivez 1 ou 2):"))
+
         if attaque==1:  #On recupere le type de l'attaque
             type_attaque=dico_types["Normal"]
         else:
@@ -91,17 +89,20 @@ class Pokemon:
         CM=table_types[type_attaque][type_defense1]
         if pokemon_adverse.type2 != "Rien":
             CM*=table_types[type_attaque][type_defense2]
-        degats= np.trunc((np.trunc((5*stat_attaque * 55)/(stat_defense *50))+2) * CM)
+        degats= np.trunc((np.trunc((10*stat_attaque * 55)/(stat_defense *50))+2) * CM)
         pokemon_adverse.HP=pokemon_adverse.HP - degats
         if pokemon_adverse.HP<0:
             pokemon_adverse.HP=0
-        return pokemon_adverse.HP, degats,
+        return pokemon_adverse.HP, CM
     
-    def potion(self,pokemon):
-        montant_restauré=pokemon.HP + 30
-        if montant_restauré>pokemon.maxHP:
-            montant_restauré=pokemon.maxHP
-        pokemon.HP=montant_restauré
+    def potion(self):
+        hp_depart=self.HP
+        vie_finale=hp_depart + 30
+        if vie_finale>self.maxHP:
+            vie_finale=self.maxHP
+        self.HP=vie_finale
+        montant_restaure=vie_finale - hp_depart
+        return int(montant_restaure)
 
 
 
@@ -147,20 +148,9 @@ class PokemonSauvage(Pokemon):
         CM=table_types[type_attaque][type_defense1]
         if pokemon_adverse.type2 != "Rien":
             CM*=table_types[type_attaque][type_defense2]
-        degats= np.trunc((np.trunc((5*stat_attaque * 55)/(stat_defense *50))+2) * CM)
+        degats= np.trunc((np.trunc((10*stat_attaque * 55)/(stat_defense *50))+2) * CM)
         pokemon_adverse.HP=pokemon_adverse.HP - degats
         if pokemon_adverse.HP<0:
             pokemon_adverse.HP=0
         return int(pokemon_adverse.HP), nom_attaque, CM
-
-if __name__=="__main__":
-    mew=PokemonSauvage("Mew",0,0)
-    florizare=Pokemon("Venusaur")
-    print(mew.attaque(florizare))
-    print(florizare.attaque(mew))
-
-
-
-
-
 

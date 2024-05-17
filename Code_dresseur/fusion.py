@@ -37,18 +37,17 @@ class Window(QMainWindow):
         sprite = QPixmap(self.sprites_individuels[4])
         
         self.joueur = QLabel(self)
-        self.joueur.setGeometry(self.vision//2 + 20, self.vision//2 +30, self.largeur_sprite, self.hauteur_sprite)
+        self.joueur.setGeometry(248, 108, self.largeur_sprite, self.hauteur_sprite)
         self.joueur.setPixmap(sprite)
         
-        self.speed = 5
             
     def carte(self):
-        pixmap = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/map_collisions.png")
+        pixmap = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/collisions.png")
         self.fond_collisions = QLabel(self)
         self.fond_collisions.setPixmap(pixmap)
         self.fond_collisions.setGeometry(0, 0, pixmap.width(), pixmap.height())
 
-        pixmap = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/map.png")
+        pixmap = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/fond.png")
         self.fond_visible = QLabel(self)
         self.fond_visible.setPixmap(pixmap)
         self.fond_visible.setGeometry(0, 0, pixmap.width(), pixmap.height())
@@ -60,16 +59,16 @@ class Window(QMainWindow):
         y_joueur = self.joueur.y() - self.fond_collisions.y() 
 
         if event.key() == Qt.Key_Up :
-            couleur_pixel = [self.fond_collisions.pixmap().toImage().pixelColor(x_joueur + i , y_joueur ) for i in range (0,self.largeur_sprite)]
+            couleur_pixel = [self.fond_collisions.pixmap().toImage().pixelColor(x_joueur + i , y_joueur-1 ) for i in range (0,self.largeur_sprite)]
             for i in range(self.largeur_sprite):
-                if (couleur_pixel[i] != Qt.black) :
+                if (couleur_pixel[i] == Qt.black) :
                     self.music_player.bruit_bump()
                     self.apparence_actuelle = 6
                     self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                     break
-                elif (couleur_pixel[i] == Qt.black) and (i == self.largeur_sprite - 1) :
-                    self.fond_collisions.move(x, y + self.speed)
-                    self.fond_visible.move(x, y + self.speed)
+                elif (couleur_pixel[i] != Qt.black) and (i == self.largeur_sprite - 1) :
+                    self.fond_collisions.move(x, y + self.hauteur_sprite)
+                    self.fond_visible.move(x, y + self.hauteur_sprite)
                     if (self.apparence_actuelle == 2) or (self.apparence_actuelle == 6) or (self.apparence_actuelle == 10) :
                         self.changer_apparence()
                     else : 
@@ -77,16 +76,16 @@ class Window(QMainWindow):
                     self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
 
         if event.key() == Qt.Key_Down :
-            couleur_pixel = [self.fond_collisions.pixmap().toImage().pixelColor(x_joueur + i , y_joueur + self.hauteur_sprite + self.speed) for i in range (0,self.largeur_sprite)]
+            couleur_pixel = [self.fond_collisions.pixmap().toImage().pixelColor(x_joueur + i , y_joueur -1 + self.hauteur_sprite + self.hauteur_sprite) for i in range (0,self.largeur_sprite)]
             for i in range(self.largeur_sprite):
-                if (couleur_pixel[i] != Qt.black) :
+                if (couleur_pixel[i] == Qt.black) :
                     self.music_player.bruit_bump()
                     self.apparence_actuelle = 4
                     self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                     break
-                elif (couleur_pixel[i] == Qt.black) and (i == self.largeur_sprite - 1) :
-                    self.fond_collisions.move(x, y - self.speed)
-                    self.fond_visible.move(x, y - self.speed)
+                elif (couleur_pixel[i] != Qt.black) and (i == self.largeur_sprite - 1) :
+                    self.fond_collisions.move(x, y - self.hauteur_sprite)
+                    self.fond_visible.move(x, y - self.hauteur_sprite)
                     if (self.apparence_actuelle == 0) or (self.apparence_actuelle == 4) or (self.apparence_actuelle == 8) :
                         self.changer_apparence()
                     else : 
@@ -94,16 +93,16 @@ class Window(QMainWindow):
                     self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
 
         if event.key() == Qt.Key_Left :
-            couleur_pixel = [self.fond_collisions.pixmap().toImage().pixelColor(x_joueur - self.speed, y_joueur + i) for i in range (0, self.hauteur_sprite)]
+            couleur_pixel = [self.fond_collisions.pixmap().toImage().pixelColor(x_joueur - self.largeur_sprite, y_joueur + i) for i in range (0, self.hauteur_sprite)]
             for i in range(self.hauteur_sprite) :
-                if (couleur_pixel[i] != Qt.black) :
+                if (couleur_pixel[i] == Qt.black) :
                     self.music_player.bruit_bump()
                     self.apparence_actuelle = 7
                     self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                     break
-                elif (couleur_pixel[i] == Qt.black) and (i == self.hauteur_sprite - 1):
-                    self.fond_collisions.move(x + self.speed, y)
-                    self.fond_visible.move(x + self.speed, y)
+                elif (couleur_pixel[i] != Qt.black) and (i == self.hauteur_sprite - 1):
+                    self.fond_collisions.move(x + self.largeur_sprite, y)
+                    self.fond_visible.move(x + self.largeur_sprite, y)
                     if (self.apparence_actuelle == 3) or (self.apparence_actuelle == 7) or (self.apparence_actuelle == 11) :
                         self.changer_apparence()
                     else : 
@@ -111,16 +110,16 @@ class Window(QMainWindow):
                     self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
     
         if event.key() == Qt.Key_Right :
-            couleur_pixel = [self.fond_collisions.pixmap().toImage().pixelColor(x_joueur + self.speed + self.largeur_sprite, y_joueur + i) for i in range (0, self.hauteur_sprite)]
+            couleur_pixel = [self.fond_collisions.pixmap().toImage().pixelColor(x_joueur + self.largeur_sprite-1 + self.largeur_sprite, y_joueur + i) for i in range (0, self.hauteur_sprite)]
             for i in range(self.hauteur_sprite):
-                if (couleur_pixel[i] != Qt.black) :
+                if (couleur_pixel[i] == Qt.black) :
                     self.music_player.bruit_bump()
                     self.apparence_actuelle = 5
                     self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                     break
-                elif (couleur_pixel[i] == Qt.black) and (i == self.hauteur_sprite - 1):
-                    self.fond_collisions.move(x - self.speed, y)
-                    self.fond_visible.move(x - self.speed, y)
+                elif (couleur_pixel[i] != Qt.black) and (i == self.hauteur_sprite - 1):
+                    self.fond_collisions.move(x - self.largeur_sprite, y)
+                    self.fond_visible.move(x - self.largeur_sprite, y)
                     if (self.apparence_actuelle == 1) or (self.apparence_actuelle == 5) or (self.apparence_actuelle == 9) :
                         self.changer_apparence()
                     else : 
@@ -164,3 +163,4 @@ if __name__ == "__main__":
     window = Window()
     window.show()
     sys.exit(app.exec_())
+    
