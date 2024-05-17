@@ -1,5 +1,5 @@
 import pokemon as pk
-from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QVBoxLayout,QWidget,QDesktopWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QVBoxLayout, QWidget, QDesktopWidget
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import Qt, QUrl, pyqtSignal, QTimer, QEventLoop
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
