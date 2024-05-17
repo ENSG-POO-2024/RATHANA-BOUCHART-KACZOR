@@ -1,8 +1,9 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 from PyQt5.QtCore import QUrl, Qt, pyqtSignal
-from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QSound, QSoundEffect
+from PyQt5.QtGui import QPixmap, QIcon
+
 
 class Fenetre(QMainWindow):
 
@@ -15,9 +16,11 @@ class Fenetre(QMainWindow):
         self.afficherSorbier()
         self.dialogues()
         self.bouton()
+        
         self.show()
         
         self.music_player = Musique()  # Ajout de l'objet Music
+        self.click = QMediaPlayer()
 
     def afficherFond(self):
         pixmap = QPixmap("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/accueil.png")
@@ -41,7 +44,15 @@ class Fenetre(QMainWindow):
         self.bouton.setGeometry(940, 540, 70, 20)
         self.bouton.clicked.connect(self.dialogue_suivant)
         self.bouton.clicked.connect(self.pokeballs)
-    
+        self.bouton.clicked.connect(self.jouer_son)
+        self.bouton.clicked.connect(self.boutonPokeball)
+
+    def jouer_son(self):
+        chemin_son = "C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/son/click.mp3"
+        self.click.setMedia(QMediaContent(QUrl.fromLocalFile(chemin_son)))
+        self.click.setVolume(50)
+        self.click.play()
+
     def dialogues(self):
         # Dialogues Rowan
         self.txt_noir("Hi ! My name is Rowan. You are going to start a very long journey...")
@@ -62,6 +73,27 @@ class Fenetre(QMainWindow):
         self.poke_cara.setGeometry(770, 200, self.poke_cara.width(), self.poke_cara.height())
         self.poke_cara.show()
 
+    def boutonPokeball(self):
+        # bouton bulbizarre
+        self.bouton_bulb = ClickableLabel("Bulbasaur", 10, self)
+        self.bouton_bulb.setGeometry(375, 320, 90, 40)
+        # self.bouton_bulb.setStyleSheet("background-color: rgba(255,255,255,0); border : none;")
+        self.bouton_bulb.show()
+        self.bouton_bulb.clicked.connect(self.choisir_bulb)
+        
+
+        self.bouton_sala = ClickableLabel("Charmander", 10, self)
+        self.bouton_sala.setGeometry(575, 320, 100, 40)
+        self.bouton_sala.show()
+
+        self.bouton_cara = ClickableLabel("Squirtle", 10, self)
+        self.bouton_cara.setGeometry(780, 320, 90, 40)
+        self.bouton_cara.show()
+
+    def choisir_bulb(self):
+        self.txt_noir("This is Bulbasaur. Do you want to choose this Pokémon?")
+
+
     def txt_noir(self, txt):
         if hasattr(self, 'txtnoir'):
             self.txtnoir.deleteLater()
@@ -74,6 +106,7 @@ class Fenetre(QMainWindow):
         self.txtnoir.move(150, 425)
         self.txtnoir.show()
 
+
 class Musique():
     def __init__(self):
         self.intro = QMediaPlayer()
@@ -84,6 +117,27 @@ class Musique():
         self.intro.setMedia(QMediaContent(QUrl.fromLocalFile(chemin_intro)))
         self.intro.setVolume(50)
         self.intro.play()
+
+
+class ClickableLabel(QLabel):
+    clicked = pyqtSignal()
+
+    def __init__(self, text, taille, parent=None):
+        super().__init__(text, parent)
+        self.setStyleSheet("QLabel { color: black; font-size: " + str(taille)+"px; font-family: 'Press Start 2P'; }")  # Style du texte
+        self.taille=taille
+        self.sound = QSound("C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/son/click.mp3")
+
+    def mousePressEvent(self, event):
+        self.sound.play()
+        self.clicked.emit()
+    
+    def enterEvent(self,event):
+        self.setStyleSheet("QLabel { color: darkgrey; font-size: " +str(self.taille) +"px; font-family: 'Press Start 2P'; }")
+
+
+    def leaveEvent(self,event):
+        self.setStyleSheet("QLabel { color: black; font-size: " + str(self.taille) +"px; font-family: 'Press Start 2P'; }")
 
 class Pokeball(QLabel):
     def __init__(self, parent=None, poke_type=""):
@@ -97,24 +151,6 @@ class Pokeball(QLabel):
 
     def leaveEvent(self, event):
         self.setPixmap(QPixmap(f"C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/documents/images/pokeballFermee.png"))
-
-class ClickableLabel(QLabel):
-    clicked = pyqtSignal()
-
-    def __init__(self, text, taille, parent=None):
-        super().__init__(text, parent)
-        self.setStyleSheet("QLabel { color: black; font-size: " + str(taille)+"px; font-family: 'Press Start 2P'; }")  # Style du texte
-        self.taille=taille
-
-    def mousePressEvent(self, event):
-        if event.buttons() & Qt.LeftButton:
-            self.clicked.emit()
-    
-    def enterEvent(self,event):
-        self.setStyleSheet("QLabel { color: darkgrey; font-size: " +str(self.taille) +"px; font-family: 'Press Start 2P'; }")
-
-    def leaveEvent(self,event):
-        self.setStyleSheet("QLabel { color: black; font-size: " + str(self.taille) +"px; font-family: 'Press Start 2P'; }")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
