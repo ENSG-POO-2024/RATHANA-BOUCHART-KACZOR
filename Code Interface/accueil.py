@@ -1,6 +1,6 @@
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QMessageBox, QDesktopWidget, QDialog
 from PyQt5.QtCore import QUrl, Qt, pyqtSignal, QRect, QTimer
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QSound, QSoundEffect
 from PyQt5.QtGui import QMouseEvent, QPixmap, QIcon
@@ -8,17 +8,30 @@ from PyQt5.QtGui import QMouseEvent, QPixmap, QIcon
 
 path = os.path.dirname(os.path.abspath(__file__))
 
-class Fenetre(QMainWindow):
-
+class Fenetre(QDialog):
+    start_signal = pyqtSignal()
+    add_to_inventaire_signal = pyqtSignal(str)
+    #Bulbasaur_signal = pyqtSignal()
+    #Charmander_signal = pyqtSignal()
+    #Squirtle_signal = pyqtSignal()
     def __init__(self):
         super().__init__()
-
-        self.setGeometry(80, 50, 1200, 600)  # Fenêtre principale
+        
+        self.pleinecran=QDesktopWidget().screenGeometry() # Fenêtre principale
+        self.setGeometry((self.pleinecran.width() - 1200)//2, 
+                         (self.pleinecran.height() - 600)//2, 
+                         1200, 600) 
 
         self.zone_bulb = QRect(370, 200, 100, 100)
         self.zone_sala = QRect(570, 200, 100, 100)
         self.zone_cara = QRect(770, 200, 100, 100)
         self.choix_possible = False
+        self.bouton_bulb = ClickableLabel('Bilbasaur', 17, self)
+        self.bouton_bulb.setGeometry(370, 200, 70, 20)
+        self.bouton_sala = ClickableLabel('Charmander', 17, self)
+        self.bouton_sala.setGeometry(570, 200, 70, 20)
+        self.bouton_cara = ClickableLabel('Squirtle', 17, self)
+        self.bouton_cara.setGeometry(770, 200, 70, 20)
 
 
 
@@ -49,40 +62,50 @@ class Fenetre(QMainWindow):
         # Vérifier si le clic est dans la zone définie
         if self.zone_bulb.contains(event.pos()) and self.choix_possible:
             self.txt_noir("Congratulations! You choose Bulbasaur.")
+            lambda: self.add_to_inventaire("Bulbasaur")
             self.jouer_acquisition()
             self.poke_sala.hide()
             self.poke_cara.hide()
             self.choix_possible = False
             self.timer.start(3000)
             self.bouton_next.hide()
+            #self.Bulbasaur_signal.emit()
             
         elif self.zone_sala.contains(event.pos()) and self.choix_possible:
             self.txt_noir("Congratulations! You choose Charmander.")
+            lambda: self.add_to_inventaire("Charmander")
             self.jouer_acquisition()
             self.poke_cara.hide()
             self.poke_bulb.hide()
             self.choix_possible = False
             self.timer.start(3000)
             self.bouton_next.hide()
+            #self.Charmander_signal.emit()
 
         elif self.zone_cara.contains(event.pos()) and self.choix_possible:
             self.txt_noir("Congratulations! You choose Squirtle.")
+            lambda: self.add_to_inventaire("Squirtle")
             self.jouer_acquisition()
             self.poke_bulb.hide()
             self.poke_sala.hide()
             self.choix_possible = False
             self.timer.start(3000)
             self.bouton_next.hide()
+            #self.Squirtle_signal.emit()
 
     def start(self):
         self.txt_noir("Press START to begin your journey.")
         self.bouton_start = ClickableLabel('START', 25, self)
         self.bouton_start.setGeometry(550, 100, 130, 35)
         self.bouton_start.show()
-        self.bouton_start.clicked.connect(self.lancerSignal)
+        self.bouton_start.clicked.connect(self.on_start)
 
-    def lancerSignal(self):
+    def on_start(self):
+        self.start_signal.emit()
         self.close()
+        
+    def add_to_inventaire(self, item):
+        self.add_to_inventaire_signal.emit(item)
 
     def jouer_acquisition(self):
         chemin_son = os.path.join(path, "../son/acquisition.mp3")
@@ -157,6 +180,12 @@ class Fenetre(QMainWindow):
         self.txtnoir.setWordWrap(True) 
         self.txtnoir.move(150, 425)
         self.txtnoir.show()
+
+        
+def launch_accueil(self):
+    accueil_window = Fenetre()
+    accueil_window.show()
+    return accueil_window
 
 
 class Musique():

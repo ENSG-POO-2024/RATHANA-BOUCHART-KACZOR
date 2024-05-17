@@ -13,17 +13,11 @@ import numpy as np
 
 path = os.path.dirname(os.path.abspath(__file__))
 
-#module_path2 = os.path.join(path, "../Code_pokemons/pokemon.py")
-#if module_path2 not in sys.path :
- #   sys.path.append(module_path2)
 sys.path.append(os.path.abspath('Code_pokemons'))
 
 import pokemon as pk
 from pokemon import pokemon_pos_arrondies
 
-#module_path1 = os.path.join(path, "../Code_pokemons/combat.py")
-#if module_path1 not in sys.path :
- #   sys.path.append(module_path1) 
 
 sys.path.append(os.path.abspath('Code_pokemons')) 
 
@@ -33,7 +27,7 @@ from combat import CombatPokemon, launch_combat_pokemon
 sys.path.append(os.path.abspath('Code Interface'))
 
 import accueil
-from accueil import Fenetre
+from accueil import Fenetre, launch_accueil
 
 
 class Window(QMainWindow):
@@ -67,6 +61,9 @@ class Window(QMainWindow):
         self.inventory.setFixedSize(100, 20)
         self.inventory.setGeometry(0, 25,100, 20)
         self.inventory.clicked.connect(self.inventoryScreen)
+        
+        self.inventaire = ["Bulbasaur"]
+    
 
         #On ordonne les différents éléments qui vont être affichés pour gérer les superpositions
         self.layout.addWidget(self.fond_collisions)
@@ -74,6 +71,7 @@ class Window(QMainWindow):
         self.layout.addWidget(self.joueur)
         self.layout.addWidget(self.button)
         self.setLayout(self.layout)
+        
         
         self.previous = False
         global pokemon_pos_arrondies
@@ -95,8 +93,7 @@ class Window(QMainWindow):
                 pokemon_pos_arrondies[compteur][1] = x
                 pokemon_pos_arrondies[compteur][2] = y
                 compteur += 1
-        #pokemon_pos_arrondies[:, 1] = np.random.randint(0, self.fond.width()-112, len(pokemon_pos_arrondies))
-        #pokemon_pos_arrondies[:, 2] = np.random.randint(0, self.fond.height()-112, len(pokemon_pos_arrondies))
+      
         pokemon_pos_arrondies[:, 1] += self.x_map
         pokemon_pos_arrondies[:, 2] += self.y_map
         self.inconnus = list(pokemon_pos_arrondies.copy())
@@ -111,6 +108,7 @@ class Window(QMainWindow):
         self.speed = 10
         
         self.show()
+    
         
         self.apparences_joueur = self.sprites_individuels
         self.apparence_actuelle = 4
@@ -128,7 +126,7 @@ class Window(QMainWindow):
         self.equipe_dresseur = [mewtwo, salameche, vide, vide,vide,vide]
         self.inventaire = []
         
-                
+    
     def FullScreen(self):
         """
         Permet de passer de la petite fenêtre à une fenêtre de
@@ -823,11 +821,6 @@ class Window(QMainWindow):
                                                                                  L, l) :
                         self.previous = True
                         pokemon_adverse = pk.PokemonSauvage(self.connus[i][0], x_pokemon, y_pokemon)
-                        #self.combat_app = QApplication(sys.argv)
-                        #self.combat_window = CombatPokemon(pokemon_adverse, self.equipe_dresseur)
-                        #self.combat_window.show()
-                        #self.combat_app.exec_()
-                        #self.setEnabled(False)
                         self.combat_window = launch_combat_pokemon(self.equipe_dresseur, pokemon_adverse, self.inventaire)
                         # self.combat_window.all_pokemons_ko.connect(self.handle_all_pokemons_ko(x_map, y_map))
                         # self.combat_window.captured.connect(self.handle_captured(i))
