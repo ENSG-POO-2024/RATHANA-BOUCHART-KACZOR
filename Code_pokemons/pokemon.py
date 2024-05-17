@@ -93,6 +93,7 @@ class Pokemon:
         pokemon_adverse.HP=pokemon_adverse.HP - degats
         if pokemon_adverse.HP<0:
             pokemon_adverse.HP=0
+        print(stat_defense)
         return pokemon_adverse.HP, CM
     
     def potion(self):
