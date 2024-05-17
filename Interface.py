@@ -110,9 +110,9 @@ class Window(QMainWindow):
         dracolosse=pk.Pokemon("Dragonite")
         papilusion=pk.Pokemon("Butterfree")
         arcanin=pk.Pokemon("Arcanine")
-        mewtwo=pk.Pokemon("Ditto")
+        mewtwo=pk.Pokemon("Snorlax")
         vide=pk.Pokemon("Vide")
-        self.equipe_dresseur = [salameche, mew, papilusion, arcanin,dracolosse,vide]
+        self.equipe_dresseur = [mewtwo, vide, vide, vide,vide,vide]
         self.inventaire = []
         
                 
