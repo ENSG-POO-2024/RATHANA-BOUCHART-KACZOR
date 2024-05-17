@@ -829,11 +829,8 @@ class Window(QMainWindow):
                         #self.combat_app.exec_()
                         #self.setEnabled(False)
                         self.combat_window = launch_combat_pokemon(self.equipe_dresseur, pokemon_adverse, self.inventaire)
-                        print(self.equipe_dresseur)
-                        print(self.inventaire)
-                        print("===============================================")
-                        self.combat_window.all_pokemons_ko.connect(self.handle_all_pokemons_ko(x_map, y_map))
-                        self.combat_window.captured.connect(self.handle_captured(i))
+                        # self.combat_window.all_pokemons_ko.connect(self.handle_all_pokemons_ko(x_map, y_map))
+                        # self.combat_window.captured.connect(self.handle_captured(i))
                         
                         
                         break
@@ -941,7 +938,6 @@ class Inventory(QMainWindow):
         l = [self.case1,self.case2,self.case3,self.case4,self.case5,self.case6]
         pokemons = []
         for i in range(6):
-            print(self.equipe[i].name)
             if (self.equipe[i].name == "Vide"):
                 break
             else:
@@ -950,20 +946,24 @@ class Inventory(QMainWindow):
 
     def affichePokemon1(self):
         self.p1.setPixmap(self.path)
-        self.p1.setGeometry(1, 1, self.path.width(), self.path.height())
+        # x_barycentre = (Window.find_right_position(QPixmap(self.pokemon_path+self.equipe[0].name+"_map.png")) - Window.find_left_position(QPixmap(self.pokemon_path+self.equipe[0].name+"_map.png")) )// 2
+        # y_barycentre = (Window.find_botom_position(QPixmap(self.pokemon_path+self.equipe[0].name+"_map.png")) - Window.find_top_position(QPixmap(self.pokemon_path+self.equipe[0].name+"_map.png")) )// 2
+        self.p1.setGeometry(-25, -45, self.path.width(), self.path.height())
         self.p1.show()
 
 
 
 
-if __name__ == "__main__":
-    # app_accueil = QApplication(sys.argv)
-    # interface = Fenetre()
-    # interface.show()
-    # sys.exit(app_accueil.exec_())
+if __name__ == "_main_":
     
     app = QApplication(sys.argv)
     window = Window()
     app.installEventFilter(window)
-    window.show()
+    fenetre = Fenetre()
+    #def on_start():
+    #    fenetre.close()
+    #    window.show()
+    #fenetre.start_signal.connect(on_start)
+    #fenetre.add_to_inventaire_signal.connect(window.update_inventaire)
+    fenetre.show()
     sys.exit(app.exec_())
