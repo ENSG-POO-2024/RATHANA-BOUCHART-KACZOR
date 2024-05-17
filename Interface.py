@@ -6,7 +6,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 import sys
 import os
-import subprocess
+from functools import partial
 import random as rd
 import numpy as np
 
@@ -30,6 +30,16 @@ sys.path.append(os.path.abspath('Code_pokemons'))
 import combat
 from combat import CombatPokemon, launch_combat_pokemon
 
+sys.path.append(os.path.abspath('Code Interface'))
+
+import accueil
+from accueil import Fenetre
+
+app_accueil = QApplication(sys.argv)
+interface = Fenetre()
+interface.show()
+sys.exit(app_accueil.exec_())
+
 class Window(QMainWindow):
     
     def __init__(self):
@@ -41,13 +51,15 @@ class Window(QMainWindow):
         self.setGeometry((self.plein_ecran.width() - self.taille_fen)//2, 
                          (self.plein_ecran.height() - self.taille_fen)//2, 
                          self.taille_fen, 
-                         self.taille_fen) 
+                         self.taille_fen)
         
         self.pokemon_path = os.path.join(path, "documents/images/pokemons/")
         
         self.layout = QVBoxLayout()
         
         self.carte()
+        self.x_m = 800
+        self.y_m = 5000
         
         self.dresseur()
         
@@ -55,6 +67,11 @@ class Window(QMainWindow):
         self.button.setFixedSize(50, 20)  # Définir une taille fixe pour le bouton
         self.button.clicked.connect(self.FullScreen)
         
+        self.inventory = QPushButton("Inventory" , self)
+        self.inventory.setFixedSize(100, 20)
+        self.inventory.setGeometry(0, 25,100, 20)
+        self.inventory.clicked.connect(self.inventoryScreen)
+
         #On ordonne les différents éléments qui vont être affichés pour gérer les superpositions
         self.layout.addWidget(self.fond_collisions)
         self.layout.addWidget(self.fond)
@@ -141,7 +158,10 @@ class Window(QMainWindow):
             
             translation_x = -(self.plein_ecran.width() - self.taille_fen)//2
             translation_y = -(self.plein_ecran.height() - self.taille_fen)//2
-            
+        
+        self.x_m += translation_x
+        self.y_m += translation_y
+        
         x_map = self.fond.x() + translation_x
         y_map = self.fond.y() + translation_y
         self.fond_collisions.move(x_map, y_map)
@@ -162,7 +182,16 @@ class Window(QMainWindow):
             self.inconnus[i][1] += translation_x
             self.inconnus[i][2] += translation_y
             
-        
+    def inventoryScreen(self):
+        """
+        Permet d'ouvrir et fermer l'inventaire du joueur
+
+        Returns
+        -------
+        None.
+
+        """
+
     def dresseur(self):
         """
         Permet d'initialiser l'affichage du dresseur
@@ -367,6 +396,7 @@ class Window(QMainWindow):
             self.connus[j][2] += translation
         for j in range(len(self.inconnus)):
             self.inconnus[j][2] += translation
+        self.y_m += translation
             
     def move_map_x(self, translation, x_map, y_map):
         self.fond_collisions.move(x_map + translation, y_map)
@@ -377,6 +407,20 @@ class Window(QMainWindow):
             self.connus[j][1] += translation
         for j in range(len(self.inconnus)):
             self.inconnus[j][1] += translation  
+        self.y_m += translation
+            
+    def handle_all_pokemons_ko(self, x_map, y_map):
+        translation = self.joueur.x() - self.x_m
+        self.move_map_x(translation, x_map, y_map)
+        translation = self.joueur.y() - self.y_m
+        self.move_map_y(translation, x_map, y_map)
+        
+    def handle_captured(self, i):
+        del self.connus[i]
+        self.dict_connus[self.list_keys[i]].lower()
+        del self.dict_connus[self.list_keys[i]]
+        
+        
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.KeyPress:
@@ -765,12 +809,12 @@ class Window(QMainWindow):
             
                 self.discover()
                 
-                list_keys = list(self.dict_connus.keys())
+                self.list_keys = list(self.dict_connus.keys())
                 for i in range(len(self.connus)) :
                     global x_baryc_pokemon
-                    x_pokemon = self.dict_connus[list_keys[i]].x()
+                    x_pokemon = self.dict_connus[self.list_keys[i]].x()
                     x_baryc_pokemon = x_pokemon + self.connus[i][4]
-                    y_pokemon = self.dict_connus[list_keys[i]].y()
+                    y_pokemon = self.dict_connus[self.list_keys[i]].y()
                     y_baryc_pokemon = y_pokemon + self.connus[i][5]
                     x_dresseur = self.joueur.x()
                     y_dresseur = self.joueur.y()
@@ -787,7 +831,13 @@ class Window(QMainWindow):
                         #self.combat_app.exec_()
                         #self.setEnabled(False)
                         self.combat_window = launch_combat_pokemon(self.equipe_dresseur, pokemon_adverse, self.inventaire)
-                        print(self.equipe_dresseur, self.inventaire)
+                        print(self.equipe_dresseur)
+                        print(self.inventaire)
+                        print("===============================================")
+                        #self.combat_window.all_pokemons_ko.connect(self.handle_all_pokemons_ko(x_map, y_map))
+                        self.combat_window.captured.connect(self.handle_captured(i))
+                        
+                        
                         break
                     elif i == len(self.connus) - 1 and not Window.point_dans_rectangle(x_baryc_pokemon, y_baryc_pokemon, 
                                                                                        x_dresseur, y_dresseur,
@@ -830,6 +880,7 @@ class Music():
         
 
 if __name__ == "__main__":
+    
     app = QApplication(sys.argv)
     window = Window()
     app.installEventFilter(window)
