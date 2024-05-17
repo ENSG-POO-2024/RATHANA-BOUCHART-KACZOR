@@ -1,7 +1,7 @@
 import sys
 import os
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
-from PyQt5.QtCore import QUrl, Qt, pyqtSignal
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QMessageBox
+from PyQt5.QtCore import QUrl, Qt, pyqtSignal, QRect, QTimer
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent, QSound, QSoundEffect
 from PyQt5.QtGui import QPixmap, QIcon
 
@@ -9,21 +9,86 @@ from PyQt5.QtGui import QPixmap, QIcon
 path = os.path.dirname(os.path.abspath(__file__))
 
 class Fenetre(QMainWindow):
-
+    
     def __init__(self):
         super().__init__()
 
         self.setGeometry(80, 50, 1200, 600)  # Fenêtre principale
         
+        self.zone_bulb = QRect(370, 200, 100, 100)
+        self.zone_sala = QRect(570, 200, 100, 100)
+        self.zone_cara = QRect(770, 200, 100, 100)
+        self.choix_possible = False
+        
         self.afficherFond()
         self.afficherSorbier()
         self.dialogues()
+        self.bouton_next = ClickableLabel('Next', 17, self)
         self.bouton()
         
         self.show()
         
+        self.poke_bulb = Pokeball(self, "bulb")
+
+        self.poke_sala = Pokeball(self, "sala")
+
+        self.poke_cara = Pokeball(self, "cara")
+        
+        
         self.music_player = Musique()  # Ajout de l'objet Music
         self.click = QMediaPlayer()
+        self.aquisition = QMediaPlayer()
+
+        self.timer = QTimer(self)
+        self.timer.setSingleShot(True)
+        self.timer.timeout.connect(self.start)
+        
+    def mousePressEvent(self, event):
+        # Vérifier si le clic est dans la zone définie
+        if self.zone_bulb.contains(event.pos()) and self.choix_possible:
+            self.txt_noir("Congratulations! You choose Bulbasaur.")
+            self.jouer_acquisition()
+            self.poke_sala.hide()
+            self.poke_cara.hide()
+            self.choix_possible = False
+            self.timer.start(3000)
+            self.bouton_next.hide()
+            
+        elif self.zone_sala.contains(event.pos()) and self.choix_possible:
+            self.txt_noir("Congratulations! You choose Charmander.")
+            self.jouer_acquisition()
+            self.poke_cara.hide()
+            self.poke_bulb.hide()
+            self.choix_possible = False
+            self.timer.start(3000)
+            self.bouton_next.hide()
+
+        elif self.zone_cara.contains(event.pos()) and self.choix_possible:
+            self.txt_noir("Congratulations! You choose Squirtle.")
+            self.jouer_acquisition()
+            self.poke_bulb.hide()
+            self.poke_sala.hide()
+            self.choix_possible = False
+            self.timer.start(3000)
+            self.bouton_next.hide()
+            
+
+    def start(self):
+        self.txt_noir("Press START to begin your journey.")
+        self.bouton_start = ClickableLabel('START', 25, self)
+        self.bouton_start.setGeometry(550, 100, 130, 35)
+        self.button.clicked.connect(self.handle_bouton_start)
+        self.bouton_start.show()
+        
+    def handle_bouton_start(self):
+        self.close()
+
+    def jouer_acquisition(self):
+        chemin_son = "C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/son/acquisition.mp3"
+        self.aquisition.setMedia(QMediaContent(QUrl.fromLocalFile(chemin_son)))
+        self.aquisition.setVolume(100)
+        self.aquisition.play()
+
 
     def afficherFond(self):
         pixmap = QPixmap(os.path.join(path, "../documents/images/accueil.png"))
@@ -48,13 +113,16 @@ class Fenetre(QMainWindow):
         self.bouton.clicked.connect(self.dialogue_suivant)
         self.bouton.clicked.connect(self.pokeballs)
         self.bouton.clicked.connect(self.jouer_son)
-        self.bouton.clicked.connect(self.boutonPokeball)
+        self.bouton.clicked.connect(self.setchoix_possible)
 
+    def setchoix_possible(self):
+            self.choix_possible = True
+            
     def jouer_son(self):
-        chemin_son = "C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/son/click.mp3"
-        self.click.setMedia(QMediaContent(QUrl.fromLocalFile(chemin_son)))
-        self.click.setVolume(50)
-        self.click.play()
+            chemin_son = "C:/Users/dell/OneDrive/Bureau/Projet Pokémon/RATHANA-BOUCHART-KACZOR/son/click.mp3"
+            self.click.setMedia(QMediaContent(QUrl.fromLocalFile(chemin_son)))
+            self.click.setVolume(50)
+            self.click.play()
 
     def dialogues(self):
         # Dialogues Rowan
@@ -64,38 +132,17 @@ class Fenetre(QMainWindow):
         self.txt_noir("Choose your first Pokémon")
 
     def pokeballs(self):
-        self.poke_bulb = Pokeball(self, "bulb")
+        #self.poke_bulb = Pokeball(self, "bulb")
         self.poke_bulb.setGeometry(370, 200, self.poke_bulb.width(), self.poke_bulb.height())
         self.poke_bulb.show()
 
-        self.poke_sala = Pokeball(self, "sala")
+        #self.poke_sala = Pokeball(self, "sala")
         self.poke_sala.setGeometry(570, 200, self.poke_sala.width(), self.poke_sala.height())
         self.poke_sala.show()
 
-        self.poke_cara = Pokeball(self, "cara")
+        #self.poke_cara = Pokeball(self, "cara")
         self.poke_cara.setGeometry(770, 200, self.poke_cara.width(), self.poke_cara.height())
         self.poke_cara.show()
-
-    def boutonPokeball(self):
-        # bouton bulbizarre
-        self.bouton_bulb = ClickableLabel("Bulbasaur", 10, self)
-        self.bouton_bulb.setGeometry(375, 320, 90, 40)
-        # self.bouton_bulb.setStyleSheet("background-color: rgba(255,255,255,0); border : none;")
-        self.bouton_bulb.show()
-        self.bouton_bulb.clicked.connect(self.choisir_bulb)
-        
-
-        self.bouton_sala = ClickableLabel("Charmander", 10, self)
-        self.bouton_sala.setGeometry(575, 320, 100, 40)
-        self.bouton_sala.show()
-
-        self.bouton_cara = ClickableLabel("Squirtle", 10, self)
-        self.bouton_cara.setGeometry(780, 320, 90, 40)
-        self.bouton_cara.show()
-
-    def choisir_bulb(self):
-        self.txt_noir("This is Bulbasaur. Do you want to choose this Pokémon?")
-
 
     def txt_noir(self, txt):
         if hasattr(self, 'txtnoir'):
@@ -108,7 +155,6 @@ class Fenetre(QMainWindow):
         self.txtnoir.setWordWrap(True) 
         self.txtnoir.move(150, 425)
         self.txtnoir.show()
-
 
 class Musique():
     def __init__(self):
@@ -154,8 +200,11 @@ class Pokeball(QLabel):
 
     def leaveEvent(self, event):
         self.setPixmap(QPixmap(os.path.join(path, f"../documents/images/pokeballFermee.png")))
+        
+    
 
 if __name__ == "__main__":
+    
     app = QApplication(sys.argv)
     interface = Fenetre()
     interface.show()
