@@ -1,12 +1,16 @@
-# importing libraries
+# import des libraries
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 import sys
+import subprocess
 import random as rd
 import numpy as np
+import pokemon as pk
 from pokemon import pokemon_pos_arrondies
+from combat import CombatPokemon, launch_combat_pokemon
 from creation_carte import mat_width, mat_height, mat_map
 
 class Window(QMainWindow):
@@ -34,12 +38,14 @@ class Window(QMainWindow):
         self.button.setFixedSize(50, 20)  # Définir une taille fixe pour le bouton
         self.button.clicked.connect(self.FullScreen)
         
+        #On ordonne les différents éléments qui vont être affichés pour gérer les superpositions
         self.layout.addWidget(self.fond_collisions)
         self.layout.addWidget(self.fond)
         self.layout.addWidget(self.joueur)
         self.layout.addWidget(self.button)
         self.setLayout(self.layout)
         
+        self.previous = False
         global pokemon_pos_arrondies
         pokemon_pos_arrondies = np.append(pokemon_pos_arrondies, [[pokemon_pos_arrondies[i][0].lower()+"_map.png"]for i in range(len(pokemon_pos_arrondies))], axis=1)
         pokemon_pos_arrondies = np.append(pokemon_pos_arrondies, [[Window.find_left_position(QPixmap(self.pokemon_path + pokemon_pos_arrondies[i][3])) + (Window.find_right_position(QPixmap(self.pokemon_path + pokemon_pos_arrondies[i][3])) - Window.find_left_position(QPixmap(self.pokemon_path + pokemon_pos_arrondies[i][3])))//2]for i in range(len(pokemon_pos_arrondies))], axis=1)
@@ -76,8 +82,33 @@ class Window(QMainWindow):
         
         self.show()
         
+        self.apparences_joueur = self.sprites_individuels
+        self.apparence_actuelle = 4
+        
+        self.music_player = Music()  # Ajout de l'objet Music
+        
+        mew = pk.Pokemon("Dratini")
+        salameche= pk.Pokemon("Blastoise")
+        bulbizare= pk.Pokemon("Bulbasaur")
+        dracolosse=pk.Pokemon("Dragonite")
+        papilusion=pk.Pokemon("Butterfree")
+        arcanin=pk.Pokemon("Arcanine")
+        mewtwo=pk.Pokemon("Ditto")
+        vide=pk.Pokemon("Vide")
+        self.equipe_dresseur = [salameche, mew, papilusion, arcanin,dracolosse,vide]
+        
                 
     def FullScreen(self):
+        """
+        Permet de passer de la petite fenêtre à une fenêtre de
+        la taille de l'écran et inversement quand le bouton 'button' de label 
+        'map' est cliqué
+
+        Returns
+        -------
+        None.
+
+        """
         if self.width() == self.taille_fen and self.height() == self.taille_fen :
             self.resize(self.plein_ecran.width(), self.plein_ecran.height())
             self.move(0,0)
@@ -115,18 +146,26 @@ class Window(QMainWindow):
             
         
     def dresseur(self):
+        """
+        Permet d'initialiser l'affichage du dresseur
+
+        Returns
+        -------
+        None.
+
+        """
         sprite_sheet = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/SpriteSheet.png")
 
         hauteur_sprite = sprite_sheet.height()//4
         largeur_sprite = sprite_sheet.width()//4
         
         # Découper le sprite sheet
-        coordonnees_sprites = [(x, y, largeur_sprite, hauteur_sprite) for x in range(0, sprite_sheet.width(), largeur_sprite) for y in range(0, sprite_sheet.height(), hauteur_sprite)]
+        coordonnees_sprites = [(x, y, largeur_sprite, hauteur_sprite) for x in range(2, sprite_sheet.width(), largeur_sprite + 15) for y in range(0, sprite_sheet.height(), hauteur_sprite)]
         self.sprites_individuels = []
         for coordonnees_sprite in coordonnees_sprites:
             sprite_individuel = sprite_sheet.copy(*coordonnees_sprite)
             self.sprites_individuels.append(sprite_individuel)
-        sprite = QPixmap(self.sprites_individuels[0])
+        sprite = QPixmap(self.sprites_individuels[4])
                 
         self.vision = 200
         self.joueur = QLabel(self)
@@ -135,8 +174,26 @@ class Window(QMainWindow):
                                 largeur_sprite, hauteur_sprite)
         self.joueur.setPixmap(sprite)
         
+    def changer_apparence(self):
+        """
+        Permet de modifier l'affichage du dresseur
+
+        Returns
+        -------
+        None.
+
+        """
+        self.apparence_actuelle = (self.apparence_actuelle + 4) % len(self.apparences_joueur)
             
     def carte(self):
+        """
+        Permet d'initialiser l'affichage de la carte
+
+        Returns
+        -------
+        None.
+
+        """
         pixmap = QPixmap("C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/documents/images/carte_collisions.png")
         self.fond_collisions = QLabel(self)
         self.fond_collisions.setPixmap(pixmap)
@@ -153,6 +210,15 @@ class Window(QMainWindow):
     
 
     def discover(self):
+        """
+        Permet d'afficher les pokémons présents dans le champ de vision du
+        dresseur
+
+        Returns
+        -------
+        None.
+
+        """
         self.compteur_sup = -1
         self.inconnus_intermediaire = self.inconnus.copy()
         for i in range(len(self.inconnus)):
@@ -314,16 +380,27 @@ class Window(QMainWindow):
                                 obstacle = True
                                 self.joueur.move(x_joueur, y_joueur - (self.row_mat - y - 1))
                                 self.row_mat = y + 1
+                                self.music_player.bruit_bump()
+                                self.apparence_actuelle = 6
+                                self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                                 break
                         if not obstacle :
                             self.joueur.move(x_joueur, y_map)
-                            self.row_mat -= y_joueur - y_map     
+                            self.row_mat -= y_joueur - y_map   
+                            if (self.apparence_actuelle == 2) or (self.apparence_actuelle == 6) or (self.apparence_actuelle == 10) :
+                                self.changer_apparence()
+                            else : 
+                                self.apparence_actuelle = 6
+                            self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                     else :
                         for y in range(self.row_mat - 1, self.row_mat - self.speed - 1, -1):
                             pixels = [self.fond_collisions.pixmap().toImage().pixelColor(x, y) for x in range (self.col_mat, self.col_mat + self.joueur.width())]
                             couleur_pixel = [(pixel.red(), pixel.green(), pixel.blue()) for pixel in pixels]
                             if (0,0,0) in couleur_pixel :
                                 obstacle = True
+                                self.music_player.bruit_bump()
+                                self.apparence_actuelle = 6
+                                self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                                 if (y_joueur - y_min >= self.speed) and (y_joueur <= y_max - self.joueur.height()) :
                                     translation = self.row_mat - y - 1
                                     self.move_map_y(translation, x_map, y_map)
@@ -363,6 +440,11 @@ class Window(QMainWindow):
                                         self.row_mat = y + 1
                                         break
                         if not obstacle :
+                            if (self.apparence_actuelle == 2) or (self.apparence_actuelle == 6) or (self.apparence_actuelle == 10) :
+                                self.changer_apparence()
+                            else : 
+                                self.apparence_actuelle = 6
+                            self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                             if (y_joueur - y_min >= self.speed) and (y_joueur <= y_max - self.joueur.height()) :
                                 translation = self.speed
                                 self.move_map_y(translation, x_map, y_map)
@@ -389,10 +471,18 @@ class Window(QMainWindow):
                             couleur_pixel = [(pixel.red(), pixel.green(), pixel.blue()) for pixel in pixels]
                             if (0,0,0) in couleur_pixel :
                                 obstacle = True
+                                self.music_player.bruit_bump()
+                                self.apparence_actuelle = 4
+                                self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                                 self.joueur.move(x_joueur, y_joueur + (y - self.joueur.height() - self.row_mat))
                                 self.row_mat = y - self.joueur.height()
                                 break
                         if not obstacle :
+                            if (self.apparence_actuelle == 0) or (self.apparence_actuelle == 4) or (self.apparence_actuelle == 8) :
+                                self.changer_apparence()
+                            else : 
+                                self.apparence_actuelle = 4
+                            self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                             self.joueur.move(x_joueur, y_map + self.fond.height() - self.joueur.height())
                             self.row_mat = self.fond.height() - self.joueur.height()
                     else :
@@ -402,6 +492,9 @@ class Window(QMainWindow):
                             couleur_pixel = [(pixel.red(), pixel.green(), pixel.blue()) for pixel in pixels]
                             if (0,0,0) in couleur_pixel :
                                 obstacle = True
+                                self.music_player.bruit_bump()
+                                self.apparence_actuelle = 4
+                                self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                                 if (y_joueur + self.joueur.height() + self.speed <= y_max) and (y_joueur >= y_min) :
                                     translation = self.row_mat + self.joueur.height() - y
                                     self.move_map_y(translation, x_map, y_map)
@@ -440,6 +533,11 @@ class Window(QMainWindow):
                                         self.row_mat = y - self.joueur.height()
                                         break
                         if not obstacle :
+                            if (self.apparence_actuelle == 0) or (self.apparence_actuelle == 4) or (self.apparence_actuelle == 8) :
+                                self.changer_apparence()
+                            else : 
+                                self.apparence_actuelle = 4
+                            self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                             if (y_joueur + self.joueur.height() + self.speed <= y_max) and (y_joueur >= y_min) :
                                 translation = - self.speed
                                 self.move_map_y(translation, x_map, y_map)
@@ -465,10 +563,18 @@ class Window(QMainWindow):
                             couleur_pixel = [(pixel.red(), pixel.green(), pixel.blue()) for pixel in pixels]
                             if (0,0,0) in couleur_pixel :
                                 obstacle = True
+                                self.music_player.bruit_bump()
+                                self.apparence_actuelle = 7
+                                self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                                 self.joueur.move(x_joueur - (self.col_mat - x - 1), y_joueur)
                                 self.col_mat = x + 1
                                 break
                         if not obstacle :
+                            if (self.apparence_actuelle == 3) or (self.apparence_actuelle == 7) or (self.apparence_actuelle == 11) :
+                                self.changer_apparence()
+                            else : 
+                                self.apparence_actuelle = 7
+                            self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                             self.joueur.move(x_map, y_joueur)
                             self.col_mat -= x_joueur - x_map
                     else :
@@ -477,6 +583,9 @@ class Window(QMainWindow):
                             couleur_pixel = [(pixel.red(), pixel.green(), pixel.blue()) for pixel in pixels]
                             if (0,0,0) in couleur_pixel :
                                 obstacle = True
+                                self.music_player.bruit_bump()
+                                self.apparence_actuelle = 7
+                                self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                                 if (x_joueur - x_min >= self.speed) and (x_joueur <= x_max - self.joueur.width()) :
                                     translation = self.col_mat - x - 1
                                     self.move_map_x(translation, x_map, y_map)
@@ -516,6 +625,11 @@ class Window(QMainWindow):
                                         self.col_mat = x + 1
                                         break
                         if not obstacle :
+                            if (self.apparence_actuelle == 3) or (self.apparence_actuelle == 7) or (self.apparence_actuelle == 11) :
+                                self.changer_apparence()
+                            else : 
+                                self.apparence_actuelle = 7
+                            self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                             if (x_joueur - x_min >= self.speed) and (x_joueur <= x_max - self.joueur.width()) :
                                 translation = self.speed
                                 self.move_map_x(translation, x_map, y_map)
@@ -542,10 +656,18 @@ class Window(QMainWindow):
                             couleur_pixel = [(pixel.red(), pixel.green(), pixel.blue()) for pixel in pixels]
                             if (0,0,0) in couleur_pixel :
                                 obstacle = True
+                                self.music_player.bruit_bump()
+                                self.apparence_actuelle = 5
+                                self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                                 self.joueur.move(x_joueur + (x - self.joueur.width() - self.col_mat), y_joueur)
                                 self.col_mat = x - self.joueur.width()
                                 break
                         if not obstacle :
+                            if (self.apparence_actuelle == 1) or (self.apparence_actuelle == 5) or (self.apparence_actuelle == 9) :
+                                self.changer_apparence()
+                            else : 
+                                self.apparence_actuelle = 5
+                            self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                             self.joueur.move(x_map + self.fond.width() - self.joueur.width(), y_joueur)
                             self.col_mat = self.fond.width() - self.joueur.width()       
                     else :
@@ -555,6 +677,9 @@ class Window(QMainWindow):
                             couleur_pixel = [(pixel.red(), pixel.green(), pixel.blue()) for pixel in pixels]
                             if (0,0,0) in couleur_pixel :
                                 obstacle = True
+                                self.music_player.bruit_bump()
+                                self.apparence_actuelle = 5
+                                self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                                 if (x_joueur + self.joueur.width() + self.speed <= x_max) and (x_joueur >= x_min) :
                                     translation = self.col_mat + self.joueur.width() - x
                                     self.move_map_x(translation, x_map, y_map)
@@ -593,6 +718,11 @@ class Window(QMainWindow):
                                         self.col_mat = x - self.joueur.width()
                                         break
                         if not obstacle :
+                            if (self.apparence_actuelle == 1) or (self.apparence_actuelle == 5) or (self.apparence_actuelle == 9) :
+                                self.changer_apparence()
+                            else : 
+                                self.apparence_actuelle = 5
+                            self.joueur.setPixmap(self.apparences_joueur[self.apparence_actuelle])
                             if (x_joueur + self.joueur.width() + self.speed <= x_max) and (x_joueur >= x_min) :
                                 translation = - self.speed
                                 self.move_map_x(translation, x_map, y_map)
@@ -616,6 +746,7 @@ class Window(QMainWindow):
                 
                 list_keys = list(self.dict_connus.keys())
                 for i in range(len(self.connus)) :
+                    global x_baryc_pokemon
                     x_pokemon = self.dict_connus[list_keys[i]].x()
                     x_baryc_pokemon = x_pokemon + self.connus[i][4]
                     y_pokemon = self.dict_connus[list_keys[i]].y()
@@ -624,16 +755,57 @@ class Window(QMainWindow):
                     y_dresseur = self.joueur.y()
                     L = self.joueur.width()
                     l = self.joueur.height()
-                    if Window.point_dans_rectangle(x_baryc_pokemon, y_baryc_pokemon, 
-                                               x_dresseur, y_dresseur,
-                                               L, l) :
-                        print(True)
+                    if self.previous == False and Window.point_dans_rectangle(x_baryc_pokemon, y_baryc_pokemon, 
+                                                                                 x_dresseur, y_dresseur,
+                                                                                 L, l) :
+                        self.previous = True
+                        pokemon_adverse = pk.PokemonSauvage(self.connus[i][0], x_pokemon, y_pokemon)
+                        #self.combat_app = QApplication(sys.argv)
+                        #self.combat_window = CombatPokemon(pokemon_adverse, self.equipe_dresseur)
+                        #self.combat_window.show()
+                        #self.combat_app.exec_()
+                        #self.setEnabled(False)
+                        self.combat_window = launch_combat_pokemon(pokemon_adverse, self.equipe_dresseur)
+                        break
+                    elif i == len(self.connus) - 1 and not Window.point_dans_rectangle(x_baryc_pokemon, y_baryc_pokemon, 
+                                                                                       x_dresseur, y_dresseur,
+                                                                                       L, l) :
+                        self.previous = False
                         
                 return True
         elif event.type() == QEvent.Close:
             return super().eventFilter(obj, event)  # Laisser le traitement de l'événement de fermeture de fenêtre par défaut
         return False  # Ne rien faire pour les autres types d'événements
             
+    
+class Music():
+    def __init__(self):
+        self.player = QMediaPlayer()
+        self.bump = QMediaPlayer()
+        self.loadAndPlayMusic()
+
+    def loadAndPlayMusic(self):
+        # Chemin vers le fichier audio
+        music_file_path = "C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/son/son.mp3" # Remplacez par le chemin de votre musique
+        self.player.setMedia(QMediaContent(QUrl.fromLocalFile(music_file_path)))
+        self.player.setVolume(50)  # Réglez le volume (0-100)
+        self.player.play()  # Commence à jouer
+
+        # Connectez le signal stateChanged à une fonction pour gérer la fin de la musique
+        self.player.stateChanged.connect(self.checkState)
+
+    def checkState(self, state):
+        if state == QMediaPlayer.EndOfMedia:
+            # Si la musique est terminée, remettez la lecture au début
+            self.player.setPosition(0)
+            self.player.play()
+
+    def bruit_bump(self):
+        son_bump = "C:/Users/kaczo/Documents/projet CCV/RATHANA-BOUCHART-KACZOR/son/bump.mp3"
+        self.bump.setMedia(QMediaContent(QUrl.fromLocalFile(son_bump)))
+        self.bump.setVolume(50)
+        self.bump.play()
+        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
