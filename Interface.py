@@ -787,6 +787,7 @@ class Window(QMainWindow):
                         #self.combat_app.exec_()
                         #self.setEnabled(False)
                         self.combat_window = launch_combat_pokemon(self.equipe_dresseur, pokemon_adverse, self.inventaire)
+                        print(self.equipe_dresseur, self.inventaire)
                         break
                     elif i == len(self.connus) - 1 and not Window.point_dans_rectangle(x_baryc_pokemon, y_baryc_pokemon, 
                                                                                        x_dresseur, y_dresseur,
