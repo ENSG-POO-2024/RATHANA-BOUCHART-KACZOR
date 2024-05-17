@@ -1628,7 +1628,7 @@ def launch_combat_pokemon(equipe_dresseur,pokemon_adverse,inventaire):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = CombatPokemon([pk.Pokemon("Machop"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo")],pk.PokemonSauvage("Nidoran♂",0,0),[])
+    window = CombatPokemon([pk.Pokemon("Butterfree"),pk.Pokemon("Vide"),pk.Pokemon("Vide"),pk.Pokemon("Vide"),pk.Pokemon("Vide"),pk.Pokemon("Vide")],pk.PokemonSauvage("Hypno",0,0),[])
     window.show()
     sys.exit(app.exec_())
 
