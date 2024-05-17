@@ -179,13 +179,15 @@ class Window(QMainWindow):
             
     def inventoryScreen(self):
         """
-        Permet d'ouvrir et fermer l'inventaire du joueur
+        Permet d'ouvrir l'inventaire du joueur
 
         Returns
         -------
         None.
 
         """
+        self.new_window = Inventory()
+        self.new_window.show()
 
     def dresseur(self):
         """
@@ -873,12 +875,25 @@ class Music():
         self.bump.setVolume(50)
         self.bump.play()
         
+class Inventory(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setGeometry(80, 50, 256, 192) 
+        self.setBackground()
+
+    def setBackground(self):
+        pixmap = QPixmap(os.path.join(path, "documents/images/inventaireFond.png"))
+        self.fond = QLabel(self)
+        self.fond.setPixmap(pixmap)
+        self.fond.setGeometry(0, 0, pixmap.width(), pixmap.height())
+    
 
 if __name__ == "__main__":
-    app_accueil = QApplication(sys.argv)
-    interface = Fenetre()
-    interface.show()
-    sys.exit(app_accueil.exec_())
+    # app_accueil = QApplication(sys.argv)
+    # interface = Fenetre()
+    # interface.show()
+    # sys.exit(app_accueil.exec_())
     
     app = QApplication(sys.argv)
     window = Window()
