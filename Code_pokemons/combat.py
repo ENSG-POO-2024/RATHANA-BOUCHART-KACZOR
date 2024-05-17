@@ -1,5 +1,5 @@
 import pokemon as pk
-from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QVBoxLayout,QWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QVBoxLayout,QWidget,QDesktopWidget
 from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtCore import Qt, QUrl, pyqtSignal, QTimer, QEventLoop
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
@@ -74,7 +74,8 @@ class CombatPokemon(QMainWindow):
             k+=1
         pokemon_allie=self.equipe_dresseur[k]
         self.setWindowTitle('Combat Pokémon')
-        self.setGeometry(100, 100, 900, 700) 
+        self.pleinecran=QDesktopWidget().screenGeometry()
+        self.setGeometry((self.pleinecran.width() - 900)//2, (self.pleinecran.height() - 700)//2, 900, 700) 
         # Création du QLabel pour afficher l'image en fond
         background_label = QLabel(self)
         
