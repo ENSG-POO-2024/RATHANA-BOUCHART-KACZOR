@@ -1306,7 +1306,6 @@ class CombatPokemon(QMainWindow):
         else: 
             self.affiche_menu_principal()
 
-
     def atk1(self):
         self.attaque1.hide()
         self.attaque2.hide()
@@ -1640,7 +1639,7 @@ def launch_combat_pokemon(equipe_dresseur,pokemon_adverse,inventaire):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = CombatPokemon([pk.Pokemon("Machop"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo")],pk.PokemonSauvage("Mewtwo",0,0),[])
+    window = CombatPokemon([pk.Pokemon("Machop"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo"),pk.Pokemon("Mewtwo")],pk.PokemonSauvage("Nidoran♂",0,0),[])
     window.show()
     sys.exit(app.exec_())
 
