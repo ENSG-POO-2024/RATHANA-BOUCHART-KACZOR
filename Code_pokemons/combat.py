@@ -1639,7 +1639,21 @@ def launch_combat_pokemon(equipe_dresseur,pokemon_adverse,inventaire):
     combat_window.show()
     return combat_window
 
-
+if __name__ == "__main__":
+    pikachu=pk.Pokemon("Pikachu")
+    mew=pk.Pokemon("Mew")
+    raichu=pk.Pokemon("Raichu")
+    dracolosse=pk.Pokemon("Dragonite")
+    arcanin=pk.Pokemon("Arcanine")
+    papilusion=pk.Pokemon("Butterfree")
+    equipe_pokemon=[pikachu,raichu,mew,dracolosse,arcanin,papilusion]
+    pokemon_adverse=pk.PokemonSauvage("Moltres",0,0)
+    inventaire=[]
+    app = QApplication(sys.argv)
+    window = CombatPokemon(equipe_pokemon,pokemon_adverse,inventaire)
+    app.installEventFilter(window)
+    window.show()
+    sys.exit(app.exec_())
     
 
 
